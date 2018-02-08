@@ -31,8 +31,9 @@ export default class SettingsUpdate extends Component {
                                     } else {
                                         Alert.alert('There seems to be update!', 'Do you wish to sync?', [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }]);
                                     }
+                                    return Promise.resolve();
                                 })
-                                .then(() => Promise.resolve())
+                               
                                 .catch(() => { Alert.alert('Error', 'Something went wrong. Please check your internet connection, restart the app, or try again later.', [{ text: 'OK', onPress: () => { } }]); });
                         })
                         .then(() => this.setState({ isLoading: false }))
