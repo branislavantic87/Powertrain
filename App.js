@@ -589,7 +589,7 @@ export default class App extends Component {
 
   }// End of isLoading()
 
-  isNetworkConnected = () => {
+  isNetworkConnected = global.isNetworkConnected = () => {
     if (Platform.OS === 'ios') {
       return new Promise(resolve => {
         const handleFirstConnectivityChangeIOS = isConnected => {

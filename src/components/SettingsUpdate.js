@@ -1,34 +1,22 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, AsyncStorage, Alert, Platform, NetInfo } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, AsyncStorage, Alert, ActivityIndicator } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import RNRestart from 'react-native-restart';
 import RNFB from 'react-native-fetch-blob'
 
 export default class SettingsUpdate extends Component {
 
+    state = {
+        isLoading: false
+    };
+
     reDownload = () => {
         Alert.alert('RE-DOWNLOAD', 'This action will delete and redownload all files. Are you sure you want to continue?', [{ text: 'Yes', onPress: () => this.redownlodAllFiles() }, { text: 'No', onPress: () => { } }]);
     }
 
-    downloadUpdates = () => {
-        Alert.alert('Download Updates', 'This action will check for updates and download if there is any. Are you sure you want to continue?', [{ text: 'Yes', onPress: () => this.syncApp() }, { text: 'No', onPress: () => { } }]);
-    }
-
-    isNetworkConnected = () => {
-        if (Platform.OS === 'ios') {
-            return new Promise(resolve => {
-                const handleFirstConnectivityChangeIOS = isConnected => {
-                    NetInfo.isConnected.removeEventListener('connectionChange', handleFirstConnectivityChangeIOS);
-                    resolve(isConnected);
-                };
-                NetInfo.isConnected.addEventListener('connectionChange', handleFirstConnectivityChangeIOS);
-            });
-        }
-        return NetInfo.isConnected.fetch();
-    }
-
     syncApp() {
-        this.isNetworkConnected()
+        this.setState({ isLoading: true });
+        global.isNetworkConnected()
             .then(res => {
                 if (res) {
                     AsyncStorage.getItem('checkedFiles')
@@ -44,16 +32,19 @@ export default class SettingsUpdate extends Component {
                                         Alert.alert('There seems to be update!', 'Do you wish to sync?', [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }]);
                                     }
                                 })
+                                .then(() => Promise.resolve())
                                 .catch(() => { Alert.alert('Error', 'Something went wrong. Please check your internet connection, restart the app, or try again later.', [{ text: 'OK', onPress: () => { } }]); });
                         })
+                        .then(() => this.setState({ isLoading: false }))
                 } else {
                     Alert.alert('Offline', 'You seem to be offline.', [{ text: 'OK', onPress: () => { } }]);
+                    this.setState({ isLoading: false });
                 }
             })
+            .catch((err) => { console.log(err); this.setState({ isLoading: false }) })
     }
 
     redownlodAllFiles = () => {
-
         RNFB.fs.ls(RNFB.fs.dirs.DocumentDir)
             .then((res) => res.map(file => file.substring(file.length - 2, file.length) != 'js' ? file : null))
             .then(res => {
@@ -71,6 +62,17 @@ export default class SettingsUpdate extends Component {
             .catch(err => console.log(err))
     }
 
+    buttonOrActivity = () => {
+        if (this.state.isLoading) {
+            return <ActivityIndicator size={'large'} />
+        }
+        return (
+            <TouchableOpacity style={styles.buttonLog} onPress={() => this.syncApp()}>
+                <Text style={styles.buttonText}>DOWNLOAD UPDATES</Text>
+            </TouchableOpacity>
+        );
+    }
+
 
     render() {
         return (
@@ -79,9 +81,7 @@ export default class SettingsUpdate extends Component {
                     <Text style={{ alignSelf: 'center', fontSize: 40, fontWeight: '700', color: 'black' }}>UPDATES</Text>
                 </View>
                 <View style={styles.download}>
-                    <TouchableOpacity style={styles.buttonLog} onPress={() => this.syncApp()}>
-                        <Text style={styles.buttonText}>DOWNLOAD UPDATES</Text>
-                    </TouchableOpacity>
+                    {this.buttonOrActivity()}
                     <TouchableOpacity style={styles.buttonReg} onPress={() => this.reDownload()}>
                         <Text style={styles.buttonText}>RE-DOWNLOAD</Text>
                     </TouchableOpacity>

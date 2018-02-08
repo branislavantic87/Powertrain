@@ -54,8 +54,12 @@ export default class SettingsLanguage extends Component {
                 return Promise.resolve(res);
             })
             .then(res => AsyncStorage.setItem('supportedLanguages', JSON.stringify(res)))
-            .then(() => Alert.alert('Update', 'About to download new content for selected languages. Do you wish to continue', [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }]))
+            .then(() => RNRestart.Restart())
             .catch(err => console.log(err))
+    }
+
+    alertForRedownload = () => {
+        Alert.alert('Update', 'About to download new content for selected languages. Do you wish to continue', [{ text: 'Sync', onPress: () => { this.onLangSubmit() } }, { text: 'Cancel', onPress: () => { } }])
     }
 
     componentWillMount() {
@@ -81,14 +85,15 @@ export default class SettingsLanguage extends Component {
             })
             .then(() => {
                 a = this.state.allLanguages.map(l => {
-                    if(l.selected) {
-                       return Promise.resolve();
+                    if (l.selected) {
+                        return Promise.resolve();
                     } else {
-                        return Promise.reject();
+                        return Promise.reject('Jezik ' + l.language + ' nije skinut, zbog toga je dugme enablovano.');
                     }
                 })
                 Promise.all(a)
-                .then(() => this.setState({buttonDisabled: true}))
+                    .then(() => this.setState({ buttonDisabled: true }))
+                    .catch(err => console.log(err))
             })
             .catch(err => console.log(err))
     }
@@ -103,7 +108,7 @@ export default class SettingsLanguage extends Component {
                     {this.renderCheckBoxes()}
                 </View>
                 <View style={styles.submitBtnCont}>
-                    <TouchableOpacity disabled={this.state.buttonDisabled} style={styles.submitBtn} onPress={() => this.onLangSubmit()}>
+                    <TouchableOpacity disabled={this.state.buttonDisabled} style={styles.submitBtn} onPress={() => this.alertForRedownload()}>
                         <Text style={{ fontSize: 20, textAlign: 'center' }}>SUBMIT</Text>
                     </TouchableOpacity>
                 </View>
@@ -125,10 +130,10 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         color: 'black'
     },
-    titleContainer:{
+    titleContainer: {
         height: '20%'
     },
-    languages:{
+    languages: {
         height: '30%',
         flexDirection: 'row',
     },
@@ -136,9 +141,9 @@ const styles = StyleSheet.create({
         height: '50%',
         width: '25%'
     },
-    submitBtn:{
-        padding: 10, 
-        backgroundColor: '#d8d8d8', 
+    submitBtn: {
+        padding: 10,
+        backgroundColor: '#d8d8d8',
         width: '100%'
     }
 });
