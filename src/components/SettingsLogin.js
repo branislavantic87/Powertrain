@@ -3,8 +3,6 @@ import { StyleSheet, View, Image, TouchableOpacity, TextInput, Text, NetInfo, Pl
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import md5 from 'md5';
 
-
-
 export default class SettingsLogin extends Component {
   constructor(props) {
     super(props);
@@ -130,6 +128,19 @@ export default class SettingsLogin extends Component {
         console.log('Success write to AsyncStorage');
     }
 
+    async getLoggedUser() {
+        try {
+          let userId = await AsyncStorage.getItem('@userId');
+          const users = global.allUsers.users;
+          let user = users.find(user => {
+            return user.userId === userId
+          });
+          alert(JSON.stringify(user));
+        } catch (error) {
+          alert(error);
+        }
+      }
+
   componentWillMount() {
     this.isNetworkConnected()
       .then(res => {
@@ -180,6 +191,10 @@ export default class SettingsLogin extends Component {
                             <Text style={styles.buttonText}>SIGN UP</Text>
                         </TouchableOpacity>
                         
+                        <TouchableOpacity style={styles.buttonReg} onPress={this.getLoggedUser.bind(this)}>
+                            <Text style={styles.buttonText}>TKO JE ULOGOVAN</Text>
+                        </TouchableOpacity>
+
                     </View>
 
                     <View style={{ height: '20%', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', width: '84%', padding: 30 }}>
