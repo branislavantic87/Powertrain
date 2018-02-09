@@ -19,8 +19,8 @@ export default class PresentationNewComponent extends Component {
             return <PresentationSort  clickDone={() => this.setState( { sort: false } )} />
         } else {
             return (
-                <View>
-                    <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'flex-end', width: '100%', zIndex: 5, marginTop: 10, marginRight: 10 }}>
+                <View style={{width: '100%', height: '100%'}}>
+                    <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end', width: '100%', zIndex: 5, marginTop: 10, marginRight: 10 }}>
                         <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginRight: 25 }} onPress={() => this.props.closePresentation()}>
                             <Image style={{ height: 20, width: 20 }} source={require('./ico/32/back.png')} />
                         </TouchableOpacity>

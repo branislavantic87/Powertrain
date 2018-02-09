@@ -74,7 +74,7 @@ export default class PdfList extends Component {
 
             <View style={styles.content}>
 
-                <ScrollView>
+                <ScrollView contentContainerStyle={{alignSelf: 'center'}}>
 
                     <View style={styles.scrollPdfList}>
                         {this.renderAllVideos()}
@@ -97,6 +97,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: '7%',
         zIndex: 3,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
 
     scrollPdfList: {
@@ -105,7 +107,7 @@ const styles = StyleSheet.create({
         paddingTop: 20,
         backgroundColor: 'white',
         borderColor: 'white',
-        marginLeft: 30,
+        marginLeft: 60,
         marginRight: 30,
         marginTop: 35,
         flexDirection: 'row',
