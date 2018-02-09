@@ -46,85 +46,51 @@ export default class App extends Component {
       let dirs = RNFB.fs.dirs;
       const allUsersJsonURL = 'http://www.cduppy.com/salescms/?a=ajax&do=getUsers&languageId=1&projectId=5&token=1234567890';
       const pathToAllUsersJson = dirs.DocumentDir + '/allUsers.json';
+      let fetchedUsers;
 
-      ifJsonExists = () => {
+      userJsonLogic = () => {
         return new Promise((resolve, reject) => {
-          RNFB.fs.exists(pathToAllUsersJson)
-            .then(res => {
-              if (!res) {
-                console.log('Uso u if')
-                return getNewJson();
-              } else {
-                console.log('Uso u else')
-                return compareJsonsLastChanges();
-              }
-            })
+          fetch(allUsersJsonURL)
+            .then(res => res.json())
+            .then(res => { fetchedUsers = res; return Promise.resolve(); })
+            .then(() => RNFB.fs.exists(pathToAllUsersJson))
+            .then(res => !res ? nePostojiUserJson() : postojiUserJson())
             .then(() => resolve())
-            .catch(error => console.log(error))
+            .catch(err => console.log('userJsonLogic: ' + err))
         })
       }
 
-      getNewJson = () => {
+      nePostojiUserJson = () => {
         return new Promise((resolve, reject) => {
           RNFB.config({
             path: pathToAllUsersJson
           })
             .fetch('GET', allUsersJsonURL)
+            .then(() => { global.allUsers = fetchedUsers; return Promise.resolve() })
             .then(() => resolve())
-            .catch(error => console.log(error))
+            .catch(error => console.log('Postoji user json: ' + error))
         })
       }
 
-      // MARKO
-      // compareJsonsLastChanges = () => {
-      //   return new Promise((resolve, reject) => {
-      //     let newUsers = {};
-      //     fetch(allUsersJsonURL)
-      //       .then(res => res.json())
-      //       .then(data => { newUsers = data; return Promise.resolve(); })
-      //       .then(() => RNFB.fs.readFile(pathToAllUsersJson, 'utf8'))
-      //       .then(res => JSON.parse(res))
-      //       .then((res) => {
-      //         global.allUsers = res;
-      //         console.log(global.allUsers);
-      //         if (newUsers.lastChanges !== global.allUsers.lastChanges) {
-      //           console.log(newUsers.lastChanges);
-      //           console.log(global.allUsers.lastChanges);
-      //           RNFB.fs.writeFile(pathToAllUsersJson, JSON.stringify(newUsers))
-      //             .then(() => { global.allUsers = newUsers; return Promise.resolve() })
-      //             .then(() => Promise.resolve())
-      //         }
-      //       })
-      //       .then(() => resolve())
-      //       .catch(error => console.log(error));
-      //   })
-      // }
-
-      // BANE
-      compareJsonsLastChanges = () => {
+      postojiUserJson = () => {
         return new Promise((resolve, reject) => {
-          let newUsers = {};
-          fetch(allUsersJsonURL)
-            .then(res => res.json())
-            .then(data => { newUsers = data })
-            .then(() => console.log(newUsers))
-            .then(() => RNFB.fs.readFile(pathToAllUsersJson, 'utf8'))
-            .then(res => global.allUsers = JSON.parse(res))
-            .then(() => {
-              console.log(global.allUsers)
-              if (newUsers.lastChanges !== global.allUsers.lastChanges) {
-                  getNewJson();
-                  return resolve();
-                }
-                console.log(newUsers.lastChanges)
-                console.log(global.allUsers.lastChanges)
+          RNFB.fs.readFile(pathToAllUsersJson, 'utf8')
+            .then(res => {
+              global.allUsers = JSON.parse(res);
+              if (fetchedUsers.lastChanges == global.allUsers.lastChanges) {
+                console.log('lastChanges za Usere su isti');
+                return resolve();
+              } else {     
+                console.log('lastChanges za Usere su razliciti');
+                global.allUsers = fetchedUsers;
+                RNFB.config({ path: pathToAllUsersJson }).fetch('GET', allUsersJsonURL)
+                  .then(() => resolve())
+              }
             })
-            .then(() => resolve())
-            .catch(error => console.log(error));
         })
       }
 
-      ifJsonExists()
+      userJsonLogic()
         .then(() => resolve());
     })
   }
@@ -365,6 +331,9 @@ export default class App extends Component {
       })
     }
 
+
+    // SREDI ZA OFFLINE
+
     getPdfJson = () => {
       return new Promise((resolve, reject) => {
         fetch('http://www.cduppy.com/salescms/?a=ajax&do=getDocuments&projectId=5&token=1234567890')
@@ -374,6 +343,7 @@ export default class App extends Component {
           .catch((err) => reject(err))
       })
     }
+
     getVideoJson = () => {
       return new Promise((resolve, reject) => {
         fetch('http://www.cduppy.com/salescms/?a=ajax&do=getVideos&projectId=5&token=1234567890')
@@ -675,7 +645,7 @@ export default class App extends Component {
           }
         })
         .then(() => this.getUsersFromLocale())
-        .catch(() => { this.setState({ isLoading: -1 }) })
+        .catch((err) => { console.log(err); this.setState({ isLoading: -1 }) })
     }
 
 

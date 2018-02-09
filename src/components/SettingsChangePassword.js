@@ -130,33 +130,21 @@ export default class ChangePassword extends Component {
   }
 
   logOutGlobally() {
+    console.log('logOutGlobally');
     const formData = new FormData();
     formData.append("id", this.state.userId);
-    console.log(formData);
-    // fetch('http://www.cduppy.com/salescms/?a=ajax&do=logoutUser&projectId=5&token=1234567890', {
-    //   method: 'POST',
-    //   body: formData
-    // })
-    // .then((res) => console.log(res))
-    // .catch(error => console.log(error));
-  }
-
-  logOutFromApp() {
-    AsyncStorage.removeItem('@userId', (error) => {
-      if (error) {
-        console.log(error);
-      }
+    console.log('FORMDATA: ' + JSON.stringify(formData));
+    fetch('http://www.cduppy.com/salescms/?a=ajax&do=logoutUser&projectId=5&token=1234567890', {
+      method: 'POST',
+      body: formData
     })
-  }
-
-
-  redirectToLogin() {
-    this.props.changeToLogin();
+      .then((res) => console.log(res))
+      .catch(error => console.log(error));
   }
 
   changePasswordHandler() {
+    this.props.logout();
     this.logOutGlobally();
-    this.logOutFromApp();
     // this.redirectToLogin.bind(this); rerender APP to accept incoming changes
   }
 
@@ -179,7 +167,7 @@ export default class ChangePassword extends Component {
   render() {
     return (
       <View style={styles.containerChangePswd}>
-        <Text style={{ color: 'red', fontSize: 24 }}>{this.state.msg}</Text>
+        <Text style={styles.noInternetText}>{this.state.msg}</Text>
         <KeyboardAwareScrollView
           contentContainerStyle={styles.avoid}
           style={{ height: '100%', width: '100%' }}
@@ -219,8 +207,8 @@ export default class ChangePassword extends Component {
 
           <View style={{ height: '30%', width: '50%', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', marginTop: 15 }}>
 
-            <TouchableOpacity style={styles.buttonConfirm} onPress={this.changePassword.bind(this)} disabled={!this.state.isConnected}>
-              <Text style={styles.buttonText}>CONFIRM</Text>
+            <TouchableOpacity style={this.state.isConnected ? styles.buttonConfirm : styles.buttonConfirmDisabled} onPress={this.changePassword.bind(this)} disabled={!this.state.isConnected}>
+              <Text style={this.state.isConnected ? styles.buttonText : styles.buttonTextDisabled}>CONFIRM</Text>
             </TouchableOpacity>
 
           </View>
@@ -232,6 +220,12 @@ export default class ChangePassword extends Component {
 }
 
 const styles = StyleSheet.create({
+  noInternetText: {
+    fontSize: 22,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginBottom: 40
+  },
   containerChangePswd: {
     borderWidth: 24,
     borderColor: '#cccccc',
@@ -250,6 +244,12 @@ const styles = StyleSheet.create({
     color: "#424242",
     textAlign: 'center',
   },
+  buttonTextDisabled: {
+    fontSize: 20,
+    fontWeight: '100',
+    color: "white",
+    textAlign: 'center',
+  },
   buttonReg: {
     backgroundColor: 'white',
     borderWidth: 2,
@@ -261,6 +261,14 @@ const styles = StyleSheet.create({
   },
   buttonConfirm: {
     backgroundColor: '#d8d8d8',
+    width: '100%',
+    height: '47%',
+    justifyContent: 'center',
+    marginBottom: 6,
+    padding: 15
+  },
+  buttonConfirmDisabled: {
+    backgroundColor: '#BDB9B9',
     width: '100%',
     height: '47%',
     justifyContent: 'center',

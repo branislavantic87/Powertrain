@@ -88,7 +88,7 @@ export default class SettingsLogin extends Component {
               'SUCCESS!',
               'You have logged in successfully',
               [
-                { text: 'OK', onPress: () => Actions.reset('home') },
+                { text: 'OK', onPress: () => this.props.onChange() }
               ],
               { cancelable: false }
             )
@@ -127,20 +127,6 @@ export default class SettingsLogin extends Component {
     console.log('Success write to AsyncStorage');
   }
 
-  /* Ovaj je samo za testiranje */
-  async getLoggedUser() {
-    try {
-      let userId = await AsyncStorage.getItem('@userId');
-      const users = global.allUsers.users;
-      let user = users.find(user => {
-        return user.userId === userId
-      });
-      alert(JSON.stringify(user));
-    } catch (error) {
-      alert(error);
-    }
-  }
-  /* Ovaj je samo za testiranje */
 
   componentWillMount() {
     this.isNetworkConnected()
@@ -191,10 +177,6 @@ export default class SettingsLogin extends Component {
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.buttonReg} onPress={() => this.props.changeToSignUp()}>
                             <Text style={styles.buttonText}>SIGN UP</Text>
-                        </TouchableOpacity>
-                        
-                        <TouchableOpacity style={styles.buttonReg} onPress={this.getLoggedUser.bind(this)}>
-                            <Text style={styles.buttonText}>TKO JE ULOGOVAN</Text>
                         </TouchableOpacity>
 
           </View>
