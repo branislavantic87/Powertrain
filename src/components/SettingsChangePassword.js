@@ -179,7 +179,7 @@ export default class ChangePassword extends Component {
   render() {
     return (
       <View style={styles.containerChangePswd}>
-        <Text style={{ color: 'red', fontSize: 24 }}>{this.state.msg}</Text>
+        <Text style={styles.noInternetText}>{this.state.msg}</Text>
         <KeyboardAwareScrollView
           contentContainerStyle={styles.avoid}
           style={{ height: '100%', width: '100%' }}
@@ -219,8 +219,8 @@ export default class ChangePassword extends Component {
 
           <View style={{ height: '30%', width: '50%', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', marginTop: 15 }}>
 
-            <TouchableOpacity style={styles.buttonConfirm} onPress={this.changePassword.bind(this)} disabled={!this.state.isConnected}>
-              <Text style={styles.buttonText}>CONFIRM</Text>
+            <TouchableOpacity style={this.state.isConnected ? styles.buttonConfirm : styles.buttonConfirmDisabled} onPress={this.changePassword.bind(this)} disabled={!this.state.isConnected}>
+              <Text style={this.state.isConnected ? styles.buttonText : styles.buttonTextDisabled}>CONFIRM</Text>
             </TouchableOpacity>
 
           </View>
@@ -232,6 +232,12 @@ export default class ChangePassword extends Component {
 }
 
 const styles = StyleSheet.create({
+  noInternetText: {
+    fontSize: 22,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginBottom: 40
+  },
   containerChangePswd: {
     borderWidth: 24,
     borderColor: '#cccccc',
@@ -250,6 +256,12 @@ const styles = StyleSheet.create({
     color: "#424242",
     textAlign: 'center',
   },
+    buttonTextDisabled: {
+    fontSize: 20,
+    fontWeight: '100',
+    color: "white",
+    textAlign: 'center',
+  },
   buttonReg: {
     backgroundColor: 'white',
     borderWidth: 2,
@@ -261,6 +273,14 @@ const styles = StyleSheet.create({
   },
   buttonConfirm: {
     backgroundColor: '#d8d8d8',
+    width: '100%',
+    height: '47%',
+    justifyContent: 'center',
+    marginBottom: 6,
+    padding: 15
+  },
+  buttonConfirmDisabled:{
+    backgroundColor: '#BDB9B9',
     width: '100%',
     height: '47%',
     justifyContent: 'center',
