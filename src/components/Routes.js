@@ -19,7 +19,7 @@ export default class Routes extends React.Component {
       <Router>
         <Stack key="root" hideNavBar={true}>
           <Scene key="app" component={App} title='App' />
-          <Scene key="setings" component={Settings} title="Settings" initial={false} />
+          <Scene key="settings" component={Settings} title="Settings" initial={false} />
           <Scene key="notification" component={Notification} title="Notification" initial={false} />
           <Scene key="home" component={Home} title="Home" initial={true}/>
           <Scene key="HBF" component={HBF} title="HBF" />

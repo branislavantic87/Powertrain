@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, TextInput, Text, Platform, NetInfo, Alert } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, TextInput, Text, Platform, NetInfo, Alert, AsyncStorage } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default class ForgotPassword extends Component {
@@ -49,7 +49,7 @@ export default class ForgotPassword extends Component {
               'Request sent',
               'Check your email for further instructions',
               [
-                { text: 'Ok', onPress: () => console.log('Ovde ide rerender cele aplikacije koju mora Marko da nam pomogne!') },
+                { text: 'Ok', onPress: () => { this.props.onChange('') }  },
               ],
               { cancelable: false }
             )
@@ -113,7 +113,7 @@ export default class ForgotPassword extends Component {
             <TouchableOpacity style={styles.buttonSubmit} onPress={this.forgotPassword.bind(this)} disabled={!this.state.isConnected}>
               <Text style={styles.buttonText}>SUBMIT</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonCancel} onPress={() => this.props.changeToLogin()}>
+            <TouchableOpacity style={styles.buttonCancel} onPress={() => this.props.onChange('login')}>
               <Text style={styles.buttonText}>CANCEL</Text>
             </TouchableOpacity>
           </View>

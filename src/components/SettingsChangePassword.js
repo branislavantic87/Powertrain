@@ -129,10 +129,10 @@ export default class ChangePassword extends Component {
     })
   }
 
-  logOutGlobally() {
+  logOutGlobally = () =>  {
     const formData = new FormData();
     formData.append("id", this.state.userId);
-    console.log(formData);
+    console.log('FORMDATA: ' + formData);
     // fetch('http://www.cduppy.com/salescms/?a=ajax&do=logoutUser&projectId=5&token=1234567890', {
     //   method: 'POST',
     //   body: formData
@@ -155,6 +155,7 @@ export default class ChangePassword extends Component {
   }
 
   changePasswordHandler() {
+    this.props.logout();
     this.logOutGlobally();
     this.logOutFromApp();
     // this.redirectToLogin.bind(this); rerender APP to accept incoming changes

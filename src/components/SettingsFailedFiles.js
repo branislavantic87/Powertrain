@@ -51,7 +51,7 @@ export default class SettingsFailedFiles extends Component {
                         <Text style={styles.failedText}>{f.filename}</Text>
                     </View>
                     <View>
-                        <Text>{f.size}</Text>
+                        <Text>{ (Number(f.size)/1024/1024).toFixed(2) } MB</Text>
                     </View>
                 </View>
             );

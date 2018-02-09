@@ -46,9 +46,9 @@ class Body extends Component {
                     return <FullText key={page.pageId} subtitle={subtitle} templateTitle={title} text={text} />
                     break;
 
-                case '5':
-                    return <HotspotImage key={page.pageId} files={files} hotspot={hotspot} />
-                    break;
+                /*case '5':
+                    return <HotspotImage page={page} key={page.pageId} files={files} hotspot={hotspot} />
+                    break;*/
 
                 default:
                     console.log('WTF?!');
