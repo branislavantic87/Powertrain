@@ -6,7 +6,7 @@ import TextImage from './temp3_textimage';
 import FullText from './temp4_fulltext';
 import Swiper from 'react-native-swiper';
 import RNFB from 'react-native-fetch-blob';
-import HotspotImage from './temp5_imageHotspot';
+import HotspotImage from './HotspotImage';
 
 class Body extends Component {
 
@@ -46,9 +46,9 @@ class Body extends Component {
                     return <FullText key={page.pageId} subtitle={subtitle} templateTitle={title} text={text} />
                     break;
 
-                /*case '5':
-                    return <HotspotImage page={page} key={page.pageId} files={files} hotspot={hotspot} />
-                    break;*/
+                case '5':
+                    return <HotspotImage page={page} key={page.pageId} />
+                    break;
 
                 default:
                     console.log('WTF?!');
