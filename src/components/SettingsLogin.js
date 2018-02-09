@@ -184,17 +184,18 @@ export default class SettingsLogin extends Component {
 
           </View>
 
-          <View style={styles.login}>
-            <TouchableOpacity style={styles.buttonLog} onPress={this.logIn.bind(this)} disabled={this.state.isChecked}>
-              <Text style={styles.buttonText}>LOGIN</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonReg} onPress={() => this.props.changeToSignUp()}>
-              <Text style={styles.buttonText}>SIGN UP</Text>
-            </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttonReg} onPress={this.getLoggedUser.bind(this)}>
-              <Text style={styles.buttonText}>TKO JE ULOGOVAN</Text>
-            </TouchableOpacity>
+                    <View style={styles.login}>
+                        <TouchableOpacity style={this.state.isChecked ? styles.buttonLogDisabled : styles.buttonLog} onPress={this.logIn.bind(this)} disabled={this.state.isChecked}>
+                            <Text style={this.state.isChecked ? styles.buttonTextDisabled : styles.buttonText}>LOGIN</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.buttonReg} onPress={() => this.props.changeToSignUp()}>
+                            <Text style={styles.buttonText}>SIGN UP</Text>
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity style={styles.buttonReg} onPress={this.getLoggedUser.bind(this)}>
+                            <Text style={styles.buttonText}>TKO JE ULOGOVAN</Text>
+                        </TouchableOpacity>
 
           </View>
 
@@ -211,74 +212,87 @@ export default class SettingsLogin extends Component {
 
 
 const styles = StyleSheet.create({
-  container: {
-    borderWidth: 24,
-    borderColor: '#cccccc',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    height: '100%',
-    width: '100%',
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  login: {
-    height: '40%',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    flexDirection: 'column',
-    paddingTop: 20
-  },
-  inputBox: {
-    width: '100%',
-    height: 40,
-    backgroundColor: "white",
-    borderRadius: 5,
-    fontSize: 18,
-    color: "#757575",
-    margin: 10,
-    borderBottomWidth: 2,
-    borderColor: "#d8d8d8"
-  },
-  buttonText: {
-    fontSize: 20,
-    fontWeight: '100',
-    color: "#424242",
-    textAlign: 'center',
-  },
-  buttonLog: {
-    backgroundColor: '#d8d8d8',
-    width: '100%',
-    height: '47%',
-    justifyContent: 'center',
-    marginBottom: 30
-  },
-  buttonReg: {
-    backgroundColor: 'white',
-    borderWidth: 2,
-    borderColor: '#d8d8d8',
-    width: '100%',
-    height: '47%',
-    justifyContent: 'center',
-  },
-  tekst: {
-    color: "#959A9C",
-    fontSize: 16
-  },
-  skip: {
-    alignItems: 'flex-end',
-    backgroundColor: 'white',
-  },
-  skipBtn: {
-    alignItems: 'center',
-    paddingTop: 25,
-  },
-  avoid: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: '20%',
-    paddingRight: '20%',
-    paddingLeft: '20%'
-  }
+    container: {
+        borderWidth: 24,
+        borderColor: '#cccccc',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        height: '100%',
+        width: '100%',
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    login: {
+        height: '40%',
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        flexDirection: 'column',
+        paddingTop: 20
+    },
+    inputBox: {
+        width: '100%',
+        height: 40,
+        backgroundColor: "white",
+        borderRadius: 5,
+        fontSize: 18,
+        color: "#757575",
+        margin: 10,
+        borderBottomWidth: 2,
+        borderColor: "#d8d8d8"
+    },
+    buttonText: {
+        fontSize: 20,
+        fontWeight: '100',
+        color: "#424242",
+        textAlign: 'center',
+    },
+    buttonTextDisabled:{
+        fontSize: 20,
+        fontWeight: '100',
+        color: "white",
+        textAlign: 'center',
+    },
+    buttonLog: {
+        backgroundColor: '#d8d8d8',
+        width: '100%',
+        height: '47%',
+        justifyContent: 'center',
+        marginBottom: 30
+    },
+    buttonLogDisabled:{
+        backgroundColor: '#BDB9B9',
+        width: '100%',
+        height: '47%',
+        justifyContent: 'center',
+        marginBottom: 30
+    },
+    buttonReg: {
+        backgroundColor: 'white',
+        borderWidth: 2,
+        borderColor: '#d8d8d8',
+        width: '100%',
+        height: '47%',
+        justifyContent: 'center',
+    },
+    tekst: {
+        color: "#959A9C",
+        fontSize: 16
+    },
+    skip: {
+        alignItems: 'flex-end',
+        backgroundColor: 'white',
+    },
+    skipBtn: {
+        alignItems: 'center',
+        paddingTop: 25,
+    },
+    avoid: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: '20%',
+        paddingRight: '20%',
+        paddingLeft: '20%'
+    }
 });
