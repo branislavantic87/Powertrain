@@ -52,10 +52,8 @@ export default class App extends Component {
           RNFB.fs.exists(pathToAllUsersJson)
             .then(res => {
               if (!res) {
-                console.log('Uso u if')
                 return getNewJson();
               } else {
-                console.log('Uso u else')
                 return compareJsonsLastChanges();
               }
             })
@@ -107,17 +105,13 @@ export default class App extends Component {
           fetch(allUsersJsonURL)
             .then(res => res.json())
             .then(data => { newUsers = data })
-            .then(() => console.log(newUsers))
             .then(() => RNFB.fs.readFile(pathToAllUsersJson, 'utf8'))
             .then(res => global.allUsers = JSON.parse(res))
             .then(() => {
-              console.log(global.allUsers)
               if (newUsers.lastChanges !== global.allUsers.lastChanges) {
                   getNewJson();
                   return resolve();
                 }
-                console.log(newUsers.lastChanges)
-                console.log(global.allUsers.lastChanges)
             })
             .then(() => resolve())
             .catch(error => console.log(error));
