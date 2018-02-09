@@ -117,7 +117,7 @@ class MenuList extends React.PureComponent {
                     {this.renderMenus1()}
                 </ScrollView>
 
-                <ScrollView ref='_scrollView2' showsHorizontalScrollIndicator={false} horizontal={true} style={{ flexDirection: 'row' }}>
+                <ScrollView ref='_scrollView2' showsHorizontalScrollIndicator={false} horizontal={true} style={{ flexDirection: 'row', flex: 1 }}>
                     {this.renderMenus2()}
                 </ScrollView>
             </View>
