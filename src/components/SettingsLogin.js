@@ -184,8 +184,8 @@ export default class SettingsLogin extends Component {
                     </View>
 
                     <View style={styles.login}>
-                        <TouchableOpacity style={styles.buttonLog} onPress={this.logIn.bind(this)} disabled={this.state.isChecked}>
-                            <Text style={styles.buttonText}>LOGIN</Text>
+                        <TouchableOpacity style={this.state.isChecked ? styles.buttonLogDisabled : styles.buttonLog} onPress={this.logIn.bind(this)} disabled={this.state.isChecked}>
+                            <Text style={this.state.isChecked ? styles.buttonTextDisabled : styles.buttonText}>LOGIN</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.buttonReg} onPress={() => this.props.changeToSignUp()}>
                             <Text style={styles.buttonText}>SIGN UP</Text>
@@ -246,8 +246,21 @@ const styles = StyleSheet.create({
         color: "#424242",
         textAlign: 'center',
     },
+    buttonTextDisabled:{
+        fontSize: 20,
+        fontWeight: '100',
+        color: "white",
+        textAlign: 'center',
+    },
     buttonLog: {
         backgroundColor: '#d8d8d8',
+        width: '100%',
+        height: '47%',
+        justifyContent: 'center',
+        marginBottom: 30
+    },
+    buttonLogDisabled:{
+        backgroundColor: '#BDB9B9',
         width: '100%',
         height: '47%',
         justifyContent: 'center',
