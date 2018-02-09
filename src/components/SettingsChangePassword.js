@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, TextInput, Text, AsyncStorage, NetInfo, Platform, Alert } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import md5 from 'md5';
+import RNFB from 'react-native-fetch-blob';
 
 
 
@@ -50,7 +51,7 @@ export default class ChangePassword extends Component {
       AsyncStorage.getItem('@userId')
         .then(res => {
           this.setState({ userId: res })
-          return resolve();
+          return Promise.resolve();
         })
         .then(() => {
           const users = global.allUsers.users;
@@ -103,7 +104,8 @@ export default class ChangePassword extends Component {
                     );
                   }
                 })
-                .then()
+                .then(() => this.myLoop())
+                //.then(() => { })
                 .catch(error => console.log(error));
             } else {
               Alert.alert(
@@ -140,24 +142,54 @@ export default class ChangePassword extends Component {
     // .then((res) => console.log(res))
     // .catch(error => console.log(error));
   }
+  
+  myLoop = () => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => { this.fetchUserJson().then(() => resolve()).catch((err) => { console.log(err); myLoop(); return reject(); }) }, 500);
 
-  logOutFromApp() {
-    AsyncStorage.removeItem('@userId', (error) => {
-      if (error) {
-        console.log(error);
-      }
     })
   }
 
+  fetchUserJson = () => {
+    console.log('okinuo fetchUserJson()');
+    return new Promise((resolve, reject) => {
+      fetch('http://www.cduppy.com/salescms/?a=ajax&do=getUsers&languageId=1&projectId=5&token=1234567890')
+        .then(res => res.json())
+        .then(res => {
+          console.log(res.lastChanges);
+          console.log(global.allUsers.lastChanges);
+          if (res.lastChanges == global.allUsers.lastChanges) {
+            console.log('i dalje je stari online');
+            return Promise.reject('Nije stigao novi json');
+          } else {
+            console.log('stigao novi');
+            RNFB.fs.writeFile(RNFB.fs.dirs.DocumentDir + '/allUsers.json', JSON.stringify(res))
+              .then(() => {
+                global.allUsers = res;
+                return Promise.resolve('stigao novi');
+              })
+          }
+        })
+        .then(() => resolve())
+        .catch((err) => reject(err) )
+    })
+  }
 
-  redirectToLogin() {
-    this.props.changeToLogin();
+  logOutGlobally() {
+    console.log('logOutGlobally');
+    const formData = new FormData();
+    formData.append("id", this.state.userId);
+    fetch('http://www.cduppy.com/salescms/?a=ajax&do=logoutUser&projectId=5&token=1234567890', {
+      method: 'POST',
+      body: formData
+    })
+
+      .catch(error => console.log(error));
   }
 
   changePasswordHandler() {
     this.props.logout();
     this.logOutGlobally();
-    this.logOutFromApp();
     // this.redirectToLogin.bind(this); rerender APP to accept incoming changes
   }
 
