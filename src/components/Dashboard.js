@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, TextInput, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, TextInput, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 
 export default class DashboardComponent extends Component {
 
@@ -73,15 +73,233 @@ export default class DashboardComponent extends Component {
         </View>
 
 
-        {/* <leafletHistory> */}
+
         <View style={styles.leafletHistory}>
           <Text style={styles.leafletTitle}>LEAFLET HISTORY</Text>
-          
+          <ScrollView horizontal showsHorizontalScrollIndicator style={styles.leafletHistory}>
+            <View style={{ flexDirection: 'column', height: 320, flexWrap: 'wrap' }}>
          
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              <View style={styles.zajebancija}>
+                <View style={{ height: '100%', width: '57%', justifyContent: 'center', alignItems: 'flex-start', }}>
+                  <Text style={{ fontSize: 10 }}>Recipient:</Text>
+                  <Text style={{ fontSize: 15 }}>John Doe Middlename</Text>
+                  <Text style={{ fontSize: 15 }}>Longlastname</Text>
+                </View>
+                <View style={{ height: '100%', width: '37%', justifyContent: 'center', alignItems: 'flex-end', }}>
+                  <Text style={{ fontSize: 10 }}>mail sent: Oct 13</Text>
+                  <Text style={{ fontSize: 10 }}>opened: Oct 14</Text>
+                  <Text style={{ fontSize: 10 }}>Leaflet read: Oct 15</Text>
+                </View>
+              </View>
+              
+
+            </View>
+          </ScrollView>
         </View>
-        {/* <leafletHistory> */}
-
-
       </View>
 
 
@@ -92,9 +310,22 @@ const styles = StyleSheet.create({
   leafletHistory: {
     flex: 1.3,
     width: '100%',
-    height: 150,
-    backgroundColor: '#F5F5F5',
-    marginTop: 0
+    height: '90%',
+    marginBottom: 0,
+    marginTop: 0,
+    backgroundColor: '#ebeced',
+  },
+
+  zajebancija: {
+    width: 300,
+    height: 70,
+    margin: 5,
+    marginLeft: 10,
+    marginBottom: 10,
+    backgroundColor: '#fff',
+    borderRadius: 3,
+    flexDirection: 'row',
+    justifyContent: 'center'
   },
 
   leafletTitle: {
@@ -102,6 +333,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
     paddingTop: 10,
+    paddingBottom: 10,
     color: '#757575'
   },
 
@@ -245,25 +477,3 @@ const styles = StyleSheet.create({
   },
 
 });
-// // <Text style={styles.fontSmall}>mail sent: Oct 13</Text>
-// // <Text style={styles.fontSmall}>opened: Oct 14</Text>
-// // <Text style={styles.fontSmall}>leaflet read: Oct 15</Text>
-// <View style={styles.leafletsHolder}>
-
-// {/* <SingleColumn[1x4]> */}
-// <View style={styles.leafletCol}>
-
-//   <View style={styles.singleThingy}>
-//     <View style={styles.leftHalf}>
-//       <Text>text</Text>
-//     </View>
-//     <View style={styles.rightHalf}>
-//       <Text>text</Text>
-//     </View>
-//   </View>
-
-//   <View style={styles.leafletSpace} /> {/* <IGNORE THIS> */}
-// </View>
-// {/* <SingleColumn[1x4]> */}
-
-// </View>
