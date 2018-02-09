@@ -41,6 +41,108 @@ export default class App extends Component {
     appState: AppState.currentState
   };
 
+  getAllUsers() {
+    return new Promise((resolve, reject) => {
+      let dirs = RNFB.fs.dirs;
+      const allUsersJsonURL = 'http://www.cduppy.com/salescms/?a=ajax&do=getUsers&languageId=1&projectId=5&token=1234567890';
+      const pathToAllUsersJson = dirs.DocumentDir + '/allUsers.json';
+
+      ifJsonExists = () => {
+        return new Promise((resolve, reject) => {
+          RNFB.fs.exists(pathToAllUsersJson)
+            .then(res => {
+              if (!res) {
+                console.log('Uso u if')
+                return getNewJson();
+              } else {
+                console.log('Uso u else')
+                return compareJsonsLastChanges();
+              }
+            })
+            .then(() => resolve())
+            .catch(error => console.log(error))
+        })
+      }
+
+      getNewJson = () => {
+        return new Promise((resolve, reject) => {
+          RNFB.config({
+            path: pathToAllUsersJson
+          })
+            .fetch('GET', allUsersJsonURL)
+            .then(() => resolve())
+            .catch(error => console.log(error))
+        })
+      }
+
+      // MARKO
+      // compareJsonsLastChanges = () => {
+      //   return new Promise((resolve, reject) => {
+      //     let newUsers = {};
+      //     fetch(allUsersJsonURL)
+      //       .then(res => res.json())
+      //       .then(data => { newUsers = data; return Promise.resolve(); })
+      //       .then(() => RNFB.fs.readFile(pathToAllUsersJson, 'utf8'))
+      //       .then(res => JSON.parse(res))
+      //       .then((res) => {
+      //         global.allUsers = res;
+      //         console.log(global.allUsers);
+      //         if (newUsers.lastChanges !== global.allUsers.lastChanges) {
+      //           console.log(newUsers.lastChanges);
+      //           console.log(global.allUsers.lastChanges);
+      //           RNFB.fs.writeFile(pathToAllUsersJson, JSON.stringify(newUsers))
+      //             .then(() => { global.allUsers = newUsers; return Promise.resolve() })
+      //             .then(() => Promise.resolve())
+      //         }
+      //       })
+      //       .then(() => resolve())
+      //       .catch(error => console.log(error));
+      //   })
+      // }
+
+      // BANE
+      compareJsonsLastChanges = () => {
+        return new Promise((resolve, reject) => {
+          let newUsers = {};
+          fetch(allUsersJsonURL)
+            .then(res => res.json())
+            .then(data => { newUsers = data })
+            .then(() => console.log(newUsers))
+            .then(() => RNFB.fs.readFile(pathToAllUsersJson, 'utf8'))
+            .then(res => global.allUsers = JSON.parse(res))
+            .then(() => {
+              console.log(global.allUsers)
+              if (newUsers.lastChanges !== global.allUsers.lastChanges) {
+                  getNewJson();
+                  return resolve();
+                }
+                console.log(newUsers.lastChanges)
+                console.log(global.allUsers.lastChanges)
+            })
+            .then(() => resolve())
+            .catch(error => console.log(error));
+        })
+      }
+
+      ifJsonExists()
+        .then(() => resolve());
+    })
+  }
+
+  getUsersFromLocale() {
+    let dirs = RNFB.fs.dirs;
+    const pathToAllUsersJson = dirs.DocumentDir + '/allUsers.json';
+    return new Promise((resolve, reject) => {
+      RNFB.fs.readFile(pathToAllUsersJson, 'utf8')
+        .then(res => JSON.parse(res))
+        .then(res => {
+          global.allUsers = res;
+          return resolve();
+        })
+        .catch(error => console.log(error))
+    })
+  }
+
   isLoading() {
     const deviceId = DeviceInfo.getUniqueID();
     let dirs = RNFB.fs.dirs;
@@ -530,6 +632,7 @@ export default class App extends Component {
     akoImaNeta = () => {
       projectJsonLogic()
         .then(() => contentJsonLogic())
+        .then(() => this.getAllUsers())
         .then(() => checkForFile())
         //.then(() => Promise.resolve([]))
         .then((a) => checkHashFiles(a))
@@ -571,6 +674,7 @@ export default class App extends Component {
             this.setState({ isLoading: 0 });
           }
         })
+        .then(() => this.getUsersFromLocale())
         .catch(() => { this.setState({ isLoading: -1 }) })
     }
 

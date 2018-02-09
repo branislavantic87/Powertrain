@@ -85,7 +85,7 @@ export default class ChangePassword extends Component {
                   console.log(response)
                   res = JSON.parse(response._bodyText);
                   if (res.hasOwnProperty("userId")) {
-                    this.setState({ email: '', oldpassword: '', newpassword: '' });
+                    this.setState({ oldpassword: '', newpassword: '', confirm_newpassword: '' });
                     Alert.alert(
                       'Password changed successfully.',
                       'Please, Log In again to proceed.',
@@ -105,7 +105,7 @@ export default class ChangePassword extends Component {
               alert('New password does not match confirmed new password');
             }
           } else {
-            alert('User not found!');
+            alert('Old password does not match with current user!');
           }
           return resolve();
         })
@@ -139,9 +139,9 @@ export default class ChangePassword extends Component {
   }
 
   changePasswordHandler() {
-    this.logOutGlobally.bind(this);
-    // this.logOutFromApp.bind(this);
-    // this.redirectToLogin.bind(this);
+    this.logOutGlobally();
+    this.logOutFromApp();
+    // this.redirectToLogin.bind(this); rerender APP to accept incoming changes
   }
   
 
