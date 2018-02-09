@@ -49,7 +49,6 @@ export default class ChangePassword extends Component {
     return new Promise((resolve, reject) => {
       AsyncStorage.getItem('@userId')
         .then(res => {
-          console.log(res);
           this.setState({ userId: res })
           return resolve();
         })
@@ -91,21 +90,38 @@ export default class ChangePassword extends Component {
                       'Please, Log In again to proceed.',
                       [
                         { text: 'Ok', onPress: this.changePasswordHandler.bind(this) },
-                        // { text: 'Cancel', onPress: () => {} }
                       ]
-                    )
+                    );
 
                   } else {
-                    this.setState({ error: res.resultText.toUpperCase() })
+                    Alert.alert(
+                      '',
+                      'Something went wrong. Please restart application and try again.',
+                      [
+                        { text: 'Try again', onPress: () => { } },
+                      ],
+                    );
                   }
                 })
                 .then()
                 .catch(error => console.log(error));
             } else {
-              alert('New password does not match confirmed new password');
+              Alert.alert(
+                '',
+                'New password does not match confirmed new password!',
+                [
+                  { text: 'Ok', onPress: () => { } },
+                ]
+              );
             }
           } else {
-            alert('Old password does not match with current user!');
+            Alert.alert(
+              '',
+              'Old password does not match with current user!',
+              [
+                { text: 'Ok', onPress: () => { } },
+              ]
+            );
           }
           return resolve();
         })
@@ -124,7 +140,7 @@ export default class ChangePassword extends Component {
     // .then((res) => console.log(res))
     // .catch(error => console.log(error));
   }
-  
+
   logOutFromApp() {
     AsyncStorage.removeItem('@userId', (error) => {
       if (error) {
@@ -143,7 +159,7 @@ export default class ChangePassword extends Component {
     this.logOutFromApp();
     // this.redirectToLogin.bind(this); rerender APP to accept incoming changes
   }
-  
+
 
 
   componentWillMount() {
@@ -211,7 +227,6 @@ export default class ChangePassword extends Component {
 
         </KeyboardAwareScrollView>
       </View>
-
     )
   }
 }
