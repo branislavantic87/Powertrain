@@ -43,7 +43,7 @@ export default class SignUpModal extends Component {
     } else if (email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*?\.[a-zA-Z]{2,3}$/) === null) { 
       Alert.alert(
         '',
-        'Bad format of email',
+        'Invalid email format',
         [
           { text: 'Ok', onPress: () => { } }
         ]
@@ -66,7 +66,7 @@ export default class SignUpModal extends Component {
             this.setState({ firstname: '', surname: '', email: '', password: '' });
             Alert.alert(
               'You have registered successfully',
-              'You have to Log In to proceed',
+              'You have to log in to proceed',
               [
                 { text: 'Log In', onPress: () => this.props.changeToLogin() },
                 // { text: 'Cancel', onPress: () => {} }
@@ -95,7 +95,7 @@ export default class SignUpModal extends Component {
       })
       .then(() => {
         if (this.state.isConnected === false) {
-          this.setState({ msg: 'No internet connection, you cannot register at the moment!' })
+          this.setState({ msg: 'No internet connection, you can not register at the moment!' })
         }
       })
       .catch(error => console.log(error));

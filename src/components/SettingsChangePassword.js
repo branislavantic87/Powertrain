@@ -87,7 +87,7 @@ export default class ChangePassword extends Component {
                     this.setState({ oldpassword: '', newpassword: '', confirm_newpassword: '' });
                     Alert.alert(
                       'Password changed successfully.',
-                      'Please, Log In again to proceed.',
+                      'Please log in again to proceed.',
                       [
                         { text: 'Ok', onPress: this.changePasswordHandler.bind(this) },
                       ]
@@ -108,7 +108,7 @@ export default class ChangePassword extends Component {
             } else {
               Alert.alert(
                 '',
-                'New password does not match confirmed new password!',
+                'Password does not match the confirm password!',
                 [
                   { text: 'Ok', onPress: () => { } },
                 ]
@@ -117,7 +117,7 @@ export default class ChangePassword extends Component {
           } else {
             Alert.alert(
               '',
-              'Old password does not match with current user!',
+              'Old password is invalid!',
               [
                 { text: 'Ok', onPress: () => { } },
               ]
@@ -129,7 +129,7 @@ export default class ChangePassword extends Component {
     })
   }
 
-  logOutGlobally = () =>  {
+  logOutGlobally = () => {
     const formData = new FormData();
     formData.append("id", this.state.userId);
     console.log('FORMDATA: ' + formData);
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
     color: "#424242",
     textAlign: 'center',
   },
-    buttonTextDisabled: {
+  buttonTextDisabled: {
     fontSize: 20,
     fontWeight: '100',
     color: "white",
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     padding: 15
   },
-  buttonConfirmDisabled:{
+  buttonConfirmDisabled: {
     backgroundColor: '#BDB9B9',
     width: '100%',
     height: '47%',
