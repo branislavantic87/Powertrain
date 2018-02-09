@@ -3,9 +3,9 @@ import { StyleSheet, TextInput, Text, View, TouchableOpacity, AsyncStorage, Swit
 
 export default class LeafletTestComponent extends Component {
 
-  state = {
-    text: ''
-  }
+    state = {
+        text: ''
+    }
 
     renderContent = () => {
         switch (this.state.settings) {
@@ -26,58 +26,139 @@ export default class LeafletTestComponent extends Component {
         return (
 
             <View style={styles.content}>
+                <View style={{ width: '65%', height: '100%' }}>
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        {/*ispisati sve produkte*/}
 
-                <ScrollView showsVerticalScrollIndicator={false}>
-                    {/*ispisati sve produkte*/}
+                        <View style={styles.productView}>
 
-                    <View style={{ flex: 1, flexDirection: 'row', width: '100%', height: 500, flexDirection: 'row' }}>
-
-                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: '20%', width: '100%', height: '100%' }}>
-                            <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                <Image style={{ height: 15, width: 15, marginLeft: 10 }} source={require('./ico/32/check-not.png')} />
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={{ flex: 10, alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-
-                            <View style={{ flex: 2, alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-
-                                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-                                    <Image style={{ height: 50, width: 70 }} source={require('./ico/img/product.png')} />
-                                </View>
-
-                                <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', flexDirection: 'row' }}>
-
-                                    <Text style={{ color: '#da281c', fontSize: 14, padding: 5 }}>Category</Text>
-                                    <Text style={{ fontSize: 18, padding: 5 }}>Product Title</Text>
-
-                                </View>
-                            </View>
-
-                            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-
-                                <TextInput
-                                    keyboardType='default'
-                                    placeholder="New presentation"
-                                    style={styles.input}
-                                    onChangeText={(text) => {
-                                        this.setState({ text });
-                                    }}
-                                    value={this.state.text}
-                                />
-                                <TouchableOpacity>
-                                    <Image style={{ height: 20, width: 20 }} source={require('./ico/32/back.png')} />
+                            <View style={styles.checkBtn}>
+                                <TouchableOpacity style={styles.checkBtnTouch}>
+                                    <Image style={{ height: 15, width: 15, marginLeft: 10 }} source={require('./ico/32/check-not.png')} />
                                 </TouchableOpacity>
+                            </View>
+
+                            <View style={styles.product}>
+
+                                <View style={styles.ImgTitle}>
+
+                                    <View style={styles.image}>
+                                        <Image style={{ height: 90, width: 120 }} source={require('./ico/img/product.png')} />
+                                    </View>
+
+                                    <View style={styles.title}>
+
+                                        <Text style={{ color: '#da281c', fontSize: 14, padding: 5 }}>Category</Text>
+                                        <Text style={{ fontSize: 18, padding: 5, color: 'black' }}>Product Title</Text>
+
+                                    </View>
+                                </View>
+
+                                <View style={styles.inputView}>
+
+                                    <TextInput
+                                        keyboardType='default'
+                                        placeholder="Comment"
+                                        style={styles.input}
+                                        onChangeText={(text) => {
+                                            this.setState({ text });
+                                        }}
+                                        value={this.state.text}
+                                    />
+                                    <TouchableOpacity>
+                                        <Image style={{ height: 15, width: 15 }} source={require('./ico/32/back.png')} />
+                                    </TouchableOpacity>
+
+                                </View>
+
 
                             </View>
 
 
                         </View>
 
+                        {/*druga test komponenta*/}
 
+                        <View style={styles.productView}>
+
+                            <View style={styles.checkBtn}>
+                                <TouchableOpacity style={styles.checkBtnTouch}>
+                                    <Image style={{ height: 15, width: 15, marginLeft: 10 }} source={require('./ico/32/check-not.png')} />
+                                </TouchableOpacity>
+                            </View>
+
+                            <View style={styles.product}>
+
+                                <View style={styles.ImgTitle}>
+
+                                    <View style={styles.image}>
+                                        <Image style={{ height: 90, width: 120 }} source={require('./ico/img/product.png')} />
+                                    </View>
+
+                                    <View style={styles.title}>
+
+                                        <Text style={{ color: '#da281c', fontSize: 14, padding: 5 }}>Category</Text>
+                                        <Text style={{ fontSize: 18, padding: 5, color: 'black' }}>Product Title</Text>
+
+                                    </View>
+                                </View>
+
+                                <View style={styles.inputView}>
+
+                                    <TextInput
+                                        keyboardType='default'
+                                        placeholder="Comment"
+                                        style={styles.input}
+                                        onChangeText={(text) => {
+                                            this.setState({ text });
+                                        }}
+                                        value={this.state.text}
+                                    />
+                                    <TouchableOpacity>
+                                        <Image style={{ height: 15, width: 15 }} source={require('./ico/32/back.png')} />
+                                    </TouchableOpacity>
+
+                                </View>
+
+
+                            </View>
+
+
+                        </View>
+
+                    </ScrollView>
+                </View>
+
+                <View style={{ width: '35%', height: '100%', justifyContent: 'flex-end', alignItems: 'center' }}>
+                    <View style={{ width: '70%', height: '30%', justifyContent: 'center', alignItems: 'center', paddingBottom: 50 }}>
+
+                        <TouchableOpacity style={{ flex: 1, width: '100%', height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomWidth: 1, marginBottom: 10 }}>
+                            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
+                                <Image style={{ height: 15, width: 15 }} source={require('./ico/32/tick.png')} />
+                            </View>
+                            <View style={{ flex: 4, alignItems: 'flex-start', justifyContent: 'center' }} >
+                                <Text style={{ padding: 5, textAlign: 'left', color: 'black', fontSize: 18 }}>Select all</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ flex: 1, width: '100%', height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 10, backgroundColor: '#b7bf11' }}>
+                            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
+                                <Image style={{ height: 15, width: 15 }} source={require('./ico/32/tick-white.png')} />
+                            </View>
+                            <View style={{ flex: 4, alignItems: 'flex-start', justifyContent: 'center' }} >
+                                <Text style={{ padding: 5, textAlign: 'left', color: 'white', fontSize: 18 }}>Forward</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ flex: 1, width: '100%', height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 10, backgroundColor: '#da281c' }}>
+                            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
+                                <Image style={{ height: 15, width: 15 }} source={require('./ico/32/cancel-white.png')} />
+                            </View>
+                            <View style={{ flex: 4, alignItems: 'flex-start', justifyContent: 'center' }} >
+                                <Text style={{ padding: 5, textAlign: 'left', color: 'white', fontSize: 18 }}>Delete</Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
 
-                </ScrollView>
+                </View>
             </View>
 
         );
@@ -98,36 +179,81 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: '7%',
         zIndex: 3,
+        padding: 20,
+        paddingRight: 5
     },
-    btn_settings: {
-        backgroundColor: '#fff',
-        height: "10%",
-        width: "92%",
-        marginLeft: 20,
-        borderWidth: 1,
-        borderColor: '#dddddd',
-        justifyContent: 'center',
-        marginTop: 10,
-        alignItems: 'center',
-    },
-    btn_text: {
-        color: '#757575',
-        fontSize: 25
-    },
-    btn_version: {
-        backgroundColor: '#cccccc',
-    },
-    btn_version_text: {
-        color: '#616161',
-        fontSize: 25
-    },
+
     input: {
         backgroundColor: 'white',
-        width: 300,
+        width: '90%',
         height: 50,
-        fontSize: 16,
-        marginLeft: 10
+        fontSize: 14,
+        marginLeft: 10,
+        textAlign: 'left'
     },
+    productView: {
+        flex: 1,
+        flexDirection: 'row',
+        width: '100%',
+        height: 200,
+        marginLeft: '5%',
+        flexDirection: 'row',
+        paddingBottom: 20,
+        paddingTop: 20,
+        borderBottomWidth: 0.5,
+        borderColor: 'black'
+    },
+    checkBtn: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%',
+        paddingTop: 50
+    },
+    checkBtnTouch: {
+        height: '100%',
+        width: '100%',
+        justifyContent: 'flex-start',
+        alignItems: 'center'
+    },
+    product: {
+        flex: 10,
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%'
+    },
+    ImgTitle: {
+        flex: 2,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%',
+        flexDirection: 'row'
+    },
+    image: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%'
+    },
+    title: {
+        flex: 3,
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%'
+    },
+    inputView: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        width: '90%', height: '100%',
+        flexDirection: 'row'
+    },
+
 });
 
 

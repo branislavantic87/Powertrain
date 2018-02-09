@@ -46,9 +46,9 @@ class Body extends Component {
                     return <FullText key={page.pageId} subtitle={subtitle} templateTitle={title} text={text} />
                     break;
 
-                    case '5':
-                    return <HotspotImage key={page.pageId} files={files} hotspot={hotspot} /> 
-                    break;
+                /*case '5':
+                    return <HotspotImage page={page} key={page.pageId} files={files} hotspot={hotspot} />
+                    break;*/
 
                 default:
                     console.log('WTF?!');
@@ -61,13 +61,13 @@ class Body extends Component {
         return (
 
             <View style={styles.bodyCont}>
-            
-                <Swiper 
+
+                <Swiper
                     loop={false}
                     paginationStyle={styles.pagginationStyle}
                     removeClippedSubviews={true}
-                    activeDot={<View style={{backgroundColor: '#9B9B9B', width: 13, height: 13, borderRadius: 25, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: '5%',}} />}
-                    dot={<View style={{backgroundColor: 'white', width: 13, height: 13, borderRadius: 25, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: '5%', borderWidth: 1.5, borderColor: '#9B9B9B'}} />}
+                    activeDot={<View style={{ backgroundColor: '#9B9B9B', width: 13, height: 13, borderRadius: 25, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: '5%', }} />}
+                    dot={<View style={{ backgroundColor: 'white', width: 13, height: 13, borderRadius: 25, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: '5%', borderWidth: 1.5, borderColor: '#9B9B9B' }} />}
                 >
                     {this.filterBody()}
                 </Swiper>
@@ -88,8 +88,6 @@ const styles = StyleSheet.create({
         bottom: 0,
         backgroundColor: '#fff'
     },
-   
-    
 });
 
 export default Body;

@@ -16,59 +16,28 @@ export default class SettingsFailedFiles extends Component {
     isThereFailedFiles = () => {
         if (this.state.failedFiles.length == 0) {
             return (
-                <View style={{width: '100%', height: '100%', flexDirection:'column'}}>
-                <ScrollView contentContainerStyle={styles.contentFailed}>
+                <View style={styles.content}>
 
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <View>
-                            <Text style={styles.failedText}>There seems to be no failed downloads.</Text>
-                        </View>
-                        <View>
-                            <Text>15MB</Text>
-                        </View>
-                    </View>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <View>
-                            <Text style={styles.failedText}>There seems to be no failed downloads.</Text>
-                        </View>
-                        <View>
-                            <Text>15MB</Text>
-                        </View>
-                    </View>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <View>
-                            <Text style={styles.failedText}>There seems to be no failed downloads.</Text>
-                        </View>
-                        <View>
-                            <Text>15MB</Text>
-                        </View>
-                    </View>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <View>
-                            <Text style={styles.failedText}>There seems to be no failed downloads.</Text>
-                        </View>
-                        <View>
-                            <Text>15MB</Text>
-                        </View>
-                    </View>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <View>
-                            <Text style={styles.failedText}>There seems to be no failed downloads.</Text>
-                        </View>
-                        <View>
-                            <Text>15MB</Text>
-                        </View>
-                    </View>
-                    
-                </ScrollView>
-                <View style={{borderBottomWidth: 3, borderColor: '#757575' }}/>
-           
+                    <Text style={styles.text}>There seems to be no failed downloads.</Text>
+
                 </View>
+
             );
         } else {
             return (
-                <View style={styles.contentFailed}>
-                    {this.renderFailedFiles()}
+                <View style={{ width: '100%', height: '100%', flexDirection: 'column' }}>
+                    <ScrollView contentContainerStyle={styles.contentFailed}>
+
+                   { this.renderFailedFiles() }
+
+
+                    </ScrollView>
+                    <View style={{ borderBottomWidth: 1, borderColor: '#757575' }} />
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.buttonDownload}>
+                            <Text style={styles.buttonText}>DOWNLOAD ALL FILES</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             );
         }
@@ -76,7 +45,16 @@ export default class SettingsFailedFiles extends Component {
 
     renderFailedFiles = () => {
         return this.state.failedFiles.map(f => {
-            return <Text style={styles.failedText} key={f.fileId}>{f.filename}</Text>
+            return (
+                <View key={f.fileId} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <View>
+                        <Text style={styles.failedText}>{f.filename}</Text>
+                    </View>
+                    <View>
+                        <Text>{ (Number(f.size)/1024/1024).toFixed(2) } MB</Text>
+                    </View>
+                </View>
+            );
         })
     }
 
@@ -112,5 +90,21 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
         fontSize: 16,
         marginBottom: 10
+    },
+    buttonContainer: {
+        height: '10%',
+        justifyContent: 'center',
+        alignItems: 'flex-end'
+    },
+    buttonDownload: {
+        backgroundColor: '#cccccc',
+        width: '45%',
+        height: '60%',
+        justifyContent: 'center',
+        marginRight: 20
+    },
+    buttonText: {
+        textAlign: 'center',
+        fontSize: 18
     }
 });

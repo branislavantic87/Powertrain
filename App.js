@@ -41,6 +41,74 @@ export default class App extends Component {
     appState: AppState.currentState
   };
 
+  getAllUsers() {
+    return new Promise((resolve, reject) => {
+      let dirs = RNFB.fs.dirs;
+      const allUsersJsonURL = 'http://www.cduppy.com/salescms/?a=ajax&do=getUsers&languageId=1&projectId=5&token=1234567890';
+      const pathToAllUsersJson = dirs.DocumentDir + '/allUsers.json';
+      let fetchedUsers;
+
+      userJsonLogic = () => {
+        return new Promise((resolve, reject) => {
+          fetch(allUsersJsonURL)
+            .then(res => res.json())
+            .then(res => { fetchedUsers = res; return Promise.resolve(); })
+            .then(() => RNFB.fs.exists(pathToAllUsersJson))
+            .then(res => !res ? nePostojiUserJson() : postojiUserJson())
+            .then(() => resolve())
+            .catch(err => console.log('userJsonLogic: ' + err))
+        })
+      }
+
+      nePostojiUserJson = () => {
+        return new Promise((resolve, reject) => {
+          RNFB.config({
+            path: pathToAllUsersJson
+          })
+            .fetch('GET', allUsersJsonURL)
+            .then(() => { global.allUsers = fetchedUsers; return Promise.resolve() })
+            .then(() => resolve())
+            .catch(error => console.log('Postoji user json: ' + error))
+        })
+      }
+
+      postojiUserJson = () => {
+        return new Promise((resolve, reject) => {
+          RNFB.fs.readFile(pathToAllUsersJson, 'utf8')
+            .then(res => {
+              global.allUsers = JSON.parse(res);
+              if (fetchedUsers.lastChanges == global.allUsers.lastChanges) {
+                console.log('lastChanges za Usere su isti');
+                return resolve();
+              } else {     
+                console.log('lastChanges za Usere su razliciti');
+                global.allUsers = fetchedUsers;
+                RNFB.config({ path: pathToAllUsersJson }).fetch('GET', allUsersJsonURL)
+                  .then(() => resolve())
+              }
+            })
+        })
+      }
+
+      userJsonLogic()
+        .then(() => resolve());
+    })
+  }
+
+  getUsersFromLocale() {
+    let dirs = RNFB.fs.dirs;
+    const pathToAllUsersJson = dirs.DocumentDir + '/allUsers.json';
+    return new Promise((resolve, reject) => {
+      RNFB.fs.readFile(pathToAllUsersJson, 'utf8')
+        .then(res => JSON.parse(res))
+        .then(res => {
+          global.allUsers = res;
+          return resolve();
+        })
+        .catch(error => console.log(error))
+    })
+  }
+
   isLoading() {
     const deviceId = DeviceInfo.getUniqueID();
     let dirs = RNFB.fs.dirs;
@@ -263,6 +331,9 @@ export default class App extends Component {
       })
     }
 
+
+    // SREDI ZA OFFLINE
+
     getPdfJson = () => {
       return new Promise((resolve, reject) => {
         fetch('http://www.cduppy.com/salescms/?a=ajax&do=getDocuments&projectId=5&token=1234567890')
@@ -272,6 +343,7 @@ export default class App extends Component {
           .catch((err) => reject(err))
       })
     }
+
     getVideoJson = () => {
       return new Promise((resolve, reject) => {
         fetch('http://www.cduppy.com/salescms/?a=ajax&do=getVideos&projectId=5&token=1234567890')
@@ -530,6 +602,7 @@ export default class App extends Component {
     akoImaNeta = () => {
       projectJsonLogic()
         .then(() => contentJsonLogic())
+        .then(() => this.getAllUsers())
         .then(() => checkForFile())
         //.then(() => Promise.resolve([]))
         .then((a) => checkHashFiles(a))
@@ -571,23 +644,13 @@ export default class App extends Component {
             this.setState({ isLoading: 0 });
           }
         })
-        .catch(() => { this.setState({ isLoading: -1 }) })
+        .then(() => this.getUsersFromLocale())
+        .catch((err) => { console.log(err); this.setState({ isLoading: -1 }) })
     }
 
-    isNetworkConnected = () => {
-      if (Platform.OS === 'ios') {
-        return new Promise(resolve => {
-          const handleFirstConnectivityChangeIOS = isConnected => {
-            NetInfo.isConnected.removeEventListener('connectionChange', handleFirstConnectivityChangeIOS);
-            resolve(isConnected);
-          };
-          NetInfo.isConnected.addEventListener('connectionChange', handleFirstConnectivityChangeIOS);
-        });
-      }
-      return NetInfo.isConnected.fetch();
-    }
 
-    isNetworkConnected()
+
+    this.isNetworkConnected()
       .then(res => {
         if (res) {
           akoImaNeta();
@@ -600,45 +663,42 @@ export default class App extends Component {
 
   }// End of isLoading()
 
+  isNetworkConnected = global.isNetworkConnected = () => {
+    if (Platform.OS === 'ios') {
+      return new Promise(resolve => {
+        const handleFirstConnectivityChangeIOS = isConnected => {
+          NetInfo.isConnected.removeEventListener('connectionChange', handleFirstConnectivityChangeIOS);
+          resolve(isConnected);
+        };
+        NetInfo.isConnected.addEventListener('connectionChange', handleFirstConnectivityChangeIOS);
+      });
+    }
+    return NetInfo.isConnected.fetch();
+  }
 
-
-  // syncApp() {
-  //   console.log('porkrenuo syncApp()');
-  //   AsyncStorage.getItem('checkedFiles')
-  //     .then((res) => JSON.parse(res))
-  //     .then(fajlic => {
-  //       fetch(global.projectJsonURL)
-  //         .then(res => res.json())
-  //         .then(res => {
-  //           let neSkinutiFajlovi = fajlic.failedDownloads.length > 0 ? 'But there seems to be ' + fajlic.failedDownloads.length + ' missing files. If this problem persists, that means files are missing from the server. Contact your admin to fix it.' : 'Seems everything is OK. \nIf you want you can restart application anyway.';
-  //           if (res.project.lastChanges == global.projectJson.project.lastChanges)
-  //             Alert.alert('App is already up to date!', neSkinutiFajlovi, [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }])
-  //           else {
-  //             Alert.alert('There seems to be update!', 'Do you wish to sync?', [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }]);
-  //           }
-  //         })
-  //     })
-  // }
 
   syncApp() {
-    this.setState({ syncLoading: true });
-    console.log('evo me u syncApp');
-    AsyncStorage.getItem('checkedFiles')
-      .then((res) => JSON.parse(res))
-      .then(fajlic => {
-
-        fetch(global.projectJsonURL)
-          .then(res => res.json())
-          .then(res => {
-            let neSkinutiFajlovi = fajlic.failedDownloads.length > 0 ? 'There seems to be ' + fajlic.failedDownloads.length + ' missing files. Try syncing the app. \nIf this problem persists, that means files are missing from the server. \nContact your admin to fix it.' : 'Seems everything is OK. If you want you can restart application anyway.';
-            if (res.project.lastChanges == global.projectJson.project.lastChanges) {
-              // Alert.alert('UP TO DATE!', neSkinutiFajlovi, [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }])
-            } else {
-              Alert.alert('There seems to be update!', 'Do you wish to sync?', [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }]);
-            }
-          })
-          .then(() => this.setState({ syncLoading: false }))
-          .catch(() => { Alert.alert('Error', 'Something went wrong. Please check your internet connection, restart the app, or try again later.', [{ text: 'OK', onPress: () => { } }]); this.setState({ syncLoading: false }); });
+    this.isNetworkConnected()
+      .then(res => {
+        if (res) {
+          AsyncStorage.getItem('checkedFiles')
+            .then((res) => JSON.parse(res))
+            .then(fajlic => {
+              fetch(global.projectJsonURL)
+                .then(res => res.json())
+                .then(res => {
+                  let neSkinutiFajlovi = fajlic.failedDownloads.length > 0 ? 'There seems to be ' + fajlic.failedDownloads.length + ' missing files. Try syncing the app. \nIf this problem persists, that means files are missing from the server. \nContact your admin to fix it.' : 'Seems everything is OK. If you want you can restart application anyway.';
+                  if (res.project.lastChanges == global.projectJson.project.lastChanges) {
+                    //Alert.alert('UP TO DATE!', neSkinutiFajlovi, [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }])
+                  } else {
+                    Alert.alert('There seems to be update!', 'Do you wish to sync?', [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }]);
+                  }
+                })
+                .catch(() => { /*Alert.alert('Error', 'Something went wrong. Please check your internet connection, restart the app, or try again later.', [{ text: 'OK', onPress: () => { } }]);*/ });
+            })
+        } else {
+          //Alert.alert('Offline', 'You seem to be offline.', [{ text: 'OK', onPress: () => {} }]);
+        }
       })
   }
 

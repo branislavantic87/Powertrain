@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, TextInput, Text, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, TextInput, Text, AsyncStorage, NetInfo, Platform, Alert } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import md5 from 'md5';
 
@@ -16,15 +16,31 @@ export default class ChangePassword extends Component {
       newpassword: '',
       confirm_newpassword: '',
       isMatch: false,
+      isConnected: false,
       error: '',
+      msg: '',
+
     };
+  }
+
+  isNetworkConnected = () => {
+    if (Platform.OS === 'ios') {
+      return new Promise(resolve => {
+        const handleFirstConnectivityChangeIOS = isConnected => {
+          NetInfo.isConnected.removeEventListener('connectionChange', handleFirstConnectivityChangeIOS);
+          resolve(isConnected);
+        };
+        NetInfo.isConnected.addEventListener('connectionChange', handleFirstConnectivityChangeIOS);
+      });
+    }
+    return NetInfo.isConnected.fetch();
   }
 
   passwordMatch = (pass1, pass2) => {
     if ((pass1 === pass2) && (pass1 !== '' && pass2 !== '')) {
       this.setState({ isMatch: true })
     } else {
-      this.setState({ isMatch: false })
+      this.setState({ isMatch: false });
     }
   }
 
@@ -33,7 +49,6 @@ export default class ChangePassword extends Component {
     return new Promise((resolve, reject) => {
       AsyncStorage.getItem('@userId')
         .then(res => {
-          console.log(res);
           this.setState({ userId: res })
           return resolve();
         })
@@ -61,24 +76,52 @@ export default class ChangePassword extends Component {
               this.setState({ error: 'Passwords match!' });
               console.log(formData);
               console.log(this.state.error)
-              // fetch('http://www.cduppy.com/salescms/?a=ajax&do=passwordUser&languageId=1&projectId=5&token=1234567890', {
-              //   method: 'POST',
-              //   body: formData
-              // })
-              //   .then(response => {
-              //     console.log(response)
-              //     res = JSON.parse(response._bodyText);
-              //     res.hasOwnProperty("userId") ?
-              //       this.setState({ error: res.resultText.toUpperCase(), email: '', oldpassword: '', newpassword: '' }) :
-              //       this.setState({ error: res.resultText.toUpperCase() })
-              //   })
-              //   .then()
-              //   .catch(error => console.log(error));
+              fetch('http://www.cduppy.com/salescms/?a=ajax&do=passwordUser&languageId=1&projectId=5&token=1234567890', {
+                method: 'POST',
+                body: formData
+              })
+                .then(response => {
+                  console.log(response)
+                  res = JSON.parse(response._bodyText);
+                  if (res.hasOwnProperty("userId")) {
+                    this.setState({ oldpassword: '', newpassword: '', confirm_newpassword: '' });
+                    Alert.alert(
+                      'Password changed successfully.',
+                      'Please, Log In again to proceed.',
+                      [
+                        { text: 'Ok', onPress: this.changePasswordHandler.bind(this) },
+                      ]
+                    );
+
+                  } else {
+                    Alert.alert(
+                      '',
+                      'Something went wrong. Please restart application and try again.',
+                      [
+                        { text: 'Try again', onPress: () => { } },
+                      ],
+                    );
+                  }
+                })
+                .then()
+                .catch(error => console.log(error));
             } else {
-              this.setState({ error: 'New passwords don\'t match' });
+              Alert.alert(
+                '',
+                'New password does not match confirmed new password!',
+                [
+                  { text: 'Ok', onPress: () => { } },
+                ]
+              );
             }
           } else {
-            this.setState({ error: 'User not found!' });
+            Alert.alert(
+              '',
+              'Old password does not match with current user!',
+              [
+                { text: 'Ok', onPress: () => { } },
+              ]
+            );
           }
           return resolve();
         })
@@ -86,10 +129,45 @@ export default class ChangePassword extends Component {
     })
   }
 
+  logOutGlobally() {
+    console.log('logOutGlobally');
+    const formData = new FormData();
+    formData.append("id", this.state.userId);
+    console.log('FORMDATA: ' + JSON.stringify(formData));
+    fetch('http://www.cduppy.com/salescms/?a=ajax&do=logoutUser&projectId=5&token=1234567890', {
+      method: 'POST',
+      body: formData
+    })
+      .then((res) => console.log(res))
+      .catch(error => console.log(error));
+  }
+
+  changePasswordHandler() {
+    this.props.logout();
+    this.logOutGlobally();
+    // this.redirectToLogin.bind(this); rerender APP to accept incoming changes
+  }
+
+
+
+  componentWillMount() {
+    this.isNetworkConnected()
+      .then(res => {
+        this.setState(() => ({ isConnected: res }));
+        return Promise.resolve();
+      })
+      .then(() => {
+        if (this.state.isConnected === false) {
+          this.setState({ msg: 'No internet connection, you cannot change password at the moment!' })
+        }
+      })
+      .catch(error => console.log(error));
+  }
 
   render() {
     return (
       <View style={styles.containerChangePswd}>
+        <Text style={styles.noInternetText}>{this.state.msg}</Text>
         <KeyboardAwareScrollView
           contentContainerStyle={styles.avoid}
           style={{ height: '100%', width: '100%' }}
@@ -129,20 +207,25 @@ export default class ChangePassword extends Component {
 
           <View style={{ height: '30%', width: '50%', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', marginTop: 15 }}>
 
-            <TouchableOpacity style={styles.buttonConfirm} onPress={this.changePassword.bind(this)}>
-              <Text style={styles.buttonText}>CONFIRM</Text>
+            <TouchableOpacity style={this.state.isConnected ? styles.buttonConfirm : styles.buttonConfirmDisabled} onPress={this.changePassword.bind(this)} disabled={!this.state.isConnected}>
+              <Text style={this.state.isConnected ? styles.buttonText : styles.buttonTextDisabled}>CONFIRM</Text>
             </TouchableOpacity>
 
           </View>
 
         </KeyboardAwareScrollView>
       </View>
-
     )
   }
 }
 
 const styles = StyleSheet.create({
+  noInternetText: {
+    fontSize: 22,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginBottom: 40
+  },
   containerChangePswd: {
     borderWidth: 24,
     borderColor: '#cccccc',
@@ -153,12 +236,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: '20%'
+    paddingTop: '15%'
   },
   buttonText: {
     fontSize: 20,
     fontWeight: '100',
     color: "#424242",
+    textAlign: 'center',
+  },
+  buttonTextDisabled: {
+    fontSize: 20,
+    fontWeight: '100',
+    color: "white",
     textAlign: 'center',
   },
   buttonReg: {
@@ -172,6 +261,14 @@ const styles = StyleSheet.create({
   },
   buttonConfirm: {
     backgroundColor: '#d8d8d8',
+    width: '100%',
+    height: '47%',
+    justifyContent: 'center',
+    marginBottom: 6,
+    padding: 15
+  },
+  buttonConfirmDisabled: {
+    backgroundColor: '#BDB9B9',
     width: '100%',
     height: '47%',
     justifyContent: 'center',

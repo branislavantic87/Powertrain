@@ -14,8 +14,8 @@ export default class SettingsLanguage extends Component {
     renderCheckBoxes = () => {
         return this.state.allLanguages.map((l, i) => {
             return (
-                <View key={i} style={{ backgroundColor: 'white', padding: 15 }}>
-                    <Text>{l.language}</Text>
+                <View key={i} style={{ backgroundColor: 'white', padding: 15, flexDirection: 'row' }}>
+                    <Text style={{fontSize: 16, fontWeight: 'bold'}}>{l.language}</Text>
                     <Switch
                         onValueChange={() => this.onLangCheckClick(l)}
                         value={l.selected}
@@ -54,8 +54,12 @@ export default class SettingsLanguage extends Component {
                 return Promise.resolve(res);
             })
             .then(res => AsyncStorage.setItem('supportedLanguages', JSON.stringify(res)))
-            .then(() => Alert.alert('Update', 'About to download new content for selected languages. Do you wish to continue', [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }]))
+            .then(() => RNRestart.Restart())
             .catch(err => console.log(err))
+    }
+
+    alertForRedownload = () => {
+        Alert.alert('Update', 'About to download new content for selected languages. Do you wish to continue', [{ text: 'Sync', onPress: () => { this.onLangSubmit() } }, { text: 'Cancel', onPress: () => { } }])
     }
 
     componentWillMount() {
@@ -81,14 +85,15 @@ export default class SettingsLanguage extends Component {
             })
             .then(() => {
                 a = this.state.allLanguages.map(l => {
-                    if(l.selected) {
-                       return Promise.resolve();
+                    if (l.selected) {
+                        return Promise.resolve();
                     } else {
-                        return Promise.reject();
+                        return Promise.reject('Jezik ' + l.language + ' nije skinut, zbog toga je dugme enablovano.');
                     }
                 })
                 Promise.all(a)
-                .then(() => this.setState({buttonDisabled: true}))
+                    .then(() => this.setState({ buttonDisabled: true }))
+                    .catch(err => console.log(err))
             })
             .catch(err => console.log(err))
     }
@@ -96,17 +101,13 @@ export default class SettingsLanguage extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.titleContainer}>
-                    <Text style={styles.title}>Languages</Text>
-                </View>
                 <View style={styles.languages}>
                     {this.renderCheckBoxes()}
-                </View>
-                <View style={styles.submitBtnCont}>
-                    <TouchableOpacity disabled={this.state.buttonDisabled} style={styles.submitBtn} onPress={() => this.onLangSubmit()}>
+                    <TouchableOpacity disabled={this.state.buttonDisabled} style={styles.submitBtn} onPress={() => this.alertForRedownload()}>
                         <Text style={{ fontSize: 20, textAlign: 'center' }}>SUBMIT</Text>
                     </TouchableOpacity>
                 </View>
+             
             </View>
         );
     }
@@ -115,30 +116,27 @@ export default class SettingsLanguage extends Component {
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: '60%',
+        height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: '20%'
     },
     title: {
         fontSize: 48,
         fontWeight: '700',
         color: '#757575'
     },
-    titleContainer:{
+    titleContainer: {
         height: '20%'
     },
-    languages:{
-        height: '30%',
-        flexDirection: 'row',
+    languages: {
+        width: '50%',
+        flexDirection: 'column',
+        alignItems: 'center'
     },
-    submitBtnCont: {
-        height: '50%',
-        width: '25%'
-    },
-    submitBtn:{
-        padding: 10, 
-        backgroundColor: '#d8d8d8', 
-        width: '100%'
+    submitBtn: {
+        padding: 10,
+        backgroundColor: '#d8d8d8',
+        width: '50%',
+        marginTop: 20,
     }
 });

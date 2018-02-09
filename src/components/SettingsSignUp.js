@@ -30,24 +30,24 @@ export default class SignUpModal extends Component {
     return NetInfo.isConnected.fetch();
   }
 
-  /*
-regex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
-
-let email = 'tween@gmaila.com';
-
-if (email.match(regex) !== null) {
-  console.log('Idi dalje!');
-} else {
-  console.log('Neispavan mail!');
-}
-  */
-
   registerUser() {
     const { firstname, surname, email, password } = this.state;
     if (email === '' || password === '') {
-      alert('Email and password are mandatory!');
-    } else if (email.match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/) === null) {
-      alert('Bad format of email!');
+      Alert.alert(
+        '',
+        'Email and password are mandatory!',
+        [
+          { text: 'Ok', onPress: () => { } }
+        ]
+      );
+    } else if (email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*?\.[a-zA-Z]{2,3}$/) === null) { 
+      Alert.alert(
+        '',
+        'Bad format of email',
+        [
+          { text: 'Ok', onPress: () => { } }
+        ]
+      );
     } else {
       const formData = new FormData();
       formData.append("firstname", firstname);
@@ -55,13 +55,6 @@ if (email.match(regex) !== null) {
       formData.append("email", email);
       formData.append("password", md5(password));
       console.log(formData);
-      // setAlert = (index, value) => {
-      //   return new Promise((resolve, reject) => {
-      //     this.setState({ index: value })
-      //     resolve();
-      //   })
-      // }
-
       fetch('http://www.cduppy.com/salescms/?a=ajax&do=registerUser&languageId=1&projectId=5&token=1234567890', {
         method: 'POST',
         body: formData
@@ -80,12 +73,16 @@ if (email.match(regex) !== null) {
               ]
             )
           } else {
-            alert(res.resultText.toUpperCase());
+            Alert.alert(
+              '',
+              (res.resultText.toUpperCase()),
+              [
+                { text: 'Ok', onPress: () => { } }
+              ]
+            );
           }
         })
         .catch(error => console.log(error));
-
-      console.log(`${firstname} ${surname} => ${email} : ${md5(password)}`);
     }
   }
 
@@ -106,16 +103,15 @@ if (email.match(regex) !== null) {
 
 
   render() {
-
     return (
       <View style={styles.containerSignUp}>
-        <Text style={{ color: 'red', fontSize: 24 }}>{this.state.msg}</Text>
+        <Text style={styles.noInternetText}>{this.state.msg}</Text>
         <KeyboardAwareScrollView
           contentContainerStyle={styles.avoid}
           style={{ height: '100%', width: '100%' }}
           scrollEnabled={true}
           resetScrollToCoords={{ x: 0, y: 0 }} >
-          <View style={{ height: '60%', alignItems: 'center', justifyContent: 'flex-end', flexDirection: 'column', width: '80%', marginTop: 40 }}>
+          <View style={{ height: '60%', alignItems: 'center', justifyContent: 'flex-end', flexDirection: 'column', width: '80%', marginTop: 20 }}>
 
             <Text style={{ alignSelf: 'flex-start', fontSize: 16 }}>E-MAIL</Text>
             <TextInput style={styles.inputBox}
@@ -156,8 +152,8 @@ if (email.match(regex) !== null) {
 
           </View>
           <View style={styles.registerArea}>
-            <TouchableOpacity style={styles.buttonSignUp} onPress={this.registerUser.bind(this)} disabled={!this.state.isConnected}>
-              <Text style={styles.buttonText}>SIGN UP</Text>
+            <TouchableOpacity style={this.state.isConnected ? styles.buttonSignUp : styles.buttonSignUpDisabled} onPress={this.registerUser.bind(this)} disabled={!this.state.isConnected}>
+              <Text style={this.state.isConnected ? styles.buttonText : styles.buttonTextDisabled}>SIGN UP</Text>
             </TouchableOpacity>
           </View>
           <View style={{ height: '20%', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', width: '80%' }}>
@@ -172,6 +168,12 @@ if (email.match(regex) !== null) {
 }
 
 const styles = StyleSheet.create({
+  noInternetText: {
+    fontSize: 24,
+    fontWeight: '700',
+    textAlign: 'center',
+    paddingTop: 30
+  },
   containerSignUp: {
     borderWidth: 24,
     borderColor: '#cccccc',
@@ -208,8 +210,20 @@ const styles = StyleSheet.create({
     color: "#424242",
     textAlign: 'center',
   },
+  buttonTextDisabled: {
+    fontSize: 20,
+    fontWeight: '100',
+    color: "white",
+    textAlign: 'center',
+  },
   buttonSignUp: {
     backgroundColor: '#d8d8d8',
+    width: '100%',
+    height: '70%',
+    justifyContent: 'center',
+  },
+  buttonSignUpDisabled: {
+    backgroundColor: '#BDB9B9',
     width: '100%',
     height: '70%',
     justifyContent: 'center',

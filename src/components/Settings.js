@@ -16,7 +16,9 @@ export default class SettingsComponent extends Component {
 
   state = {
     settings: '',
-    settingsText: ''
+    settingsText: '',
+    loggedIn: false,
+    changePassword: true
   };
 
 
@@ -26,11 +28,35 @@ export default class SettingsComponent extends Component {
       case 'languages': return <SettingsLanguage />;
       case 'failedFiles': return <SettingsFailedFiles />;
       case 'update': return <SettingsUpdate />;
-      case 'login': return <SettingsLogin changeToSignUp={() => this.setState({ settings: 'signup' })} changeToForgotPassword={() => this.setState({ settings: 'forgotPassword' })} />;
+      case 'login': return <SettingsLogin onChange={() => this.setState({ loggedIn: !this.state.loggedIn, changePassword: !this.state.changePassword, settings: '' })} changeToSignUp={() => this.setState({ settings: 'signup' })} changeToForgotPassword={() => this.setState({ settings: 'forgotPassword' })} />;
       case 'signup': return <SettingsSignUp changeToLogin={() => this.setState({ settings: 'login' })} />;
-      case 'forgotPassword': return <SettingsForgotPassword changeToLogin={() => this.setState({ settings: 'login' })} />;
-      case 'changePassword': return <SettingsChangePassword />;
+      case 'forgotPassword': return <SettingsForgotPassword onChange={(a) => this.setState({ settings: a })} />;
+      case 'changePassword': return <SettingsChangePassword logout={() => this.logOut()} />;
       default: return (<View></View>);
+    }
+  }
+
+  componentWillMount() {
+    AsyncStorage.getItem('@userId')
+      .then(res => {
+        if (res == null) {
+          this.setState({ loggedIn: false, changePassword: false });
+        } else {
+          this.setState({ loggedIn: true, changePassword: true });
+        }
+      })
+  }
+
+  logOut = () => {
+    AsyncStorage.removeItem('@userId');
+    this.setState({ loggedIn: false, changePassword: false, settings: '' });
+  }
+
+  loginOrLogout = () => {
+    if(this.state.loggedIn) {
+      return <TouchableOpacity style={styles.btn_settings} onPress={() => this.logOut()}><Text style={styles.btn_text}>Logout</Text></TouchableOpacity>
+    } else {
+      return <TouchableOpacity style={styles.btn_settings} onPress={() => this.setState({ settings: 'login' })}><Text style={styles.btn_text}>Login</Text></TouchableOpacity>
     }
   }
 
@@ -44,9 +70,9 @@ export default class SettingsComponent extends Component {
           <TouchableOpacity style={[styles.btn_settings, styles.btn_version]} onPress={() => this.setState({ settingsText: global.projectJson.project.version })} disabled><Text style={styles.btn_version_text}>Version 2.0.0</Text></TouchableOpacity>
           <TouchableOpacity style={styles.btn_settings} onPress={() => this.setState({ settings: 'languages' })}><Text style={styles.btn_text}>Languages</Text></TouchableOpacity>
           <TouchableOpacity style={styles.btn_settings} onPress={() => this.setState({ settings: 'update' })}><Text style={styles.btn_text}>Update</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.btn_settings} onPress={() => this.setState({ settings: 'login' })}><Text style={styles.btn_text}>Login</Text></TouchableOpacity>
           <TouchableOpacity style={styles.btn_settings} onPress={() => this.setState({ settings: 'failedFiles' })}><Text style={styles.btn_text}>Failed Files</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.btn_settings} onPress={() => this.setState({ settings: 'changePassword' })}><Text style={styles.btn_text}>Change Password</Text></TouchableOpacity>
+          {this.loginOrLogout()}
+          {this.state.changePassword && <TouchableOpacity style={styles.btn_settings} onPress={() => this.setState({ settings: 'changePassword' })}><Text style={styles.btn_text}>Change Password</Text></TouchableOpacity>}
 
           {/*
           <TouchableOpacity style={styles.btn_settings} onPress={() => this.setState({ settingsText: global.projectJson.project.version, failedFiles: false})}><Text style={styles.btn_text}>Version 2.0.0</Text></TouchableOpacity>
@@ -68,9 +94,9 @@ export default class SettingsComponent extends Component {
 }
 const styles = StyleSheet.create({
   renderContent: {
-    backgroundColor: '#fff', 
-    width: '60%', height: "100%", 
-    borderLeftWidth: 1, 
+    backgroundColor: '#fff',
+    width: '60%', height: "100%",
+    borderLeftWidth: 1,
     borderLeftColor: '#dddddd'
   },
   content: {
