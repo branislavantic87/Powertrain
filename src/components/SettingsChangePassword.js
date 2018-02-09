@@ -129,7 +129,8 @@ export default class ChangePassword extends Component {
     })
   }
 
-  logOutGlobally = () =>  {
+  logOutGlobally () {
+    console.log('logOutGlobally');
     const formData = new FormData();
     formData.append("id", this.state.userId);
     console.log('FORMDATA: ' + formData);
@@ -142,16 +143,18 @@ export default class ChangePassword extends Component {
   }
 
   logOutFromApp() {
-    AsyncStorage.removeItem('@userId', (error) => {
-      if (error) {
-        console.log(error);
-      }
-    })
+    console.log('logOutFromApp');
+    // AsyncStorage.removeItem('@userId', (error) => {
+    //   if (error) {
+    //     console.log(error);
+    //   }
+    // })
   }
 
 
   redirectToLogin() {
-    this.props.changeToLogin();
+    console.log('redirectToLogin');
+    // this.props.changeToLogin();
   }
 
   changePasswordHandler() {
