@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, TextInput, Text, NetInfo, Platform, AsyncStorage, Alert } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import md5 from 'md5';
+import { Actions } from 'react-native-router-flux';
 
 export default class SettingsLogin extends Component {
   constructor(props) {
@@ -17,18 +18,6 @@ export default class SettingsLogin extends Component {
 
   }
 
-  async getLoggedUser() {
-    try {
-      let userId = await AsyncStorage.getItem('@userId');
-      const users = global.allUsers.users;
-      let user = users.find(user => {
-        return user.userId === userId
-      });
-      alert(JSON.stringify(user));
-    } catch (error) {
-      alert(error);
-    }
-  }
 
   isNetworkConnected = () => {
     if (Platform.OS === 'ios') {
@@ -52,31 +41,36 @@ export default class SettingsLogin extends Component {
       });
       if (user === undefined) {
         this.setState({
-                email: '',
-                password: ''
-            }); 
-        alert("Incorrect username or password");
+          email: '',
+          password: ''
+        });
+        Alert.alert(
+          '',
+          'Incorrect username or password',
+          [
+            { text: 'Ok', onPress: () => { } }
+          ]
+        )
       } else {
-        this.setState({ 
-                userId: user.userId, 
-                email: '',
-                password: ''
-            }); 
+        this.setState({
+          userId: user.userId,
+          email: '',
+          password: ''
+        });
         this.setLoggedUser(user.userId);
         Alert.alert(
-            'SUCCESS!',
-            'You have logged in successfully',
-            [
-                { text: 'OK', onPress: () => console.log('Blagoje vodi me na Pale preko Ledina, tamo zivi HOME strana jedina xD') },
-            ],
-            { cancelable: false }
+          'SUCCESS!',
+          'You have logged in successfully',
+          [
+            { text: 'OK', onPress: () => Actions.reset('home') },
+          ],
+          { cancelable: false }
         )
       }
     } else {
       let formData = new FormData();
       formData.append("email", this.state.email);
       formData.append("password", hashPass);
-      console.log(formData);
       fetch('http://www.cduppy.com/salescms/?a=ajax&do=loginUser&languageId=1&projectId=5&token=1234567890', {
         method: 'POST',
         body: formData
@@ -84,27 +78,32 @@ export default class SettingsLogin extends Component {
         .then(response => {
           res = JSON.parse(response._bodyText);
           if (res.hasOwnProperty("userId")) {
-            this.setState({ 
-                userId: res.userId, 
-                email: '',
-                password: ''
-            }); 
+            this.setState({
+              userId: res.userId,
+              email: '',
+              password: ''
+            });
             this.setLoggedUser(res.userId);
             Alert.alert(
-            'SUCCESS!',
-            'You have logged in successfully',
-            [
-              { text: 'OK', onPress: () => console.log('Blagoje vodi me na Pale preko Ledina, tamo zivi HOME strana jedina xD') },
-              { text: 'Ulogovan', onPress: this.getLoggedUser.bind(this) }
-            ],
-            { cancelable: false }
-          )
+              'SUCCESS!',
+              'You have logged in successfully',
+              [
+                { text: 'OK', onPress: () => Actions.reset('home') },
+              ],
+              { cancelable: false }
+            )
           } else {
             this.setState({
-                email: '',
-                password: ''
-            }); 
-            alert("Incorrect username or password");
+              email: '',
+              password: ''
+            });
+            Alert.alert(
+              '',
+              'Incorrect username or password',
+              [
+                { text: 'Ok', onPress: () => { } }
+              ]
+            );
           }
         })
         .catch(error => this.setState({ error }));
@@ -122,24 +121,26 @@ export default class SettingsLogin extends Component {
     }
   }
 
-    setLoggedUser(userId) {
-        console.log('usao u setloggeduser')
-        AsyncStorage.setItem('@userId', userId);
-        console.log('Success write to AsyncStorage');
-    }
+  setLoggedUser(userId) {
+    console.log('usao u setloggeduser')
+    AsyncStorage.setItem('@userId', userId);
+    console.log('Success write to AsyncStorage');
+  }
 
-    async getLoggedUser() {
-        try {
-          let userId = await AsyncStorage.getItem('@userId');
-          const users = global.allUsers.users;
-          let user = users.find(user => {
-            return user.userId === userId
-          });
-          alert(JSON.stringify(user));
-        } catch (error) {
-          alert(error);
-        }
-      }
+  /* Ovaj je samo za testiranje */
+  async getLoggedUser() {
+    try {
+      let userId = await AsyncStorage.getItem('@userId');
+      const users = global.allUsers.users;
+      let user = users.find(user => {
+        return user.userId === userId
+      });
+      alert(JSON.stringify(user));
+    } catch (error) {
+      alert(error);
+    }
+  }
+  /* Ovaj je samo za testiranje */
 
   componentWillMount() {
     this.isNetworkConnected()
@@ -150,38 +151,39 @@ export default class SettingsLogin extends Component {
       .then(() => { console.log(this.state.isConnected) })
       .catch(error => console.log(error));
   }
-  
 
-    render() {
-        return (
-            <View style={styles.container}>
-                <KeyboardAwareScrollView
-                    contentContainerStyle={styles.avoid}
-                    style={{ height: '100%', width: '100%' }}
-                    scrollEnabled={true}
-                    resetScrollToCoords={{ x: 0, y: 0 }} >
-                    <View style={{ height: '40%', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%', marginBottom: 40 }}>
-                        <Text style={{ alignSelf: 'flex-start', fontSize: 16 }}>USERNAME</Text>
 
-                        <TextInput style={styles.inputBox}
-                            underlineColorAndroid='white'
-                            keyboardType="email-address"
-                            returnKeyType="next"
-                            value={this.state.email}
-                            onChangeText={email => {this.enableLogin(); this.setState({ email }) } }
-                            onSubmitEditing={() => this.password.focus()}
-                        />
-                        <Text style={{ alignSelf: 'flex-start', fontSize: 16 }}>PASSWORD</Text>
-                        <TextInput style={styles.inputBox}
-                            underlineColorAndroid='white'
-                            secureTextEntry={true}
-                            returnKeyType="go"
-                            value={this.state.password}
-                            onChangeText={password => { this.enableLogin(); this.setState({ password }) } }
-                            ref={(input) => this.password = input}
-                        />
+  render() {
+    return (
+      <View style={styles.container}>
+        <KeyboardAwareScrollView
+          contentContainerStyle={styles.avoid}
+          style={{ height: '100%', width: '100%' }}
+          scrollEnabled={true}
+          resetScrollToCoords={{ x: 0, y: 0 }} >
+          <View style={{ height: '40%', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%', marginBottom: 40 }}>
+            <Text style={{ alignSelf: 'flex-start', fontSize: 16 }}>USERNAME</Text>
 
-                    </View>
+            <TextInput style={styles.inputBox}
+              underlineColorAndroid='white'
+              keyboardType="email-address"
+              returnKeyType="next"
+              value={this.state.email}
+              onChangeText={email => { this.enableLogin(); this.setState({ email }) }}
+              onSubmitEditing={() => this.password.focus()}
+            />
+            <Text style={{ alignSelf: 'flex-start', fontSize: 16 }}>PASSWORD</Text>
+            <TextInput style={styles.inputBox}
+              underlineColorAndroid='white'
+              secureTextEntry={true}
+              returnKeyType="go"
+              value={this.state.password}
+              onChangeText={password => { this.enableLogin(); this.setState({ password }) }}
+              ref={(input) => this.password = input}
+            />
+
+          </View>
+
 
                     <View style={styles.login}>
                         <TouchableOpacity style={this.state.isChecked ? styles.buttonLogDisabled : styles.buttonLog} onPress={this.logIn.bind(this)} disabled={this.state.isChecked}>
@@ -195,17 +197,17 @@ export default class SettingsLogin extends Component {
                             <Text style={styles.buttonText}>TKO JE ULOGOVAN</Text>
                         </TouchableOpacity>
 
-                    </View>
+          </View>
 
-                    <View style={{ height: '20%', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', width: '84%', padding: 30 }}>
-                        <View style={styles.skip}>
-                            <TouchableOpacity onPress={() => this.props.changeToForgotPassword()} style={styles.skipBtn}><Text style={styles.tekst}>FORGOT PASSWORD</Text></TouchableOpacity>
-                        </View>
-                    </View>
-                </KeyboardAwareScrollView>
+          <View style={{ height: '20%', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', width: '84%', padding: 30 }}>
+            <View style={styles.skip}>
+              <TouchableOpacity onPress={() => this.props.changeToForgotPassword()} style={styles.skipBtn}><Text style={styles.tekst}>FORGOT PASSWORD</Text></TouchableOpacity>
             </View>
-        );
-    }
+          </View>
+        </KeyboardAwareScrollView>
+      </View>
+    );
+  }
 }
 
 

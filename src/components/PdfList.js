@@ -30,11 +30,11 @@ export default class PdfList extends Component {
     pdfList = (list) => {
         return list.map((lista, i) => {
             return (
-                <TouchableOpacity key={i} onPress={() => Actions.DocumentView({ docuri: `file://${RNFB.fs.dirs.DocumentDir}/${lista.fileId}.pdf` })}>
+                <TouchableOpacity key={i} style={{width: '48%', marginRight: 4}} onPress={() => Actions.DocumentView({ docuri: `file://${RNFB.fs.dirs.DocumentDir}/${lista.fileId}.pdf` })}>
                     <View style={styles.pdf_list_tag}>
 
                         <Image
-                            style={{ width: 30, height: 30, padding: 5, alignSelf: 'center' }}
+                            style={{ width: 30, height: 30, padding: 5, marginLeft: 5, alignSelf: 'center' }}
                             source={require('./ico/32/pdf.png')}
                         />
 
@@ -97,12 +97,13 @@ const styles = StyleSheet.create({
         paddingTop: 10
     },
     category_list: {
-        width: '35%',
+        width: '30%',
         backgroundColor: 'white',
         height: "100%",
         justifyContent: 'flex-start',
         alignItems: 'center',
-        marginRight: 20
+        marginRight: 20,
+        padding: 2
     },
     pdf_list: {
         width: '100%',
@@ -112,10 +113,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         flex: 1,
+        marginTop: 25
     },
 
     pdf_list_tag: {
-        width: '50%',
+        width: '100%',
         height: 70,
         flexDirection: 'row',
 
@@ -146,7 +148,7 @@ const styles = StyleSheet.create({
 
     btn_settings: {
         height: 60,
-        width: '100%',
+        width: '95%',
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,

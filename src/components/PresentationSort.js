@@ -126,11 +126,10 @@ const styles = StyleSheet.create({
     content: {
         backgroundColor: 'white',
         width: '100%',
-        height: '93%',
+        height: '100%',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         position: 'absolute',
-        top: '7%',
         flex: 1,
         zIndex: 3,
         paddingLeft: '5%'

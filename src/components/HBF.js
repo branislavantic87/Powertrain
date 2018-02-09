@@ -12,7 +12,6 @@ import VideoList from './VideoList';
 import PdfList from './PdfList';
 import Dashboard from './Dashboard';
 import PresentationNewComponent from './PresentationNew';
-import PresentationSortComponent from './PresentationSort';
 import Breadcrumbs from './Breadcrumbs';
 import Leaflets from './Leaflets';
 import Videos from './Videos';
@@ -93,7 +92,7 @@ class HBF extends Component {
 
                 {
                     this.state.visiblepresentation &&
-                    <PresentationNewComponent closePresentation={() => { this.setState({ visiblepresentation: false }) }} presentationSort={() => { this.setState({ visiblepresentation: false, visiblepresentationsort: true }) }} />
+                    <PresentationNewComponent closePresentation={() => { this.setState({ visiblepresentation: false, whatIsOpen: '' }) }}  />
                 }
 
                 {/* {

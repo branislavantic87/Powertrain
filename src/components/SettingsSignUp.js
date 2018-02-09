@@ -33,9 +33,21 @@ export default class SignUpModal extends Component {
   registerUser() {
     const { firstname, surname, email, password } = this.state;
     if (email === '' || password === '') {
-      alert('Email and password are mandatory!');
-    } else if (email.match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/) === null) {
-      alert('Bad format of email!');
+      Alert.alert(
+        '',
+        'Email and password are mandatory!',
+        [
+          { text: 'Ok', onPress: () => { } }
+        ]
+      );
+    } else if (email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*?\.[a-zA-Z]{2,3}$/) === null) { 
+      Alert.alert(
+        '',
+        'Bad format of email',
+        [
+          { text: 'Ok', onPress: () => { } }
+        ]
+      );
     } else {
       const formData = new FormData();
       formData.append("firstname", firstname);
@@ -43,13 +55,6 @@ export default class SignUpModal extends Component {
       formData.append("email", email);
       formData.append("password", md5(password));
       console.log(formData);
-      // setAlert = (index, value) => {
-      //   return new Promise((resolve, reject) => {
-      //     this.setState({ index: value })
-      //     resolve();
-      //   })
-      // }
-
       fetch('http://www.cduppy.com/salescms/?a=ajax&do=registerUser&languageId=1&projectId=5&token=1234567890', {
         method: 'POST',
         body: formData
@@ -68,12 +73,16 @@ export default class SignUpModal extends Component {
               ]
             )
           } else {
-            alert(res.resultText.toUpperCase());
+            Alert.alert(
+              '',
+              (res.resultText.toUpperCase()),
+              [
+                { text: 'Ok', onPress: () => { } }
+              ]
+            );
           }
         })
         .catch(error => console.log(error));
-
-      console.log(`${firstname} ${surname} => ${email} : ${md5(password)}`);
     }
   }
 
@@ -94,7 +103,6 @@ export default class SignUpModal extends Component {
 
 
   render() {
-
     return (
       <View style={styles.containerSignUp}>
         <Text style={styles.noInternetText}>{this.state.msg}</Text>
@@ -160,7 +168,7 @@ export default class SignUpModal extends Component {
 }
 
 const styles = StyleSheet.create({
-  noInternetText:{
+  noInternetText: {
     fontSize: 24,
     fontWeight: '700',
     textAlign: 'center',
