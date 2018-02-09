@@ -14,8 +14,8 @@ export default class SettingsLanguage extends Component {
     renderCheckBoxes = () => {
         return this.state.allLanguages.map((l, i) => {
             return (
-                <View key={i} style={{ backgroundColor: 'white', padding: 15 }}>
-                    <Text>{l.language}</Text>
+                <View key={i} style={{ backgroundColor: 'white', padding: 15, flexDirection: 'row' }}>
+                    <Text style={{fontSize: 16, fontWeight: 'bold'}}>{l.language}</Text>
                     <Switch
                         onValueChange={() => this.onLangCheckClick(l)}
                         value={l.selected}
@@ -101,17 +101,13 @@ export default class SettingsLanguage extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.titleContainer}>
-                    <Text style={styles.title}>Languages</Text>
-                </View>
                 <View style={styles.languages}>
                     {this.renderCheckBoxes()}
-                </View>
-                <View style={styles.submitBtnCont}>
                     <TouchableOpacity disabled={this.state.buttonDisabled} style={styles.submitBtn} onPress={() => this.alertForRedownload()}>
                         <Text style={{ fontSize: 20, textAlign: 'center' }}>SUBMIT</Text>
                     </TouchableOpacity>
                 </View>
+             
             </View>
         );
     }
@@ -120,10 +116,9 @@ export default class SettingsLanguage extends Component {
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: '60%',
+        height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: '20%'
     },
     title: {
         fontSize: 48,
@@ -134,16 +129,14 @@ const styles = StyleSheet.create({
         height: '20%'
     },
     languages: {
-        height: '30%',
-        flexDirection: 'row',
-    },
-    submitBtnCont: {
-        height: '50%',
-        width: '25%'
+        width: '50%',
+        flexDirection: 'column',
+        alignItems: 'center'
     },
     submitBtn: {
         padding: 10,
         backgroundColor: '#d8d8d8',
-        width: '100%'
+        width: '50%',
+        marginTop: 20,
     }
 });
