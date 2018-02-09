@@ -129,38 +129,22 @@ export default class ChangePassword extends Component {
     })
   }
 
-  logOutGlobally () {
+  logOutGlobally() {
     console.log('logOutGlobally');
     const formData = new FormData();
     formData.append("id", this.state.userId);
-    console.log('FORMDATA: ' + formData);
-    // fetch('http://www.cduppy.com/salescms/?a=ajax&do=logoutUser&projectId=5&token=1234567890', {
-    //   method: 'POST',
-    //   body: formData
-    // })
-    // .then((res) => console.log(res))
-    // .catch(error => console.log(error));
-  }
-
-  logOutFromApp() {
-    console.log('logOutFromApp');
-    // AsyncStorage.removeItem('@userId', (error) => {
-    //   if (error) {
-    //     console.log(error);
-    //   }
-    // })
-  }
-
-
-  redirectToLogin() {
-    console.log('redirectToLogin');
-    // this.props.changeToLogin();
+    console.log('FORMDATA: ' + JSON.stringify(formData));
+    fetch('http://www.cduppy.com/salescms/?a=ajax&do=logoutUser&projectId=5&token=1234567890', {
+      method: 'POST',
+      body: formData
+    })
+      .then((res) => console.log(res))
+      .catch(error => console.log(error));
   }
 
   changePasswordHandler() {
     this.props.logout();
     this.logOutGlobally();
-    this.logOutFromApp();
     // this.redirectToLogin.bind(this); rerender APP to accept incoming changes
   }
 
@@ -260,7 +244,7 @@ const styles = StyleSheet.create({
     color: "#424242",
     textAlign: 'center',
   },
-    buttonTextDisabled: {
+  buttonTextDisabled: {
     fontSize: 20,
     fontWeight: '100',
     color: "white",
@@ -283,7 +267,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     padding: 15
   },
-  buttonConfirmDisabled:{
+  buttonConfirmDisabled: {
     backgroundColor: '#BDB9B9',
     width: '100%',
     height: '47%',
