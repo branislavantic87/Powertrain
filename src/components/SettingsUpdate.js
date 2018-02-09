@@ -78,8 +78,8 @@ export default class SettingsUpdate extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={{ height: '40%', alignItems: 'center', justifyContent: 'flex-end', flexDirection: 'column', width: '80%' }}>
-                    <Text style={{ alignSelf: 'center', fontSize: 40, fontWeight: '700', color: 'black' }}>UPDATES</Text>
+                <View style={{height: '40%', alignItems: 'center', justifyContent: 'flex-end', flexDirection: 'column', width: '80%' }}>
+                    <Text style={{ alignSelf: 'center', fontSize: 40, fontWeight: '700', color: '#757575' }}>UPDATES</Text>
                 </View>
                 <View style={styles.download}>
                     {this.buttonOrActivity()}

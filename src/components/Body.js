@@ -88,7 +88,6 @@ const styles = StyleSheet.create({
         bottom: 0,
         backgroundColor: '#fff'
     },
-
 });
 
 export default Body;

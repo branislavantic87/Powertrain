@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 48,
         fontWeight: '700',
-        color: 'black'
+        color: '#757575'
     },
     titleContainer: {
         height: '20%'
