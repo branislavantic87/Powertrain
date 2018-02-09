@@ -424,7 +424,7 @@ export default class App extends Component {
             if (r.info().status == 200) {
               console.log('One file downloaded at ', r.path() + ', with status code: ' + r.info().status);
               let t1 = Date.now();
-              this.setState(prevState => ({ downloaded: prevState.downloaded + 1, mbDone: prevState.mbDone + Math.round(Number(file.size) / 1024 / 1024) }));
+              this.setState(prevState => ({ downloaded: prevState.downloaded + 1, mbDone: Math.trunc((prevState.mbDone + Math.round(Number(file.size) / 1024 / 1024 * 100)/100)*100)/100 }));
               let time = t1 - t0;
               let sizeOne = Number(file.size) / 1024.0;
               let dlSpeed = sizeOne / time;
