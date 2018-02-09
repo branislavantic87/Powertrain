@@ -67,7 +67,7 @@ export default class ForgotPassword extends Component {
     } else {
       Alert.alert(
         '',
-        'Email does not exist.',
+        'Entered email does not exist.',
         [
           { text: 'Try again', onPress: () => {} },
         ],
@@ -84,7 +84,7 @@ export default class ForgotPassword extends Component {
       })
       .then(() => {
         if (this.state.isConnected === false) {
-          this.setState({ msg: 'No internet connection, you cannot proceed at the moment!' })
+          this.setState({ msg: 'No internet connection, you can not proceed at the moment!' })
         }
       })
       .catch(error => console.log(error));
@@ -93,12 +93,15 @@ export default class ForgotPassword extends Component {
   render() {
     return (
       <View style={styles.containerForgotPswd}>
+         <Text style={styles.noInternetText}>{this.state.msg}</Text>
         <KeyboardAwareScrollView
           contentContainerStyle={styles.avoid}
           style={{ height: '100%', width: '100%' }}
           scrollEnabled={true}
           resetScrollToCoords={{ x: 0, y: 0 }} >
+        
           <View style={{ height: '40%', alignItems: 'center', justifyContent: 'flex-end', flexDirection: 'column', width: '70%' }}>
+         
             <Text style={{ alignSelf: 'center', fontSize: 26, fontWeight: '700', color: 'black' }}>FORGOT PASSWORD </Text>
             <Text style={{ alignSelf: 'flex-start', fontSize: 16, marginTop: 30 }}>USERNAME</Text>
             <TextInput style={styles.inputBox}
@@ -110,11 +113,11 @@ export default class ForgotPassword extends Component {
             />
           </View>
           <View style={{ height: '60%', width: '50%', alignItems: 'center', justifyContent: 'flex-start', flexDirection: 'column', marginTop: 15 }}>
-            <TouchableOpacity style={styles.buttonSubmit} onPress={this.forgotPassword.bind(this)} disabled={!this.state.isConnected}>
-              <Text style={styles.buttonText}>SUBMIT</Text>
+            <TouchableOpacity style={this.state.isConnected ? styles.buttonSubmit : styles.buttonSubmitDisabled} onPress={this.forgotPassword.bind(this)} disabled={!this.state.isConnected}>
+            <Text style={this.state.isConnected ? styles.buttonText : styles.buttonTextDisabled}>SUBMIT</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.buttonCancel} onPress={() => this.props.onChange('login')}>
-              <Text style={styles.buttonText}>CANCEL</Text>
+            <Text style={styles.buttonText}>CANCEL</Text>
             </TouchableOpacity>
           </View>
         </KeyboardAwareScrollView>
@@ -126,6 +129,12 @@ export default class ForgotPassword extends Component {
 }
 
 const styles = StyleSheet.create({
+  noInternetText: {
+    fontSize: 22,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginTop: '10%'
+  },
   containerForgotPswd: {
     borderWidth: 24,
     borderColor: '#cccccc',
@@ -143,6 +152,12 @@ const styles = StyleSheet.create({
     color: "#424242",
     textAlign: 'center',
   },
+  buttonTextDisabled: {
+    fontSize: 20,
+    fontWeight: '100',
+    color: "white",
+    textAlign: 'center',
+  },
   inputBox: {
     width: '100%',
     height: 40,
@@ -157,10 +172,18 @@ const styles = StyleSheet.create({
   avoid: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: '26%'
+    paddingTop: '15%'
   },
   buttonSubmit: {
     backgroundColor: '#d8d8d8',
+    width: '100%',
+    justifyContent: 'center',
+    marginBottom: 20,
+    marginTop: 20,
+    padding: 15
+  },
+  buttonSubmitDisabled:{
+    backgroundColor: '#BDB9B9',
     width: '100%',
     justifyContent: 'center',
     marginBottom: 20,

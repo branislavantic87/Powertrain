@@ -88,7 +88,7 @@ export default class ChangePassword extends Component {
                     this.setState({ oldpassword: '', newpassword: '', confirm_newpassword: '' });
                     Alert.alert(
                       'Password changed successfully.',
-                      'Please, Log In again to proceed.',
+                      'Please log in again to proceed.',
                       [
                         { text: 'Ok', onPress: this.changePasswordHandler.bind(this) },
                       ]
@@ -110,7 +110,7 @@ export default class ChangePassword extends Component {
             } else {
               Alert.alert(
                 '',
-                'New password does not match confirmed new password!',
+                'Password does not match the confirm password!',
                 [
                   { text: 'Ok', onPress: () => { } },
                 ]
@@ -119,7 +119,7 @@ export default class ChangePassword extends Component {
           } else {
             Alert.alert(
               '',
-              'Old password does not match with current user!',
+              'Old password is invalid!',
               [
                 { text: 'Ok', onPress: () => { } },
               ]
@@ -131,6 +131,18 @@ export default class ChangePassword extends Component {
     })
   }
 
+  logOutGlobally = () => {
+    const formData = new FormData();
+    formData.append("id", this.state.userId);
+    console.log('FORMDATA: ' + formData);
+    // fetch('http://www.cduppy.com/salescms/?a=ajax&do=logoutUser&projectId=5&token=1234567890', {
+    //   method: 'POST',
+    //   body: formData
+    // })
+    // .then((res) => console.log(res))
+    // .catch(error => console.log(error));
+  }
+  
   myLoop = () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => { this.fetchUserJson().then(() => resolve()).catch((err) => { console.log(err); myLoop(); return reject(); }) }, 500);
