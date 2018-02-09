@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image, Dimensions, TouchableOpacity } from 'react-native';
 import HTML from 'react-native-render-html';
 import Swiper from 'react-native-swiper';
 import VB from './VideoBtn';
 import DB from './DocBtn';
 import Modall from './Modall';
+
 
 import SwiperFlatList from './SwiperFlatList';
 export const { width, height } = Dimensions.get('window');
@@ -68,6 +69,7 @@ export default class TextImage extends Component {
           <View>
             <Text style={[styles.headingText, styles.headingMain]}>{this.props.templateTitle}</Text>
             <Text style={styles.headingText}>{this.props.subtitle}</Text>
+           
           </View>
 
           <View style={styles.contentContainer}>
@@ -78,7 +80,7 @@ export default class TextImage extends Component {
               </ScrollView>
              
             </View>
-
+            
             <View style={styles.contentPic} onLayout={(event) => this.onLayout(event)}>
               <View style={{ width: '100%', height: '85%' }}>
                 <SwiperFlatList
@@ -165,5 +167,7 @@ const styles = StyleSheet.create({
     height: '85%',
     backgroundColor: '#ebeced',
     padding: 20
-  }
+  },
+ 
+
 });
