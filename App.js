@@ -678,20 +678,9 @@ export default class App extends Component {
         .catch(() => { this.setState({ isLoading: -1 }) })
     }
 
-    isNetworkConnected = () => {
-      if (Platform.OS === 'ios') {
-        return new Promise(resolve => {
-          const handleFirstConnectivityChangeIOS = isConnected => {
-            NetInfo.isConnected.removeEventListener('connectionChange', handleFirstConnectivityChangeIOS);
-            resolve(isConnected);
-          };
-          NetInfo.isConnected.addEventListener('connectionChange', handleFirstConnectivityChangeIOS);
-        });
-      }
-      return NetInfo.isConnected.fetch();
-    }
 
-    isNetworkConnected()
+
+    this.isNetworkConnected()
       .then(res => {
         if (res) {
           akoImaNeta();
@@ -704,45 +693,42 @@ export default class App extends Component {
 
   }// End of isLoading()
 
+  isNetworkConnected = global.isNetworkConnected = () => {
+    if (Platform.OS === 'ios') {
+      return new Promise(resolve => {
+        const handleFirstConnectivityChangeIOS = isConnected => {
+          NetInfo.isConnected.removeEventListener('connectionChange', handleFirstConnectivityChangeIOS);
+          resolve(isConnected);
+        };
+        NetInfo.isConnected.addEventListener('connectionChange', handleFirstConnectivityChangeIOS);
+      });
+    }
+    return NetInfo.isConnected.fetch();
+  }
 
-
-  // syncApp() {
-  //   console.log('porkrenuo syncApp()');
-  //   AsyncStorage.getItem('checkedFiles')
-  //     .then((res) => JSON.parse(res))
-  //     .then(fajlic => {
-  //       fetch(global.projectJsonURL)
-  //         .then(res => res.json())
-  //         .then(res => {
-  //           let neSkinutiFajlovi = fajlic.failedDownloads.length > 0 ? 'But there seems to be ' + fajlic.failedDownloads.length + ' missing files. If this problem persists, that means files are missing from the server. Contact your admin to fix it.' : 'Seems everything is OK. \nIf you want you can restart application anyway.';
-  //           if (res.project.lastChanges == global.projectJson.project.lastChanges)
-  //             Alert.alert('App is already up to date!', neSkinutiFajlovi, [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }])
-  //           else {
-  //             Alert.alert('There seems to be update!', 'Do you wish to sync?', [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }]);
-  //           }
-  //         })
-  //     })
-  // }
 
   syncApp() {
-    this.setState({ syncLoading: true });
-    console.log('evo me u syncApp');
-    AsyncStorage.getItem('checkedFiles')
-      .then((res) => JSON.parse(res))
-      .then(fajlic => {
-
-        fetch(global.projectJsonURL)
-          .then(res => res.json())
-          .then(res => {
-            let neSkinutiFajlovi = fajlic.failedDownloads.length > 0 ? 'There seems to be ' + fajlic.failedDownloads.length + ' missing files. Try syncing the app. \nIf this problem persists, that means files are missing from the server. \nContact your admin to fix it.' : 'Seems everything is OK. If you want you can restart application anyway.';
-            if (res.project.lastChanges == global.projectJson.project.lastChanges) {
-              // Alert.alert('UP TO DATE!', neSkinutiFajlovi, [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }])
-            } else {
-              Alert.alert('There seems to be update!', 'Do you wish to sync?', [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }]);
-            }
-          })
-          .then(() => this.setState({ syncLoading: false }))
-          .catch(() => { Alert.alert('Error', 'Something went wrong. Please check your internet connection, restart the app, or try again later.', [{ text: 'OK', onPress: () => { } }]); this.setState({ syncLoading: false }); });
+    this.isNetworkConnected()
+      .then(res => {
+        if (res) {
+          AsyncStorage.getItem('checkedFiles')
+            .then((res) => JSON.parse(res))
+            .then(fajlic => {
+              fetch(global.projectJsonURL)
+                .then(res => res.json())
+                .then(res => {
+                  let neSkinutiFajlovi = fajlic.failedDownloads.length > 0 ? 'There seems to be ' + fajlic.failedDownloads.length + ' missing files. Try syncing the app. \nIf this problem persists, that means files are missing from the server. \nContact your admin to fix it.' : 'Seems everything is OK. If you want you can restart application anyway.';
+                  if (res.project.lastChanges == global.projectJson.project.lastChanges) {
+                    //Alert.alert('UP TO DATE!', neSkinutiFajlovi, [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }])
+                  } else {
+                    Alert.alert('There seems to be update!', 'Do you wish to sync?', [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }]);
+                  }
+                })
+                .catch(() => { /*Alert.alert('Error', 'Something went wrong. Please check your internet connection, restart the app, or try again later.', [{ text: 'OK', onPress: () => { } }]);*/ });
+            })
+        } else {
+          //Alert.alert('Offline', 'You seem to be offline.', [{ text: 'OK', onPress: () => {} }]);
+        }
       })
   }
 
