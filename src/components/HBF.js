@@ -109,22 +109,27 @@ class HBF extends Component {
 
                 <Body fromHome={this.props.fromHome} style={{ bottom: 10 }} pages={this.props.filtered} />
 
-
+            {this.state.visibleMenu==false &&
                 <View style={{ position: 'absolute', width: 50, height: 50, bottom: 30, left: 40, zIndex: 20 }}>
                     <TouchableOpacity onPress={() => { this.state.visibleMenu ? this.setState({ visibleMenu: false }) : this.setState({ visibleMenu: true }); }} style={{ width: '100%', height: '100%' }}>
                         <Image style={styles.ico} source={require('./ico/32/main-menu.png')} />
                     </TouchableOpacity>
                 </View>
-
-                <View style={{ position: 'absolute', bottom: this.state.visibleMenu ? '7%' : -500, width: '100%' }}>
+            }
+               
+                <View style={{ position: 'absolute', bottom: this.state.visibleMenu ? '6%' : -500, width: '100%' }}>
+                {this.state.visibleMenu==true &&
                     <View style={{ width: 50, height: 50, bottom: 30, left: 40, zIndex: 22 }}>
                         <TouchableOpacity onPress={() => { this.state.visibleMenu ? this.setState({ visibleMenu: false }) : this.setState({ visibleMenu: true }); }} style={{ position: 'absolute', width: '100%', height: '100%', }}>
                             <Image style={styles.ico} source={require('./ico/32/main-menu.png')} />
                         </TouchableOpacity>
                     </View>
+                }
                     <MenuList selected={this.props.selected} data={global.globalJson} from={this.props.from.menuId} />
-                </View>
+                </View> 
+                
             </View >
+                
         );
     }
 
