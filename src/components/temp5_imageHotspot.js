@@ -22,7 +22,13 @@ export default class HotspotImage extends Component {
             const posy = this.state.layoutHeigth * (spot.y / 1000) - 19;
             return (
                 <View key={i + '.viewMaster'} style={{flexDirection: 'row', position: "absolute", zIndex: 20, left: posx - 10, top: posy - 10}}>
-                    <TouchableOpacity key={i} style={{marginTop: 17 }} >
+                    <TouchableOpacity 
+                    key={i} 
+                    style={{marginTop: 17 }} 
+                    onPress={() => {
+                        console.log(spot.linkPageId);
+                    }}
+                    >
                         <Image key={i + '.image'} source={require('./ico/32/hotspot.png')} />
                     </TouchableOpacity>
                     <View key={i + '.viewSlave'} style={[styles.hotspotTitileView, {marginBottom: 17} ]}>
