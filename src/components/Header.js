@@ -13,7 +13,8 @@ import { isNetworkConnected } from '../../helpers';
 export default class Header extends Component {
 
   state = {
-    isConnected: true
+    isConnected: true,
+    refresh: true
   };
 
   openLanguage = () => {
@@ -21,7 +22,7 @@ export default class Header extends Component {
   };
 
   openHome = () => {
-    Actions.reset('home', { lang: global.language })
+    Actions.reset('home', { lang: global.language });
   };
 
   openFavorites = () => {
@@ -82,6 +83,10 @@ export default class Header extends Component {
       .then(res => res ? this.setState({ isConnected: true }) : this.setState({ isConnected: false }));
   }
 
+  refresh = () => {
+    this.setState({ refresh: !this.state.refresh });
+  }
+
   componentDidMount() {
     StatusBar.setHidden(true);
   }
@@ -111,7 +116,7 @@ export default class Header extends Component {
             <TouchableWithoutFeedback onPress={this.openNotification}><Image style={styles.ico_smaller_4} source={this.props.whatIsOpen != 'notifications' ? require('./ico/top-bar/notifications.png') : require('./ico/top-bar/notifications_pressed.png')} /></TouchableWithoutFeedback>
             <TouchableWithoutFeedback onPress={this.openSettings}><Image style={styles.ico} source={this.props.whatIsOpen != 'settings' ? require('./ico/top-bar/settings.png') : require('./ico/top-bar/settings_pressed.png')} /></TouchableWithoutFeedback>
             <TouchableWithoutFeedback disabled={true} onPress={this.divider}><Image style={styles.ico} source={require('./ico/x64/divider.png')} /></TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={this.openHome}><Image style={styles.ico} source={this.state.isConnected ? require('./ico/x64/magna.png') : require('./ico/x64/search.png')} /></TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={this.openHome}><Image style={styles.ico} source={this.state.isConnected ? require('./ico/x64/magna.png') : require('./ico/x64/magna_offline.png')} /></TouchableWithoutFeedback>
           </View>
         </View>
 

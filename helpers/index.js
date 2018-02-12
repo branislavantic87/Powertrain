@@ -229,7 +229,7 @@ export const zaNemaNetaDefault = () => {
             .then(res => {
                 global.projectJson = res;
                 defaultLanguageId = Number(global.projectJson.project.defaultLanguageId);
-                defaultLanguageObject = global.projectJson.languages.find(l => l.languageId == defaultLanguageId);
+                global.defaultLanguageObject = global.projectJson.languages.find(l => l.languageId == defaultLanguageId);
                 return Promise.resolve();
             })
             .then(() => resolve())

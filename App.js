@@ -250,7 +250,7 @@ export default class App extends Component {
 
     akoNemaNeta = () => {
       zaNemaNetaDefault()
-        .then(() => AsyncStorage.getItem(defaultLanguageObject.language))
+        .then(() => AsyncStorage.getItem(global.defaultLanguageObject.language))
         .then((res) => res == null ? Promise.resolve({ bool: false, res: res }) : Promise.resolve({ bool: true, res: res }))
         .then(res => {
           if (!res.bool) {
@@ -264,7 +264,7 @@ export default class App extends Component {
         .then(res => global.usersJson = JSON.parse(res))
         .then(() => AsyncStorage.getItem('pdfJson'))
         .then(res => { global.pdfJson = JSON.parse(res); return Promise.resolve() })
-        .then(() => AsyncStorage.getItem('videoJson'))
+        .then(() => AsyncStorage.getItem('videosJson'))
         .then(res => { global.videosJson = JSON.parse(res); return Promise.resolve(); })
         .catch((err) => { console.log(err); this.setState({ isLoading: -1 }) })
     }
