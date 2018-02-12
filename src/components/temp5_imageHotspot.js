@@ -1,127 +1,104 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, Text, TouchableWithoutFeedback } from 'react-native';
-import HTML from 'react-native-render-html';
+import { StyleSheet, View, Image, TouchableOpacity, Text, TouchableWithoutFeedback, Dimensions } from 'react-native';
+import RNFB from 'react-native-fetch-blob';
 
+const margine = 0.10;
 
 export default class HotspotImage extends Component {
 
     state = {
-        videoPath: [],
-        documentPath: [],
-        image: ''
-    };
-//provera fajlova za video i doc dugme
-    componentWillMount() {
-        let videos = this.props.files.filter(file => {
-            return file.substring(file.length - 3, file.length) == 'mp4'
-        })
-
-        let documents = this.props.files.filter(file => {
-            return file.substring(file.length - 3, file.length) == 'pdf'
-        })
-
-        let images = this.props.files.find(file => {
-            return file.substring(file.length - 3, file.length) == 'jpg' 
-            || file.substring(file.length - 3, file.length) == 'png' 
-            || file.substring(file.length - 4, file.length) == 'jpeg'
-        })
-
-
-        this.setState({ videoPath: videos, documentPath: documents, image: images });
+        layoutWidth: 0,
+        layoutHeigth: 0
     }
-
-    componentDidMount() {
-        StatusBar.setHidden(true);
-     }
-
-     //ispis svih hotspotova
     getPosistionsFromJSON = () => {
-        // const fileJSON = require('./img/file.json');
-        // console.log(fileJSON);
+        console.log('layoutWidth: ' + this.state.layoutWidth + ' layoutHeight: ' + this.state.layoutHeigth);
+        console.log(this.props);
+        const hotspots = this.props.page.hotspots;
+        console.log('hotspots:', hotspots);
 
-        spots = this.props.hotspot.spots.map((spot, i) =>
-          <View key={i + '.viewMaster'} style={{ flexDirection: 'row', position: "absolute", zIndex: 20, top: (spot.y-4) + '%', left: (spot.x) + '%', height: 50 }}>
-            <TouchableOpacity key={i} style={{ padding: 5, marginTop: 10 }} >
-              <Image key={i + '.image'} source={require('./ico/32/hotspot.png')} />
-            </TouchableOpacity>
-            <View key={i + '.viewSlave'} style={styles.hotspotTitileView}>
-              <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.pageTitle}</Text>
-            </View>
-          </View>
-        );
-        return spots;
-      }
-   
-    render() {
-        return (
-            <View style={styles.mainView}>
-      
-              <View style={styles.body}>
-      
-                <View style={styles.contentContainer}>
-      
-                <Image resizeMethod='resize' style={{width: '100%', height: '100%', resizeMode: 'cover', zIndex: 1}} source={{ uri: this.state.image }}/>
-
-                  {this.getPosistionsFromJSON()}
-
-                  <View style={styles.ButtonContainer}>
-                                {this.state.videoPath.length > 0 && <VB videouri={this.state.videoPath[0]} />}
-                                {this.state.documentPath.length > 0 && <DB documenturi={this.state.documentPath[0]} />}
-                            </View>
-      
+        return (hotspots.map((spot, i) => {
+            const posx = this.state.layoutWidth * (spot.x / 1000) + Dimensions.get('screen').width * margine/2;
+            // const posx = this.state.layoutWidth * (spot.x / 1000) + Dimensions.get('screen').width * 0.07;
+            const posy = this.state.layoutHeigth * (spot.y / 1000) - 19;
+            return (
+                <View key={i + '.viewMaster'} style={{flexDirection: 'row', position: "absolute", zIndex: 20, left: posx - 10, top: posy - 10}}>
+                    <TouchableOpacity 
+                    key={i} 
+                    style={{marginTop: 17 }} 
+                    onPress={() => {
+                        console.log(spot.linkPageId);
+                    }}
+                    >
+                        <Image key={i + '.image'} source={require('./ico/32/hotspot.png')} />
+                    </TouchableOpacity>
+                    <View key={i + '.viewSlave'} style={[styles.hotspotTitileView, {marginBottom: 17} ]}>
+                        <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.label}</Text>
+                    </View>
                 </View>
-      
-              </View>
-      
+            );
+        }));
+    }
+    render() {
+
+        return (
+            <View style={styles.mainView} >
+                <View style={styles.body}>
+                    <View style={styles.contentContainer}>
+                        {<Image
+                            ref='_image'
+                            resizeMode='cover'
+                            style={styles.imageStyle}
+                            onLayout={event => {
+                                const width = event.nativeEvent.layout.width;
+                                const height = event.nativeEvent.layout.height;
+                                console.log('event', width, height);
+                                this.setState(() => ({ layoutWidth: width, layoutHeigth: height }));
+                            }}
+                            source={{ uri: 'file://' + RNFB.fs.dirs.DocumentDir + '/' + this.props.page.files.find(e => e.ext == 'jpg').filename }} />}
+                        {this.getPosistionsFromJSON()}
+                    </View>
+                </View>
             </View>
-          );
+        );
     }
 }
 
 const styles = StyleSheet.create({
     mainView: {
-      backgroundColor: 'white',
-      position: 'relative',
-      height: '100%'
+        backgroundColor: 'white',
+        position: 'relative',
+        height: '100%'
     },
     body: {
-      height: '100%',
-      width: '100%'
+        height: '100%',
+        width: '100%'
     },
     contentContainer: {
-      marginTop: 10,
-      width: '100%',
-      height: '100%',
-      marginBottom: 5,
+        marginTop: 10,
+        marginBottom: 5,
     },
     hotspotTitle: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      color: '#da281c'
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#da281c',
     },
-  
+
     hotspotTitileView: {
-      borderTopLeftRadius: 30,
-      borderTopRightRadius: 5,
-      borderBottomRightRadius: 5,
-      backgroundColor: 'white',
-      height: 25,
-      width: 150,
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: 20
-    },
-
-    ButtonContainer: {
-        justifyContent: 'flex-end',
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 5,
+        borderBottomRightRadius: 5,
+        backgroundColor: 'white',
+        height: 25,
+        width: 150,
         alignItems: 'center',
-        flexDirection: 'row',
-        position: 'absolute',
-        bottom: 40,
-        right: 20,
-        width: '51%',
-
+        justifyContent: 'center',
     },
-  
-  });
-  
+    imageStyle: {
+        width: Dimensions.get('screen').width - Dimensions.get('screen').width*margine,
+        height: Dimensions.get('screen').height - Dimensions.get('screen').height*margine,
+        resizeMode: 'cover',
+        zIndex: 1,
+        marginLeft: Dimensions.get('screen').width  * margine/2
+    }
+
+});

@@ -46,9 +46,9 @@ class Body extends Component {
                     return <FullText fromHome={this.props.fromHome} key={page.pageId} subtitle={subtitle} templateTitle={title} text={text} />
                     break;
 
-                /*case '5':
-                    return <HotspotImage page={page} key={page.pageId} files={files} hotspot={hotspot} />
-                    break;*/
+                case '5':
+                    return <HotspotImage page={page} key={page.pageId} />
+                    break;
 
                 default:
                     console.log('WTF?!');
