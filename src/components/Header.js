@@ -5,12 +5,11 @@ import HTML from 'react-native-render-html';
 import RNRestart from 'react-native-restart';
 import RNFB from 'react-native-fetch-blob';
 import Modal from "react-native-modal";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 
 
 export default class Header extends Component {
-
 
   openLanguage = () => {
     this.props.onPressLang();
@@ -46,13 +45,6 @@ export default class Header extends Component {
 
   };
 
-  syncFiles = () => {
-    //uradi sync fajlova
-    this.syncApp();
-  };
-
-
-
   openBreadcrumbs = () => {
     this.props.onPressBreadcrumbs();
   };
@@ -87,58 +79,9 @@ export default class Header extends Component {
   };
 
   
-
-
-
-
-state = {
-
-  syncLoading: false,
-
-
-};
-
-
-
 componentDidMount() {
   StatusBar.setHidden(true);
 }
-
-
-
-syncApp() {
-  this.setState({ syncLoading: true });
-
-  AsyncStorage.getItem('checkedFiles')
-    .then((res) => JSON.parse(res))
-    .then(fajlic => {
-
-      fetch(global.projectJsonURL)
-        .then(res => res.json())
-        .then(res => {
-          let neSkinutiFajlovi = fajlic.failedDownloads.length > 0 ? 'There seems to be ' + fajlic.failedDownloads.length + ' missing files. Try syncing the app. \nIf this problem persists, that means files are missing from the server. \nContact your admin to fix it.' : 'Seems everything is OK. If you want you can restart application anyway.';
-          if (res.project.lastChanges == global.projectJson.project.lastChanges)
-            Alert.alert('UP TO DATE!', neSkinutiFajlovi, [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }])
-          else {
-            Alert.alert('There seems to be update!', 'Do you wish to sync?', [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }]);
-          }
-        })
-        .then(() => this.setState({ syncLoading: false }))
-        .catch(() => { Alert.alert('Error', 'Something went wrong. Please check your internet connection, restart the app, or try again later.', [{ text: 'OK', onPress: () => { } }]); this.setState({ syncLoading: false }); });
-    })
-}
-
-syncOrSpinner = () => {
-  if (this.state.syncLoading) {
-    return <ActivityIndicator size={'small'} />
-  }
-
-  return (
-    <TouchableWithoutFeedback onPress={this.syncFiles}><Image style={styles.ico} source={require('./ico/x64/sync.png')} /></TouchableWithoutFeedback>
-  );
-}
-
-
 
 
 render() {
@@ -153,7 +96,6 @@ render() {
         <View style={{ flex: 3.5, alignItems: 'center', alignSelf: 'center', width: '100%' }}><HTML html={this.props.title ? this.props.title : ''} /></View>
 
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-          {/*this.syncOrSpinner()*/}
           <TouchableWithoutFeedback onPress={this.openDashboard}><Image style={styles.ico} source={ this.props.whatIsOpen != 'dashboard' ? require('./ico/top-bar/dashboard.png') : require('./ico/top-bar/dashboard_pressed.png') } /></TouchableWithoutFeedback>
           <TouchableWithoutFeedback onPress={this.openLanguage}><Image style={styles.ico} source={ this.props.whatIsOpen != 'language' ? require('./ico/top-bar/language.png') : require('./ico/top-bar/language_pressed.png') } /></TouchableWithoutFeedback>
           <TouchableWithoutFeedback onPress={this.openBreadcrumbs}><Image style={styles.ico} source={ this.props.whatIsOpen != 'breadcrumbs' ? require('./ico/top-bar/breadcrumbs.png') : require('./ico/top-bar/breadcrumbs_pressed.png') } /></TouchableWithoutFeedback>

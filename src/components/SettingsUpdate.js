@@ -2,47 +2,13 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, AsyncStorage, Alert, ActivityIndicator } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import RNRestart from 'react-native-restart';
-import RNFB from 'react-native-fetch-blob'
+import RNFB from 'react-native-fetch-blob';
+import { syncApp } from '../../helpers';
 
 export default class SettingsUpdate extends Component {
 
-    state = {
-        isLoading: false
-    };
-
     reDownload = () => {
         Alert.alert('RE-DOWNLOAD', 'This action will delete and redownload all files. Are you sure you want to continue?', [{ text: 'Yes', onPress: () => this.redownlodAllFiles() }, { text: 'No', onPress: () => { } }]);
-    }
-
-    syncApp() {
-        this.setState({ isLoading: true });
-        global.isNetworkConnected()
-            .then(res => {
-                if (res) {
-                    AsyncStorage.getItem('checkedFiles')
-                        .then((res) => JSON.parse(res))
-                        .then(fajlic => {
-                            fetch(global.projectJsonURL)
-                                .then(res => res.json())
-                                .then(res => {
-                                    let neSkinutiFajlovi = fajlic.failedDownloads.length > 0 ? 'There seems to be ' + fajlic.failedDownloads.length + ' missing files. Try syncing the app. \nIf this problem persists, that means files are missing from the server. \nContact your admin to fix it.' : 'Seems everything is OK. If you want you can restart application anyway.';
-                                    if (res.project.lastChanges == global.projectJson.project.lastChanges) {
-                                        Alert.alert('UP TO DATE!', neSkinutiFajlovi, [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }])
-                                    } else {
-                                        Alert.alert('There seems to be update!', 'Do you wish to sync?', [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }]);
-                                    }
-                                    return Promise.resolve();
-                                })
-                               
-                                .catch(() => { Alert.alert('Error', 'Something went wrong. Please check your internet connection, restart the app, or try again later.', [{ text: 'OK', onPress: () => { } }]); });
-                        })
-                        .then(() => this.setState({ isLoading: false }))
-                } else {
-                    Alert.alert('Offline', 'You seem to be offline.', [{ text: 'OK', onPress: () => { } }]);
-                    this.setState({ isLoading: false });
-                }
-            })
-            .catch((err) => { console.log(err); this.setState({ isLoading: false }) })
     }
 
     redownlodAllFiles = () => {
@@ -63,26 +29,16 @@ export default class SettingsUpdate extends Component {
             .catch(err => console.log(err))
     }
 
-    buttonOrActivity = () => {
-        if (this.state.isLoading) {
-            return <ActivityIndicator size={'large'} />
-        }
-        return (
-            <TouchableOpacity style={styles.buttonLog} onPress={() => this.syncApp()}>
-                <Text style={styles.buttonText}>DOWNLOAD UPDATES</Text>
-            </TouchableOpacity>
-        );
-    }
-
-
     render() {
         return (
             <View style={styles.container}>
-                <View style={{height: '40%', alignItems: 'center', justifyContent: 'flex-end', flexDirection: 'column', width: '80%' }}>
+                <View style={{ height: '40%', alignItems: 'center', justifyContent: 'flex-end', flexDirection: 'column', width: '80%' }}>
                     <Text style={{ alignSelf: 'center', fontSize: 40, fontWeight: '700', color: '#757575' }}>UPDATES</Text>
                 </View>
                 <View style={styles.download}>
-                    {this.buttonOrActivity()}
+                    <TouchableOpacity style={styles.buttonLog} onPress={() => syncApp(true)}>
+                        <Text style={styles.buttonText}>DOWNLOAD UPDATES</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.buttonReg} onPress={() => this.reDownload()}>
                         <Text style={styles.buttonText}>RE-DOWNLOAD</Text>
                     </TouchableOpacity>

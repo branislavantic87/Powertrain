@@ -7,7 +7,7 @@ import { Actions } from 'react-native-router-flux';
 export default class PdfList extends Component {
 
     state = {
-        allVideos: global.globalVideoJson.videos
+        allVideos: global.videosJson.videos
     };
     /*
     Category(id) {

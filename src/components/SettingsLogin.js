@@ -3,6 +3,7 @@ import { StyleSheet, View, Image, TouchableOpacity, TextInput, Text, NetInfo, Pl
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import md5 from 'md5';
 import { Actions } from 'react-native-router-flux';
+import { isNetworkConnected } from '../../helpers';
 
 export default class SettingsLogin extends Component {
   constructor(props) {
@@ -18,22 +19,8 @@ export default class SettingsLogin extends Component {
 
   }
 
-
-  isNetworkConnected = () => {
-    if (Platform.OS === 'ios') {
-      return new Promise(resolve => {
-        const handleFirstConnectivityChangeIOS = isConnected => {
-          NetInfo.isConnected.removeEventListener('connectionChange', handleFirstConnectivityChangeIOS);
-          resolve(isConnected);
-        };
-        NetInfo.isConnected.addEventListener('connectionChange', handleFirstConnectivityChangeIOS);
-      });
-    }
-    return NetInfo.isConnected.fetch();
-  }
-
   logIn() {
-    const users = global.allUsers.users;
+    const users = global.usersJson.users;
     const hashPass = md5(this.state.password);
     if (this.state.isConnected === false) {
       user = users.find(({ email, password }) => {
@@ -129,7 +116,7 @@ export default class SettingsLogin extends Component {
 
 
   componentWillMount() {
-    this.isNetworkConnected()
+    isNetworkConnected()
       .then(res => {
         this.setState(() => ({ isConnected: res }));
         return Promise.resolve();
