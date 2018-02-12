@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, TextInput, Text, NetInfo, Platform, Alert } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import md5 from 'md5';
+import RNFB from 'react-native-fetch-blob';
 
 export default class SignUpModal extends Component {
   constructor(props) {
@@ -43,7 +44,7 @@ export default class SignUpModal extends Component {
     } else if (email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*?\.[a-zA-Z]{2,3}$/) === null) { 
       Alert.alert(
         '',
-        'Bad format of email',
+        'Invalid email format',
         [
           { text: 'Ok', onPress: () => { } }
         ]
@@ -66,7 +67,7 @@ export default class SignUpModal extends Component {
             this.setState({ firstname: '', surname: '', email: '', password: '' });
             Alert.alert(
               'You have registered successfully',
-              'You have to Log In to proceed',
+              'You have to log in to proceed',
               [
                 { text: 'Log In', onPress: () => this.props.changeToLogin() },
                 // { text: 'Cancel', onPress: () => {} }
@@ -82,8 +83,41 @@ export default class SignUpModal extends Component {
             );
           }
         })
+        .then(() => this.myLoop())
         .catch(error => console.log(error));
     }
+  }
+
+  myLoop = () => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => { this.fetchUserJson().then(() => resolve()).catch((err) => { console.log(err); myLoop(); return reject(); }) }, 2000);
+
+    })
+  }
+
+  fetchUserJson = () => {
+    console.log('okinuo fetchUserJson()');
+    return new Promise((resolve, reject) => {
+      fetch('http://www.cduppy.com/salescms/?a=ajax&do=getUsers&languageId=1&projectId=5&token=1234567890')
+        .then(res => res.json())
+        .then(res => {
+          console.log(res.lastChanges);
+          console.log(global.allUsers.lastChanges);
+          if (res.lastChanges == global.allUsers.lastChanges) {
+            console.log('i dalje je stari online');
+            return Promise.reject('Nije stigao novi json');
+          } else {
+            console.log('stigao novi');
+            RNFB.fs.writeFile(RNFB.fs.dirs.DocumentDir + '/allUsers.json', JSON.stringify(res))
+              .then(() => {
+                global.allUsers = res;
+                return Promise.resolve('stigao novi');
+              })
+          }
+        })
+        .then(() => resolve())
+        .catch((err) => { console.log(err); return reject() })
+    })
   }
 
 
@@ -95,7 +129,7 @@ export default class SignUpModal extends Component {
       })
       .then(() => {
         if (this.state.isConnected === false) {
-          this.setState({ msg: 'No internet connection, you cannot register at the moment!' })
+          this.setState({ msg: 'No internet connection, you can not register at the moment!' })
         }
       })
       .catch(error => console.log(error));

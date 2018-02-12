@@ -45,7 +45,7 @@ class Languages extends Component {
             return (
             <View key={index}>
                 <TouchableOpacity disabled={isDisabled} style={[{ margin: 10, height: 37, width:150, alignItems: 'center', borderWidth: 1, borderColor: '#ddd'}, isDisabled ? {backgroundColor: '#cccccc'} : {backgroundColor: '#fff'}]} onPress={() => this.onclickLanguageText(object)}>
-                    <Text style={{ fontSize: 25, color: '#9E9E9E' }} >{object.language}</Text>
+                    <Text style={{ fontSize: 23, color: '#757575' }} >{object.language}</Text>
                 </TouchableOpacity>
             </View>
             );

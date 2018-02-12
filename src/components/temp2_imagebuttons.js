@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, Dimensions, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, Image, Dimensions, StatusBar, TouchableOpacity } from 'react-native';
 import VB from './VideoBtn';
 import DB from './DocBtn';
 import Modall from './Modall';
@@ -9,7 +9,9 @@ export default class ImageButtons extends Component {
     state = {
         videoPath: [],
         documentPath: [],
-        image: ''
+        image: '',
+        whichOne: '',
+        visableTwoBtns: false
     };
 
     componentWillMount() {
@@ -22,9 +24,9 @@ export default class ImageButtons extends Component {
         })
 
         let images = this.props.files.find(file => {
-            return file.substring(file.length - 3, file.length) == 'jpg' 
-            || file.substring(file.length - 3, file.length) == 'png' 
-            || file.substring(file.length - 4, file.length) == 'jpeg'
+            return file.substring(file.length - 3, file.length) == 'jpg'
+                || file.substring(file.length - 3, file.length) == 'png'
+                || file.substring(file.length - 4, file.length) == 'jpeg'
         })
 
 
@@ -32,26 +34,45 @@ export default class ImageButtons extends Component {
     }
     componentDidMount() {
         StatusBar.setHidden(true);
-     }
+    }
+
+    onPressAdd = () => {
+        this.state.whichOne == 'add' ? this.setState({ whichOne: '', visableTwoBtns: false }) : this.setState({ whichOne: 'add', visableTwoBtns: true });
+
+    }
+
     render() {
         return (
-            
+
             <View style={styles.mainView}>
-    
+
+                <View style={styles.floatingButtonsHolder}>
+                    <TouchableOpacity onPress={this.onPressAdd} style={styles.add}><Image style={styles.floatBtnAdd} source={this.state.whichOne != 'add' ? require('./ico/add/add.png') : require('./ico/add/add_close_pressed.png')} /></TouchableOpacity>
+
+                    {this.state.visableTwoBtns &&
+                        <View>
+                            <TouchableOpacity style={styles.add_leaflet}><Image style={styles.floatBtnAdd} source={require('./ico/add/add_leaflet.png')} /></TouchableOpacity>
+                            <TouchableOpacity style={styles.add_presentation}><Image style={styles.floatBtnAdd} source={require('./ico/add/add_mypresentation.png')} /></TouchableOpacity>
+                        </View>
+                    }
+                </View>
+
                 <View style={styles.body}>
 
                     <View>
                         <Text style={[styles.headingText, styles.headingMain]}>{this.props.templateTitle}</Text>
                         <Text style={styles.headingText}>{this.props.subtitle}</Text>
+
                     </View>
+
 
                     <View style={styles.contentContainer}>
 
                         <View style={styles.contentPic}>
                             <Modall>
-                              <Image resizeMethod='resize' style={{width: '100%', height: '100%', resizeMode: 'cover' }} source={{ uri: this.state.image }}/>
+                                <Image resizeMethod='resize' style={{ width: '100%', height: '100%', resizeMode: 'cover' }} source={{ uri: this.state.image }} />
                             </Modall>
-                       
+
                             <View style={styles.ButtonContainer}>
                                 {this.state.videoPath.length > 0 && <VB videouri={this.state.videoPath[0]} />}
                                 {this.state.documentPath.length > 0 && <DB documenturi={this.state.documentPath[0]} />}
@@ -71,7 +92,7 @@ export default class ImageButtons extends Component {
 const styles = StyleSheet.create({
     mainView: {
         backgroundColor: 'white',
-        position: 'relative',
+        position: 'absolute',
         height: '100%'
     },
     body: {
@@ -116,5 +137,32 @@ const styles = StyleSheet.create({
         width: '51%',
 
     },
+
+
+
+
+
+    floatingButtonsHolder: {
+        position: 'absolute',
+        width: 50,
+        height: 158,
+
+        zIndex: 49824982789,
+        right: 0,
+        top: 140
+    },
+    floatBtnAdd: {
+        width: 50,
+        height: 50,
+    },
+
+    add_leaflet: {
+        paddingBottom: 4,
+        paddingTop: 4,
+
+    },
+    add_presentation: {
+
+    }
 });
 

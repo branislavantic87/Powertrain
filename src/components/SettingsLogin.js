@@ -147,7 +147,7 @@ export default class SettingsLogin extends Component {
           style={{ height: '100%', width: '100%' }}
           scrollEnabled={true}
           resetScrollToCoords={{ x: 0, y: 0 }} >
-          <View style={{ height: '40%', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%', marginBottom: 40 }}>
+          <View style={{ height: '40%', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%', }}>
             <Text style={{ alignSelf: 'flex-start', fontSize: 16 }}>USERNAME</Text>
 
             <TextInput style={styles.inputBox}
@@ -204,6 +204,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
+       
     },
     login: {
         height: '40%',
@@ -273,7 +274,7 @@ const styles = StyleSheet.create({
     avoid: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingTop: '20%',
+        paddingTop: '10%',
         paddingRight: '20%',
         paddingLeft: '20%'
     }

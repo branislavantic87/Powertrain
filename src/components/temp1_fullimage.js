@@ -12,12 +12,15 @@ export default class FullImage extends Component {
         <View style={styles.body}>
 
           <View style={styles.contentContainer}>
-
+          
             <View style={styles.contentPic}>
 
             <Modall>
               <Image resizeMethod='resize' style={{ width: '100%', height: '100%', resizeMode: 'cover'}} source={{ uri: this.props.files[0] }} />
+              
             </Modall>
+
+          
 
             </View>
 
@@ -52,4 +55,5 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: 'white',
   },
+ 
 });

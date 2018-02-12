@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, TextInput, Text, AsyncStorage, NetInfo, Platform, Alert } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import md5 from 'md5';
+import RNFB from 'react-native-fetch-blob';
 
 
 
@@ -50,7 +51,7 @@ export default class ChangePassword extends Component {
       AsyncStorage.getItem('@userId')
         .then(res => {
           this.setState({ userId: res })
-          return resolve();
+          return Promise.resolve();
         })
         .then(() => {
           const users = global.allUsers.users;
@@ -87,7 +88,7 @@ export default class ChangePassword extends Component {
                     this.setState({ oldpassword: '', newpassword: '', confirm_newpassword: '' });
                     Alert.alert(
                       'Password changed successfully.',
-                      'Please, Log In again to proceed.',
+                      'Please log in again to proceed.',
                       [
                         { text: 'Ok', onPress: this.changePasswordHandler.bind(this) },
                       ]
@@ -103,12 +104,13 @@ export default class ChangePassword extends Component {
                     );
                   }
                 })
-                .then()
+                .then(() => this.myLoop())
+                //.then(() => { })
                 .catch(error => console.log(error));
             } else {
               Alert.alert(
                 '',
-                'New password does not match confirmed new password!',
+                'Password does not match the confirm password!',
                 [
                   { text: 'Ok', onPress: () => { } },
                 ]
@@ -117,7 +119,7 @@ export default class ChangePassword extends Component {
           } else {
             Alert.alert(
               '',
-              'Old password does not match with current user!',
+              'Old password is invalid!',
               [
                 { text: 'Ok', onPress: () => { } },
               ]
@@ -129,16 +131,59 @@ export default class ChangePassword extends Component {
     })
   }
 
+  logOutGlobally = () => {
+    const formData = new FormData();
+    formData.append("id", this.state.userId);
+    console.log('FORMDATA: ' + formData);
+    // fetch('http://www.cduppy.com/salescms/?a=ajax&do=logoutUser&projectId=5&token=1234567890', {
+    //   method: 'POST',
+    //   body: formData
+    // })
+    // .then((res) => console.log(res))
+    // .catch(error => console.log(error));
+  }
+  
+  myLoop = () => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => { this.fetchUserJson().then(() => resolve()).catch((err) => { console.log(err); myLoop(); return reject(); }) }, 500);
+
+    })
+  }
+
+  fetchUserJson = () => {
+    console.log('okinuo fetchUserJson()');
+    return new Promise((resolve, reject) => {
+      fetch('http://www.cduppy.com/salescms/?a=ajax&do=getUsers&languageId=1&projectId=5&token=1234567890')
+        .then(res => res.json())
+        .then(res => {
+          console.log(res.lastChanges);
+          console.log(global.allUsers.lastChanges);
+          if (res.lastChanges == global.allUsers.lastChanges) {
+            console.log('i dalje je stari online');
+            return Promise.reject('Nije stigao novi json');
+          } else {
+            console.log('stigao novi');
+            RNFB.fs.writeFile(RNFB.fs.dirs.DocumentDir + '/allUsers.json', JSON.stringify(res))
+              .then(() => {
+                global.allUsers = res;
+                return Promise.resolve('stigao novi');
+              })
+          }
+        })
+        .then(() => resolve())
+        .catch((err) => reject(err) )
+    })
+  }
+
   logOutGlobally() {
     console.log('logOutGlobally');
     const formData = new FormData();
     formData.append("id", this.state.userId);
-    console.log('FORMDATA: ' + JSON.stringify(formData));
     fetch('http://www.cduppy.com/salescms/?a=ajax&do=logoutUser&projectId=5&token=1234567890', {
       method: 'POST',
       body: formData
     })
-      .then((res) => console.log(res))
+
       .catch(error => console.log(error));
   }
 
