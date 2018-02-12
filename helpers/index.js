@@ -13,6 +13,7 @@ let supportedLanguages = {};
 let defaultLanguageId = 1;
 let defaultLanguageObject = {};
 let server = '';
+let checkedFiles = {};
 
 urls = global.urls = {
     projectJson: 'http://www.cduppy.com/salescms/?a=ajax&do=getProject&projectId=5&token=1234567890&deviceId=' + deviceId,
@@ -171,9 +172,8 @@ export const checkForFile = () => {
                     return resolve([]);
                 } else {
                     res = JSON.parse(res);
-                    checkedFiles = res;
+                    global.checkedFiles = res;
                     if (res.failedDownloads.length > 0) {
-
                         return resolve(res.failedDownloads);
                     } else if (res.allDownloaded) {
                         return reject('Postoji checkedFiles.')
@@ -189,7 +189,8 @@ export const checkHashFiles = (pocetni) => {
     console.log('usao u hash files()');
     return new Promise((resolve, reject) => {
         let downloadStage = pocetni;
-        //checkedFiles.failedDownloads = [];
+        console.log('pocetni niz: ' + pocetni);
+        global.checkedFiles.failedDownloads = [];
         AsyncStorage.getItem('supportedLanguages')
             .then(res => JSON.parse(res))
             .then(res => {

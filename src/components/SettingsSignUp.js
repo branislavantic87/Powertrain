@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, TextInput, Text, NetInfo, Platform, Alert } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, TextInput, Text, NetInfo, Platform, Alert, AsyncStorage } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import md5 from 'md5';
 import RNFB from 'react-native-fetch-blob';
@@ -57,10 +57,11 @@ export default class SignUpModal extends Component {
               'You have registered successfully',
               'You have to log in to proceed',
               [
-                { text: 'Log In', onPress: () => this.props.changeToLogin() },
+                { text: 'Log In', onPress: () => {this.props.changeToLogin(); this.myLoop(); } },
                 // { text: 'Cancel', onPress: () => {} }
               ]
             )
+
           } else {
             Alert.alert(
               '',
@@ -71,14 +72,13 @@ export default class SignUpModal extends Component {
             );
           }
         })
-        .then(() => this.myLoop())
         .catch(error => console.log(error));
     }
   }
 
   myLoop = () => {
     return new Promise((resolve, reject) => {
-      setTimeout(() => { this.fetchUserJson().then(() => resolve()).catch((err) => { console.log(err); myLoop(); return reject(); }) }, 2000);
+      setTimeout(() => { this.fetchUserJson().then(() => resolve()).catch((err) => { console.log(err); this.myLoop(); return reject(); }) }, 2000);
 
     })
   }
@@ -95,7 +95,7 @@ export default class SignUpModal extends Component {
             return Promise.reject('Nije stigao novi json');
           } else {
             console.log('stigao novi');
-            RNFB.fs.writeFile(RNFB.fs.dirs.DocumentDir + '/allUsers.json', JSON.stringify(res))
+            AsyncStorage.setItem('usersJson', JSON.stringify(res))
               .then(() => {
                 global.usersJson = res;
                 return Promise.resolve('stigao novi');

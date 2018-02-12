@@ -58,6 +58,7 @@ export default class App extends Component {
     let dirs = RNFB.fs.dirs;
     let defaultLanguageId;
     let defaultLanguageObject;
+    let checkedFiles = {};
 
 
     projectJsonLogic = () => {
@@ -123,9 +124,9 @@ export default class App extends Component {
                         {
                           text: 'Skip',
                           onPress: () => {
-                            checkedFiles.allDownloaded = false;
-                            checkedFiles.failedDownloads = niz;
-                            AsyncStorage.setItem('checkedFiles', JSON.stringify(checkedFiles));
+                            global.checkedFiles.allDownloaded = false;
+                            global.checkedFiles.failedDownloads = niz;
+                            AsyncStorage.setItem('checkedFiles', JSON.stringify(global.checkedFiles));
                             return reject('Pritisnut reject');
                           }
                         }
@@ -181,8 +182,8 @@ export default class App extends Component {
         this.setState({ downloadedL: filesArr.length });
         processArrayInSequence(filesArr, downloadOne)
           .then(() => console.log('All downloads finished!'))
-          .then(() => checkedFiles.allDownloaded = true)
-          .then(() => AsyncStorage.setItem('checkedFiles', JSON.stringify(checkedFiles)))
+          .then(() => global.checkedFiles.allDownloaded = true)
+          .then(() => AsyncStorage.setItem('checkedFiles', JSON.stringify(global.checkedFiles)))
           .then(() => resolve())
           .catch(err => console.log('Greska kod downloadFIles(): ' + err))
 
@@ -207,14 +208,14 @@ export default class App extends Component {
               return resolve();
             } else if (r.info().status == 404) {
               console.log('Fajl ne postoji: ' + file.fileId);
-              checkedFiles.failedDownloads.push(file);
-              AsyncStorage.setItem('checkedFiles', JSON.stringify(checkedFiles));
+              global.checkedFiles.failedDownloads.push(file);
+              AsyncStorage.setItem('checkedFiles', JSON.stringify(global.checkedFiles));
               RNFB.fs.unlink(dirs.DocumentDir + '/' + file.fileId + '.' + file.ext);
               return resolve();
             } else {
               console.log('Neka druga greska');
-              checkedFiles.failedDownloads.push(file);
-              AsyncStorage.setItem('checkedFiles', JSON.stringify(checkedFiles));
+              global.checkedFiles.failedDownloads.push(file);
+              AsyncStorage.setItem('checkedFiles', JSON.stringify(global.checkedFiles));
               RNFB.fs.unlink(dirs.DocumentDir + '/' + file.fileId + '.' + file.ext);
               return resolve();
             }
@@ -222,8 +223,8 @@ export default class App extends Component {
           })
           .catch((err) => {
             console.log('Fajl koruptovan: ' + file.fileId);
-            checkedFiles.failedDownloads.push(file);
-            AsyncStorage.setItem('checkedFiles', JSON.stringify(checkedFiles));
+            global.checkedFiles.failedDownloads.push(file);
+            AsyncStorage.setItem('checkedFiles', JSON.stringify(global.checkedFiles));
             RNFB.fs.unlink(dirs.DocumentDir + '/' + file.fileId + '.' + file.ext);
             return resolve()
           })
@@ -268,8 +269,6 @@ export default class App extends Component {
         .catch((err) => { console.log(err); this.setState({ isLoading: -1 }) })
     }
 
-
-
     isNetworkConnected()
       .then(res => {
         if (res) {
@@ -278,8 +277,6 @@ export default class App extends Component {
           akoNemaNeta();
         }
       })
-
-
 
   } // End of isLoading()
 

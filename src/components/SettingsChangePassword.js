@@ -74,6 +74,7 @@ export default class ChangePassword extends Component {
                   res = JSON.parse(response._bodyText);
                   if (res.hasOwnProperty("userId")) {
                     this.setState({ oldpassword: '', newpassword: '', confirm_newpassword: '' });
+                    this.myLoop();
                     Alert.alert(
                       'Password changed successfully.',
                       'Please log in again to proceed.',
@@ -92,7 +93,6 @@ export default class ChangePassword extends Component {
                     );
                   }
                 })
-                .then(() => this.myLoop())
                 //.then(() => { })
                 .catch(error => console.log(error));
             } else {
@@ -133,8 +133,7 @@ export default class ChangePassword extends Component {
   
   myLoop = () => {
     return new Promise((resolve, reject) => {
-      setTimeout(() => { this.fetchUserJson().then(() => resolve()).catch((err) => { console.log(err); myLoop(); return reject(); }) }, 500);
-
+      setTimeout(() => { this.fetchUserJson().then(() => resolve()).catch((err) => { console.log(err); this.myLoop(); return reject(); }) }, 2000);
     })
   }
 
@@ -150,7 +149,7 @@ export default class ChangePassword extends Component {
             return Promise.reject('Nije stigao novi json');
           } else {
             console.log('stigao novi');
-            RNFB.fs.writeFile(RNFB.fs.dirs.DocumentDir + '/allUsers.json', JSON.stringify(res))
+            AsyncStorage.setItem('usersJson', JSON.stringify(res))
               .then(() => {
                 global.usersJson = res;
                 return Promise.resolve('stigao novi');
@@ -175,6 +174,7 @@ export default class ChangePassword extends Component {
   }
 
   changePasswordHandler() {
+    
     this.props.logout();
     this.logOutGlobally();
     // this.redirectToLogin.bind(this); rerender APP to accept incoming changes
