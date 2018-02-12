@@ -45,9 +45,9 @@ export default class ImageButtons extends Component {
         return (
 
             <View style={styles.mainView}>
-
+                { !this.props.fromHome && 
                 <View style={styles.floatingButtonsHolder}>
-                    <TouchableOpacity onPress={this.onPressAdd} style={styles.add}><Image style={styles.floatBtnAdd} source={this.state.whichOne != 'add' ? require('./ico/add/add.png') : require('./ico/add/add_close_pressed.png')} /></TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.onPressAdd()} style={styles.add}><Image style={styles.floatBtnAdd} source={this.state.whichOne != 'add' ? require('./ico/add/add.png') : require('./ico/add/add_close_pressed.png')} /></TouchableOpacity>
 
                     {this.state.visableTwoBtns &&
                         <View>
@@ -56,7 +56,7 @@ export default class ImageButtons extends Component {
                         </View>
                     }
                 </View>
-
+                }
                 <View style={styles.body}>
 
                     <View>

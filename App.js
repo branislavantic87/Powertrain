@@ -80,7 +80,7 @@ export default class App extends Component {
               if (fetchedUsers.lastChanges == global.allUsers.lastChanges) {
                 console.log('lastChanges za Usere su isti');
                 return resolve();
-              } else {     
+              } else {
                 console.log('lastChanges za Usere su razliciti');
                 global.allUsers = fetchedUsers;
                 RNFB.config({ path: pathToAllUsersJson }).fetch('GET', allUsersJsonURL)
@@ -118,6 +118,8 @@ export default class App extends Component {
     global.projectJsonURL = 'http://www.cduppy.com/salescms/?a=ajax&do=getProject&projectId=5&token=1234567890&deviceId=' + deviceId;
 
     let fetchedContent = {};
+    let fetchedPdf = {};
+    let fetchedVideos = {};
     let contentJsonURLReqParametri; // = '?a=ajax&do=getContent&projectId=5&token=1234567890&deviceId=' + deviceId;
     let contentJsonURL = '';
     let defaultLanguageId;
@@ -324,35 +326,88 @@ export default class App extends Component {
           .then(() => AsyncStorage.getItem(defaultLanguageObject.language))
           .then((res) => JSON.parse(res))
           .then((res) => { console.log('Defaultni jezik podesen na ' + defaultLanguageObject.language); global.globalJson = res; return Promise.resolve() })
-          .then(() => getPdfJson())
-          .then(() => getVideoJson())
           .then(() => resolve())
           .catch((err) => reject(err))
       })
     }
 
 
-    // SREDI ZA OFFLINE
-
-    getPdfJson = () => {
+    pdfJsonLogic = () => {
       return new Promise((resolve, reject) => {
         fetch('http://www.cduppy.com/salescms/?a=ajax&do=getDocuments&projectId=5&token=1234567890')
           .then(res => res.json())
-          .then(data => { global.globalPdf = data; return Promise.resolve() })
+          .then(data => { fetchedPdf = data; return Promise.resolve() })
+          .then(() => AsyncStorage.getItem('pdfJson'))
+          .then((res) => res == null ? nePostojiPdfJson() : postojiPdfJson())
           .then(() => resolve())
           .catch((err) => reject(err))
       })
     }
 
-    getVideoJson = () => {
+    nePostojiPdfJson = () => {
+      return new Promise((resolve, reject) => {
+        AsyncStorage.setItem('pdfJson', JSON.stringify(fetchedPdf))
+          .then(() => { global.globalPdf = fetchedPdf; return Promise.resolve(); })
+          .then(() => resolve())
+          .catch(err => reject(err))
+      })
+    }
+
+    postojiPdfJson = () => {
+      return new Promise((resolve, reject) => {
+        AsyncStorage.getItem('pdfJson')
+          .then((res) => {
+            global.globalPdf = JSON.parse(res);
+
+            if (global.globalPdf.lastChanges == fetchedPdf.lastChanges) {
+              return resolve();
+            } else {
+              global.globalPdf = fetchedPdf;
+              AsyncStorage.setItem('pdfJson', JSON.stringify(fetchedPdf));
+              return resolve();
+            }
+
+          })
+      })
+    }
+
+    videoJsonLogic = () => {
       return new Promise((resolve, reject) => {
         fetch('http://www.cduppy.com/salescms/?a=ajax&do=getVideos&projectId=5&token=1234567890')
           .then(res => res.json())
-          .then(data => { global.globalVideoJson = data; return Promise.resolve() })
+          .then(data => { fetchedVideos = data; return Promise.resolve() })
+          .then(() => AsyncStorage.getItem('videoJson'))
+          .then(res => res == null ? nePostojiVideoJson() : postojiVideoJson())
           .then(() => RNFB.fs.exists(pathToThumbnails))
           .then(res => !res ? nePostojeThumbsi() : postojeThumbails())
           .then(() => resolve())
           .catch(err => console.log(err))
+      })
+    }
+
+    nePostojiVideoJson = () => {
+      return new Promise((resolve, reject) => {
+        AsyncStorage.setItem('videoJson', JSON.stringify(fetchedVideos))
+          .then(() => { global.globalVideoJson = fetchedVideos; return Promise.resolve(); })
+          .then(() => resolve())
+          .catch(err => reject(err))
+      })
+    }
+
+    postojiVideoJson = () => {
+      return new Promise((resolve, reject) => {
+        AsyncStorage.getItem('videoJson')
+          .then(res => {
+            global.globalVideoJson = JSON.parse(res);
+
+            if (global.globalVideoJson.lastChanges == fetchedVideos.lastChanges) {
+              return resolve();
+            } else {
+              global.globalVideoJson = fetchedVideos;
+              AsyncStorage.setItem('videoJson', JSON.stringify(fetchedVideos));
+              return resolve();
+            }
+          })
       })
     }
 
@@ -603,8 +658,9 @@ export default class App extends Component {
       projectJsonLogic()
         .then(() => contentJsonLogic())
         .then(() => this.getAllUsers())
+        .then(() => pdfJsonLogic())
+        .then(() => videoJsonLogic())
         .then(() => checkForFile())
-        //.then(() => Promise.resolve([]))
         .then((a) => checkHashFiles(a))
         .then((niz) => calculateSize(niz)
           .then((mb) => alertForDownload(mb, niz))
@@ -645,6 +701,10 @@ export default class App extends Component {
           }
         })
         .then(() => this.getUsersFromLocale())
+        .then(() => AsyncStorage.getItem('pdfJson'))
+        .then(res => { global.globalPdf = JSON.parse(res); return Promise.resolve() })
+        .then(() => AsyncStorage.getItem('videoJson'))
+        .then(res => { global.globalVideoJson = JSON.parse(res); return Promise.resolve(); })
         .catch((err) => { console.log(err); this.setState({ isLoading: -1 }) })
     }
 
@@ -661,7 +721,7 @@ export default class App extends Component {
 
 
 
-  }// End of isLoading()
+  } // End of isLoading()
 
   isNetworkConnected = global.isNetworkConnected = () => {
     if (Platform.OS === 'ios') {

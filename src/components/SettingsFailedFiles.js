@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, AsyncStorage, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, AsyncStorage, ScrollView, Alert } from 'react-native';
+import RNRestart from 'react-native-restart';
 
 export default class SettingsFailedFiles extends Component {
 
@@ -28,13 +29,15 @@ export default class SettingsFailedFiles extends Component {
                 <View style={{ width: '100%', height: '100%', flexDirection: 'column' }}>
                     <ScrollView contentContainerStyle={styles.contentFailed}>
 
-                   { this.renderFailedFiles() }
+                        {this.renderFailedFiles()}
 
 
                     </ScrollView>
                     <View style={{ borderBottomWidth: 1, borderColor: '#757575' }} />
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.buttonDownload}>
+                        <TouchableOpacity
+                            onPress={() => Alert.alert('Download all files', 'You need to restart application to try and download all failed files. Do you wish to continue?', [{ text: 'Yes', onPress: () => RNRestart.Restart() }, { text: 'No', onPress: () => { } }])}
+                            style={styles.buttonDownload}>
                             <Text style={styles.buttonText}>DOWNLOAD ALL FILES</Text>
                         </TouchableOpacity>
                     </View>
@@ -51,7 +54,7 @@ export default class SettingsFailedFiles extends Component {
                         <Text style={styles.failedText}>{f.filename}</Text>
                     </View>
                     <View>
-                        <Text>{ (Number(f.size)/1024/1024).toFixed(2) } MB</Text>
+                        <Text>{(Number(f.size) / 1024 / 1024).toFixed(2)} MB</Text>
                     </View>
                 </View>
             );

@@ -31,19 +31,19 @@ class Body extends Component {
 
             switch (page.templateId) {
                 case '1':
-                    return <FullImage key={page.pageId} files={files} />
+                    return <FullImage fromHome={this.props.fromHome} key={page.pageId} files={files} />
                     break;
 
                 case '2':
-                    return <ImageButtons key={page.pageId} templateTitle={title} subtitle={subtitle} files={files} />
+                    return <ImageButtons fromHome={this.props.fromHome} key={page.pageId} templateTitle={title} subtitle={subtitle} files={files} />
                     break;
 
                 case '3':
-                    return <TextImage key={page.pageId} templateTitle={title} subtitle={subtitle} files={files} text={text} />
+                    return <TextImage fromHome={this.props.fromHome} key={page.pageId} templateTitle={title} subtitle={subtitle} files={files} text={text} />
                     break;
 
                 case '4':
-                    return <FullText key={page.pageId} subtitle={subtitle} templateTitle={title} text={text} />
+                    return <FullText fromHome={this.props.fromHome} key={page.pageId} subtitle={subtitle} templateTitle={title} text={text} />
                     break;
 
                 case '5':
