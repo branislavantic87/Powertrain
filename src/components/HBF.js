@@ -107,7 +107,7 @@ class HBF extends Component {
                         ForgotPswdDrop={() => { this.setState({ isModalVisibleForgotPswd: !this.state.isModalVisibleForgotPswd }) }} />
                 }
 
-                <Body style={{ bottom: 10 }} pages={this.props.filtered} />
+                <Body fromHome={this.props.fromHome} style={{ bottom: 10 }} pages={this.props.filtered} />
 
 
                 <View style={{ position: 'absolute', width: 50, height: 50, bottom: 30, left: 40, zIndex: 20 }}>

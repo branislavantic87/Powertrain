@@ -36,7 +36,7 @@ export default class Home extends Component {
 
     return (
       <View>
-        <HBF visibleVideoTour={true} from={this.state.menu} filtered={this.state.filtered} />
+        <HBF fromHome={true} from={this.state.menu} filtered={this.state.filtered} />
       </View>
     );
   }
