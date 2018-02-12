@@ -290,16 +290,6 @@ export default class App extends Component {
     this.setState({ appState: nextAppState });
   }
 
-  componentWillMount() {
-    KeepAwake.activate();
-    this.isLoading();
-    AppState.addEventListener('change', this._handleAppStateChange);
-  }
-
-  componentWillUnmount() {
-    AppState.removeEventListener('change', this._handleAppStateChange);
-  }
-
   calcProgress() {
     if (this.state.downloaded == 1) {
       this.state.indeterminate = false;
@@ -317,6 +307,16 @@ export default class App extends Component {
       }
       this.setState((oldState) => ({ bonusSec: oldState.bonusSec - 1 }));
     }, 1000);
+  }
+
+  componentWillMount() {
+    KeepAwake.activate();
+    this.isLoading();
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
   }
 
 
