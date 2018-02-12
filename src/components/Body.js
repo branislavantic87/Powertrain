@@ -6,7 +6,7 @@ import TextImage from './temp3_textimage';
 import FullText from './temp4_fulltext';
 import Swiper from 'react-native-swiper';
 import RNFB from 'react-native-fetch-blob';
-import HotspotImage from './HotspotImage';
+import HotspotImage from './temp5_imageHotspot';
 
 class Body extends Component {
 
