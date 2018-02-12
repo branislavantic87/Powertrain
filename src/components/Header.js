@@ -6,10 +6,15 @@ import RNRestart from 'react-native-restart';
 import RNFB from 'react-native-fetch-blob';
 import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { isNetworkConnected } from '../../helpers';
 
 
 
 export default class Header extends Component {
+
+  state = {
+    isConnected: true
+  };
 
   openLanguage = () => {
     this.props.onPressLang();
@@ -31,18 +36,12 @@ export default class Header extends Component {
     this.props.onPressSearch();
   };
 
-  openFolder = () => {
-
-  };
-
   openSettings = () => {
     this.props.onPressSettings();
   };
 
   openDashboard = () => {
     this.props.onPressDashboard();
-
-
   };
 
   openBreadcrumbs = () => {
@@ -78,44 +77,48 @@ export default class Header extends Component {
 
   };
 
-  
-componentDidMount() {
-  StatusBar.setHidden(true);
-}
+  componentWillMount() {
+    isNetworkConnected()
+      .then(res => res ? this.setState({ isConnected: true }) : this.setState({ isConnected: false }));
+  }
+
+  componentDidMount() {
+    StatusBar.setHidden(true);
+  }
 
 
-render() {
+  render() {
 
-  return (
+    return (
 
-    <View style={styles.navbarH}>
+      <View style={styles.navbarH}>
 
-      <StatusBar barStyle="dark-content" hidden={true} />
-      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+        <StatusBar barStyle="dark-content" hidden={true} />
+        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
 
-        <View style={{ flex: 3.5, alignItems: 'center', alignSelf: 'center', width: '100%' }}><HTML html={this.props.title ? this.props.title : ''} /></View>
+          <View style={{ flex: 3.5, alignItems: 'center', alignSelf: 'center', width: '100%' }}><HTML html={this.props.title ? this.props.title : ''} /></View>
 
-        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-          <TouchableWithoutFeedback onPress={this.openDashboard}><Image style={styles.ico} source={ this.props.whatIsOpen != 'dashboard' ? require('./ico/top-bar/dashboard.png') : require('./ico/top-bar/dashboard_pressed.png') } /></TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={this.openLanguage}><Image style={styles.ico} source={ this.props.whatIsOpen != 'language' ? require('./ico/top-bar/language.png') : require('./ico/top-bar/language_pressed.png') } /></TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={this.openBreadcrumbs}><Image style={styles.ico} source={ this.props.whatIsOpen != 'breadcrumbs' ? require('./ico/top-bar/breadcrumbs.png') : require('./ico/top-bar/breadcrumbs_pressed.png') } /></TouchableWithoutFeedback>
-          <TouchableWithoutFeedback disabled={true} onPress={this.divider}><Image style={styles.ico} source={require('./ico/x64/divider.png')} /></TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={this.openPresentation}><Image style={styles.ico_smaller_2} source={ this.props.whatIsOpen != 'presentation' ? require('./ico/top-bar/presentation.png') : require('./ico/top-bar/presentation_pressed.png') } /></TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={this.openLeaflets}><Image style={styles.ico_smaller} source={ this.props.whatIsOpen != 'leaflets' ? require('./ico/top-bar/leaflets.png') : require('./ico/top-bar/leaflets_pressed.png') }/></TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={this.openSearch}><Image style={styles.ico} source={ this.props.whatIsOpen != 'search' ? require('./ico/top-bar/search.png') : require('./ico/top-bar/search_pressed.png') }/></TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={this.openVideos}><Image style={styles.ico} source={ this.props.whatIsOpen != 'videos' ? require('./ico/top-bar/videos.png') : require('./ico/top-bar/videos_pressed.png') }/></TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={this.openMediaCenter}><Image style={styles.ico_smaller_3} source={ this.props.whatIsOpen != 'mediacenter' ? require('./ico/top-bar/media_center.png') : require('./ico/top-bar/media_center_pressed.png') } /></TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={this.openNotification}><Image style={styles.ico_smaller_4} source={ this.props.whatIsOpen != 'notifications' ? require('./ico/top-bar/notifications.png') : require('./ico/top-bar/notifications_pressed.png') } /></TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={this.openSettings}><Image style={styles.ico} source={ this.props.whatIsOpen != 'settings' ? require('./ico/top-bar/settings.png') : require('./ico/top-bar/settings_pressed.png') }/></TouchableWithoutFeedback>
-          <TouchableWithoutFeedback disabled={true} onPress={this.divider}><Image style={styles.ico} source={require('./ico/x64/divider.png')} /></TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={this.openHome}><Image style={styles.ico} source={require('./ico/x64/magna.png')} /></TouchableWithoutFeedback>
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <TouchableWithoutFeedback onPress={this.openDashboard}><Image style={styles.ico} source={this.props.whatIsOpen != 'dashboard' ? require('./ico/top-bar/dashboard.png') : require('./ico/top-bar/dashboard_pressed.png')} /></TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={this.openLanguage}><Image style={styles.ico} source={this.props.whatIsOpen != 'language' ? require('./ico/top-bar/language.png') : require('./ico/top-bar/language_pressed.png')} /></TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={this.openBreadcrumbs}><Image style={styles.ico} source={this.props.whatIsOpen != 'breadcrumbs' ? require('./ico/top-bar/breadcrumbs.png') : require('./ico/top-bar/breadcrumbs_pressed.png')} /></TouchableWithoutFeedback>
+            <TouchableWithoutFeedback disabled={true} onPress={this.divider}><Image style={styles.ico} source={require('./ico/x64/divider.png')} /></TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={this.openPresentation}><Image style={styles.ico_smaller_2} source={this.props.whatIsOpen != 'presentation' ? require('./ico/top-bar/presentation.png') : require('./ico/top-bar/presentation_pressed.png')} /></TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={this.openLeaflets}><Image style={styles.ico_smaller} source={this.props.whatIsOpen != 'leaflets' ? require('./ico/top-bar/leaflets.png') : require('./ico/top-bar/leaflets_pressed.png')} /></TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={this.openSearch}><Image style={styles.ico} source={this.props.whatIsOpen != 'search' ? require('./ico/top-bar/search.png') : require('./ico/top-bar/search_pressed.png')} /></TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={this.openVideos}><Image style={styles.ico} source={this.props.whatIsOpen != 'videos' ? require('./ico/top-bar/videos.png') : require('./ico/top-bar/videos_pressed.png')} /></TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={this.openMediaCenter}><Image style={styles.ico_smaller_3} source={this.props.whatIsOpen != 'mediacenter' ? require('./ico/top-bar/media_center.png') : require('./ico/top-bar/media_center_pressed.png')} /></TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={this.openNotification}><Image style={styles.ico_smaller_4} source={this.props.whatIsOpen != 'notifications' ? require('./ico/top-bar/notifications.png') : require('./ico/top-bar/notifications_pressed.png')} /></TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={this.openSettings}><Image style={styles.ico} source={this.props.whatIsOpen != 'settings' ? require('./ico/top-bar/settings.png') : require('./ico/top-bar/settings_pressed.png')} /></TouchableWithoutFeedback>
+            <TouchableWithoutFeedback disabled={true} onPress={this.divider}><Image style={styles.ico} source={require('./ico/x64/divider.png')} /></TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={this.openHome}><Image style={styles.ico} source={this.state.isConnected ? require('./ico/x64/magna.png') : require('./ico/x64/search.png')} /></TouchableWithoutFeedback>
+          </View>
         </View>
+
+
       </View>
-
-
-    </View>
-  )
-}
+    )
+  }
 }
 
 const styles = StyleSheet.create({
