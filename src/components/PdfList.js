@@ -9,7 +9,7 @@ export default class PdfList extends Component {
     state = {
         settingsText: '',
         categorySelected: '',
-        allPdf: global.globalPdf
+        allPdf: global.pdfJson
     };
 
     Category(id) {

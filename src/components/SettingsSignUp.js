@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, TextInput, Text, NetInfo, Platform, Alert } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, TextInput, Text, NetInfo, Platform, Alert, AsyncStorage } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import md5 from 'md5';
 import RNFB from 'react-native-fetch-blob';
+import { isNetworkConnected } from '../../helpers';
 
 export default class SignUpModal extends Component {
   constructor(props) {
@@ -16,19 +17,6 @@ export default class SignUpModal extends Component {
       isConnected: false,
       msg: '',
     };
-  }
-
-  isNetworkConnected = () => {
-    if (Platform.OS === 'ios') {
-      return new Promise(resolve => {
-        const handleFirstConnectivityChangeIOS = isConnected => {
-          NetInfo.isConnected.removeEventListener('connectionChange', handleFirstConnectivityChangeIOS);
-          resolve(isConnected);
-        };
-        NetInfo.isConnected.addEventListener('connectionChange', handleFirstConnectivityChangeIOS);
-      });
-    }
-    return NetInfo.isConnected.fetch();
   }
 
   registerUser() {
@@ -69,10 +57,11 @@ export default class SignUpModal extends Component {
               'You have registered successfully',
               'You have to log in to proceed',
               [
-                { text: 'Log In', onPress: () => this.props.changeToLogin() },
+                { text: 'Log In', onPress: () => {this.props.changeToLogin(); this.myLoop(); } },
                 // { text: 'Cancel', onPress: () => {} }
               ]
             )
+
           } else {
             Alert.alert(
               '',
@@ -83,14 +72,13 @@ export default class SignUpModal extends Component {
             );
           }
         })
-        .then(() => this.myLoop())
         .catch(error => console.log(error));
     }
   }
 
   myLoop = () => {
     return new Promise((resolve, reject) => {
-      setTimeout(() => { this.fetchUserJson().then(() => resolve()).catch((err) => { console.log(err); myLoop(); return reject(); }) }, 2000);
+      setTimeout(() => { this.fetchUserJson().then(() => resolve()).catch((err) => { console.log(err); this.myLoop(); return reject(); }) }, 2000);
 
     })
   }
@@ -102,15 +90,14 @@ export default class SignUpModal extends Component {
         .then(res => res.json())
         .then(res => {
           console.log(res.lastChanges);
-          console.log(global.allUsers.lastChanges);
-          if (res.lastChanges == global.allUsers.lastChanges) {
+          if (res.lastChanges == global.usersJson.lastChanges) {
             console.log('i dalje je stari online');
             return Promise.reject('Nije stigao novi json');
           } else {
             console.log('stigao novi');
-            RNFB.fs.writeFile(RNFB.fs.dirs.DocumentDir + '/allUsers.json', JSON.stringify(res))
+            AsyncStorage.setItem('usersJson', JSON.stringify(res))
               .then(() => {
-                global.allUsers = res;
+                global.usersJson = res;
                 return Promise.resolve('stigao novi');
               })
           }
@@ -122,7 +109,7 @@ export default class SignUpModal extends Component {
 
 
   componentWillMount() {
-    this.isNetworkConnected()
+    isNetworkConnected()
       .then(res => {
         this.setState(() => ({ isConnected: res }));
         return Promise.resolve();

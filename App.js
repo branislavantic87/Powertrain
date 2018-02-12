@@ -1,26 +1,36 @@
 import React, { Component } from 'react';
 import {
-  Platform,
   StyleSheet,
   Text,
   View,
-  NetInfo,
   Alert,
   StatusBar,
   AsyncStorage,
   Image,
-  AppState
+  AppState,
+  NetInfo
 } from 'react-native';
 import RNFB from 'react-native-fetch-blob';
-import axios from 'axios';
-import hash from 'object-hash';
+import DeviceInfo from 'react-native-device-info';
 import * as Progress from 'react-native-progress';
 import md5 from 'md5';
 import Routes from './src/components/Routes';
-import DeviceInfo from 'react-native-device-info';
 import base64 from 'base-64';
 import KeepAwake from 'react-native-keep-awake';
 import _ from 'lodash';
+import {
+  isNetworkConnected,
+  syncApp,
+  jsonLogic,
+  thumbnailsLogic,
+  initializeCheckedFiles,
+  checkServer,
+  contentJsonLogic,
+  checkForFile,
+  checkHashFiles,
+  processArrayInSequence,
+  zaNemaNetaDefault
+} from './helpers';
 
 export default class App extends Component {
 
@@ -41,443 +51,24 @@ export default class App extends Component {
     appState: AppState.currentState
   };
 
-  getAllUsers() {
-    return new Promise((resolve, reject) => {
-      let dirs = RNFB.fs.dirs;
-      const allUsersJsonURL = 'http://www.cduppy.com/salescms/?a=ajax&do=getUsers&languageId=1&projectId=5&token=1234567890';
-      const pathToAllUsersJson = dirs.DocumentDir + '/allUsers.json';
-      let fetchedUsers;
-
-      userJsonLogic = () => {
-        return new Promise((resolve, reject) => {
-          fetch(allUsersJsonURL)
-            .then(res => res.json())
-            .then(res => { fetchedUsers = res; return Promise.resolve(); })
-            .then(() => RNFB.fs.exists(pathToAllUsersJson))
-            .then(res => !res ? nePostojiUserJson() : postojiUserJson())
-            .then(() => resolve())
-            .catch(err => console.log('userJsonLogic: ' + err))
-        })
-      }
-
-      nePostojiUserJson = () => {
-        return new Promise((resolve, reject) => {
-          RNFB.config({
-            path: pathToAllUsersJson
-          })
-            .fetch('GET', allUsersJsonURL)
-            .then(() => { global.allUsers = fetchedUsers; return Promise.resolve() })
-            .then(() => resolve())
-            .catch(error => console.log('Postoji user json: ' + error))
-        })
-      }
-
-      postojiUserJson = () => {
-        return new Promise((resolve, reject) => {
-          RNFB.fs.readFile(pathToAllUsersJson, 'utf8')
-            .then(res => {
-              global.allUsers = JSON.parse(res);
-              if (fetchedUsers.lastChanges == global.allUsers.lastChanges) {
-                console.log('lastChanges za Usere su isti');
-                return resolve();
-              } else {
-                console.log('lastChanges za Usere su razliciti');
-                global.allUsers = fetchedUsers;
-                RNFB.config({ path: pathToAllUsersJson }).fetch('GET', allUsersJsonURL)
-                  .then(() => resolve())
-              }
-            })
-        })
-      }
-
-      userJsonLogic()
-        .then(() => resolve());
-    })
-  }
-
-  getUsersFromLocale() {
-    let dirs = RNFB.fs.dirs;
-    const pathToAllUsersJson = dirs.DocumentDir + '/allUsers.json';
-    return new Promise((resolve, reject) => {
-      RNFB.fs.readFile(pathToAllUsersJson, 'utf8')
-        .then(res => JSON.parse(res))
-        .then(res => {
-          global.allUsers = res;
-          return resolve();
-        })
-        .catch(error => console.log(error))
-    })
-  }
 
   isLoading() {
+
     const deviceId = DeviceInfo.getUniqueID();
     let dirs = RNFB.fs.dirs;
-    let fetchedProject = {};
-    let server = '';
-    let lastChangesOld = '';
-    global.projectJsonURL = 'http://www.cduppy.com/salescms/?a=ajax&do=getProject&projectId=5&token=1234567890&deviceId=' + deviceId;
-
-    let fetchedContent = {};
-    let fetchedPdf = {};
-    let fetchedVideos = {};
-    let contentJsonURLReqParametri; // = '?a=ajax&do=getContent&projectId=5&token=1234567890&deviceId=' + deviceId;
-    let contentJsonURL = '';
     let defaultLanguageId;
     let defaultLanguageObject;
-
-    const pathToThumbnails = dirs.DocumentDir + '/videoThumbs/'
-
-    const pathToCheckedFiles = dirs.DocumentDir + '/checkedFiles.json';
-    let checkedFiles = { failedDownloads: [], allDownloaded: false };
-    let supportedLanguages;
+    let checkedFiles = {};
 
 
     projectJsonLogic = () => {
       return new Promise((resolve, reject) => {
-        fetch(global.projectJsonURL)
-          .then(res => res.json())
-          .then(res => { fetchedProject = res; return Promise.resolve() })
-          .then(() => AsyncStorage.getItem('projectJson'))
-          .then(res => res == null ? nePostojiProjectJson() : postojiProjectJson())
+        jsonLogic('projectJson')
           .then(() => initializeCheckedFiles())
-          .then(() => { defaultLanguageId = Number(global.projectJson.project.defaultLanguageId); return Promise.resolve(); })
-          .then(() => { defaultLanguageObject = global.projectJson.languages.find(l => l.languageId == defaultLanguageId); return Promise.resolve(); })
           .then(() => checkServer())
-          .then(res => { console.log(res.config.url); server = res.config.url; return Promise.resolve(); })
-          .then(() => { contentJsonURLReqParametri = '?a=ajax&do=getContentByLanguage&languageId=' + defaultLanguageId + '&projectId=5&token=1234567890&deviceId=' + deviceId; return Promise.resolve(); })
-          .then(() => { contentJsonURL = server + contentJsonURLReqParametri; return Promise.resolve() })
+          .then(res => { global.server = res.config.url; return Promise.resolve(); })
           .then(() => resolve())
           .catch((err) => reject(err))
-      })
-    }
-
-    initializeCheckedFiles = () => {
-      return new Promise((resolve, reject) => {
-        AsyncStorage.getItem('checkedFiles')
-          .then(res => {
-            if (res == null) {
-              AsyncStorage.setItem('checkedFiles', JSON.stringify(checkedFiles))
-                .then(() => resolve())
-            } else {
-              return resolve();
-            }
-          })
-      })
-    }
-
-    nePostojiProjectJson = () => {
-      console.log('nePostojiProjectJson()');
-      return new Promise((resolve, reject) => {
-        AsyncStorage.setItem('projectJson', JSON.stringify(fetchedProject))
-          .then(res => { global.projectJson = fetchedProject; return Promise.resolve() })
-          .then(() => resolve())
-          .catch((err) => reject(err));
-      })
-    }
-
-    postojiProjectJson = () => {
-      console.log('postojiProjectJson()');
-      return new Promise((resolve, reject) => {
-        AsyncStorage.getItem('projectJson')
-          .then(res => {
-            const projectJsonObj = JSON.parse(res);
-            lastChangesOld = projectJsonObj.project.lastChanges;
-            if (hash(fetchedProject) == hash(projectJsonObj)) {
-              console.log('hashevi projectJsona su isti!');
-              global.projectJson = projectJsonObj;
-              return resolve();
-            } else {
-              // ovde obrisi check files
-              console.log('hashevi projectJsona su razliciti!');
-              global.projectJson = fetchedProject;
-              AsyncStorage.removeItem('checkedFiles')
-                .then(() => AsyncStorage.setItem('projectJson', JSON.stringify(fetchedProject)))
-                .then(() => resolve());
-            }
-          })
-      })
-    }
-
-    checkServer = () => {
-      let a = global.projectJson.project.servers.map(server =>
-        axios.get(server)
-      );
-      return Promise.resolve(a[0]);
-    }
-
-    supportedLanguagesFile = () => {
-      return new Promise((resolve, reject) => {
-        AsyncStorage.getItem('supportedLanguages')
-          .then((res) => JSON.parse(res))
-          .then((res) => {
-            if (res == null) {
-              supportedLanguages = { currentlySupportedLanguages: [] };
-              supportedLanguages.currentlySupportedLanguages.push(defaultLanguageObject);
-
-            } else {
-              supportedLanguages = res;
-              supportedLanguages.currentlySupportedLanguages.push(defaultLanguageObject);
-              supportedLanguages.currentlySupportedLanguages = _.uniqBy(supportedLanguages.currentlySupportedLanguages, 'languageId');
-            }
-            return Promise.resolve();
-          })
-          .then(() => JSON.stringify(supportedLanguages))
-          .then((res) => AsyncStorage.setItem('supportedLanguages', res))
-          .then(() => resolve())
-      })
-    }
-
-
-    setSupportedLanguage = () => {
-      return new Promise((resolve, reject) => {
-        AsyncStorage.getItem('supportedLanguages')
-          .then((res) => JSON.parse(res))
-          .then((res) => {
-            let a = global.projectJson.languages.map(l => checkContentForLang(l))
-            Promise.all(a)
-              .then(() => resolve())
-          })
-          .catch(() => resolve('Neka greska kod setSupportedLang'));
-      })
-    }
-
-    checkContentForLang = (lang) => {
-      return new Promise((resolve, reject) => {
-        AsyncStorage.getItem(lang.language)
-          .then(res => JSON.parse(res))
-          .then(res => res == null ? Promise.resolve({ bool: false, res: res }) : Promise.resolve({ bool: true, res: res }))
-          .then(res => {
-            if (res.bool) { // ako postoji json za jezik
-              console.log('Postoji content za ' + lang.language);
-              let urlZaJezik = server + '?a=ajax&do=getContentByLanguage&languageId=' + lang.languageId + '&projectId=5&token=1234567890&deviceId=' + deviceId;
-              let localLastChanges = res.res.lastChanges;
-              fetch(urlZaJezik)
-                .then(res => res.json())
-                .then(res => {
-                  if (res.lastChanges == localLastChanges) {
-                    console.log('Content JSON za jezik ' + lang.language + ' je isti kao i u lokalu i ne treba ga menjati.');
-                    return resolve();
-                  } else {
-                    console.log('Content JSON za jezik ' + lang.language + ' je RAZLICITI i treba ga opet skinuti, smestiti i naci fajlove.');
-                    AsyncStorage.setItem(lang.language, JSON.stringify(res))
-                      .then(() => resolve())
-                  }
-                })
-
-            } else { // ako ne postoji json za jezik
-              console.log('Ne postoji contentJSON za jezik ' + lang.language + ' i treba proveriti da li se treba skinuti');
-              AsyncStorage.getItem('supportedLanguages')
-                .then((supp) => JSON.parse(supp))
-                .then((supp) => {
-                  let urlZaJezik = server + '?a=ajax&do=getContentByLanguage&languageId=' + lang.languageId + '&projectId=5&token=1234567890&deviceId=' + deviceId;
-
-                  let ind = supp.currentlySupportedLanguages.findIndex(l => l.languageId == lang.languageId);
-
-                  if (ind >= 0) {
-                    console.log('Content JSON za jezik ' + lang.language + ' se treba skinuti.')
-                    fetch(urlZaJezik)
-                      .then(res => res.json())
-                      .then(res => AsyncStorage.setItem(lang.language, JSON.stringify(res)))
-                      .then(() => AsyncStorage.getItem('checkedFiles'))
-                      .then(res => JSON.parse(res))
-                      .then(res => { res && res.allDownloaded ? res.allDownloaded = false : null; return Promise.resolve(res); })
-                      .then((res) => AsyncStorage.setItem('checkedFiles', JSON.stringify(res)))
-                      .then(() => resolve())
-
-                  } else {
-                    console.log('Jezik ' + lang.language + ' se ne treba skinuti');
-                    return resolve();
-                  }
-
-                })
-            }
-          })
-          .catch((err) => console.log('Neka greska za jezik ' + lang.language + '.\n ' + err))
-      })
-    }
-
-
-    checkForFile = () => {
-      return new Promise((resolve, reject) => {
-        AsyncStorage.getItem('checkedFiles')
-          .then(res => {
-            if (res == null) {
-              return resolve([]);
-            } else {
-              res = JSON.parse(res);
-              checkedFiles = res;
-              if (res.failedDownloads.length > 0) {
-
-                return resolve(res.failedDownloads);
-              } else if (res.allDownloaded) {
-                return reject('Postoji checkedFiles.')
-              } else {
-                return resolve([]);
-              }
-            }
-          })
-      })
-    }
-
-    contentJsonLogic = () => {
-      return new Promise((resolve, reject) => {
-        supportedLanguagesFile()
-          .then(() => setSupportedLanguage())
-          .then(() => AsyncStorage.getItem(defaultLanguageObject.language))
-          .then((res) => JSON.parse(res))
-          .then((res) => { console.log('Defaultni jezik podesen na ' + defaultLanguageObject.language); global.globalJson = res; return Promise.resolve() })
-          .then(() => resolve())
-          .catch((err) => reject(err))
-      })
-    }
-
-
-    pdfJsonLogic = () => {
-      return new Promise((resolve, reject) => {
-        fetch('http://www.cduppy.com/salescms/?a=ajax&do=getDocuments&projectId=5&token=1234567890')
-          .then(res => res.json())
-          .then(data => { fetchedPdf = data; return Promise.resolve() })
-          .then(() => AsyncStorage.getItem('pdfJson'))
-          .then((res) => res == null ? nePostojiPdfJson() : postojiPdfJson())
-          .then(() => resolve())
-          .catch((err) => reject(err))
-      })
-    }
-
-    nePostojiPdfJson = () => {
-      return new Promise((resolve, reject) => {
-        AsyncStorage.setItem('pdfJson', JSON.stringify(fetchedPdf))
-          .then(() => { global.globalPdf = fetchedPdf; return Promise.resolve(); })
-          .then(() => resolve())
-          .catch(err => reject(err))
-      })
-    }
-
-    postojiPdfJson = () => {
-      return new Promise((resolve, reject) => {
-        AsyncStorage.getItem('pdfJson')
-          .then((res) => {
-            global.globalPdf = JSON.parse(res);
-
-            if (global.globalPdf.lastChanges == fetchedPdf.lastChanges) {
-              return resolve();
-            } else {
-              global.globalPdf = fetchedPdf;
-              AsyncStorage.setItem('pdfJson', JSON.stringify(fetchedPdf));
-              return resolve();
-            }
-
-          })
-      })
-    }
-
-    videoJsonLogic = () => {
-      return new Promise((resolve, reject) => {
-        fetch('http://www.cduppy.com/salescms/?a=ajax&do=getVideos&projectId=5&token=1234567890')
-          .then(res => res.json())
-          .then(data => { fetchedVideos = data; return Promise.resolve() })
-          .then(() => AsyncStorage.getItem('videoJson'))
-          .then(res => res == null ? nePostojiVideoJson() : postojiVideoJson())
-          .then(() => RNFB.fs.exists(pathToThumbnails))
-          .then(res => !res ? nePostojeThumbsi() : postojeThumbails())
-          .then(() => resolve())
-          .catch(err => console.log(err))
-      })
-    }
-
-    nePostojiVideoJson = () => {
-      return new Promise((resolve, reject) => {
-        AsyncStorage.setItem('videoJson', JSON.stringify(fetchedVideos))
-          .then(() => { global.globalVideoJson = fetchedVideos; return Promise.resolve(); })
-          .then(() => resolve())
-          .catch(err => reject(err))
-      })
-    }
-
-    postojiVideoJson = () => {
-      return new Promise((resolve, reject) => {
-        AsyncStorage.getItem('videoJson')
-          .then(res => {
-            global.globalVideoJson = JSON.parse(res);
-
-            if (global.globalVideoJson.lastChanges == fetchedVideos.lastChanges) {
-              return resolve();
-            } else {
-              global.globalVideoJson = fetchedVideos;
-              AsyncStorage.setItem('videoJson', JSON.stringify(fetchedVideos));
-              return resolve();
-            }
-          })
-      })
-    }
-
-    postojeThumbails = () => {
-      return new Promise((resolve, reject) => {
-        let a = global.globalVideoJson.videos.map(video =>
-          RNFB.fs.exists(pathToThumbnails + video.thumbnail)
-            .then(res => {
-              if (!res) {
-                RNFB.config({ path: pathToThumbnails + video.thumbnail }).fetch('GET', server + video.thumbnail)
-                  .then(() => { console.log('Ovaj thumbnail ne postoji potreban je ponovni download: ' + video.thumbnail); return Promise.resolve() })
-              }
-            })
-        )
-        Promise.all(a)
-          .then(() => resolve())
-          .catch(err => { console.log(err); return reject() })
-      })
-    }
-
-    nePostojeThumbsi = () => {
-      return new Promise((resolve, reject) => {
-        let dl = global.globalVideoJson.videos.map(video =>
-          RNFB.config({ path: pathToThumbnails + video.thumbnail }).fetch('GET', server + video.thumbnail)
-            .then(r => console.log('One thumb downloaded to: ' + r.path()))
-        )
-        Promise.all(dl)
-          .then(() => resolve())
-          .catch(err => console.log(err))
-      })
-    }
-
-
-    downloadOne = (file) => {
-      return new Promise((resolve, reject) => {
-        let t0 = Date.now();
-        RNFB.config({ path: dirs.DocumentDir + '/' + file.fileId + '.' + file.ext }).fetch('GET', server + global.projectJson.project.contentDir + file.filename + '?deviceId=' + deviceId)
-          .then(r => {
-            if (r.info().status == 200) {
-              console.log('One file downloaded at ', r.path() + ', with status code: ' + r.info().status);
-              let t1 = Date.now();
-              this.setState(prevState => ({ downloaded: prevState.downloaded + 1, mbDone: Math.trunc((prevState.mbDone + Math.round(Number(file.size) / 1024 / 1024 * 100)/100)*100)/100 }));
-              let time = t1 - t0;
-              let sizeOne = Number(file.size) / 1024.0;
-              let dlSpeed = sizeOne / time;
-              global.averageSpeed = 0.001 * dlSpeed + (1 - 0.001) * global.averageSpeed;
-              this.setState(() => ({ bonusSec: ((this.state.total - this.state.mbDone) / global.averageSpeed).toFixed(0) }));
-              return resolve();
-            } else if (r.info().status == 404) {
-              console.log('Fajl ne postoji: ' + file.fileId);
-              checkedFiles.failedDownloads.push(file);
-              AsyncStorage.setItem('checkedFiles', JSON.stringify(checkedFiles));
-              RNFB.fs.unlink(dirs.DocumentDir + '/' + file.fileId + '.' + file.ext);
-              return resolve();
-            } else {
-              console.log('Neka druga greska');
-              checkedFiles.failedDownloads.push(file);
-              AsyncStorage.setItem('checkedFiles', JSON.stringify(checkedFiles));
-              RNFB.fs.unlink(dirs.DocumentDir + '/' + file.fileId + '.' + file.ext);
-              return resolve();
-            }
-
-          })
-          .catch((err) => {
-            console.log('Fajl koruptovan: ' + file.fileId);
-            checkedFiles.failedDownloads.push(file);
-            AsyncStorage.setItem('checkedFiles', JSON.stringify(checkedFiles));
-            RNFB.fs.unlink(dirs.DocumentDir + '/' + file.fileId + '.' + file.ext);
-            return resolve()
-          })
       })
     }
 
@@ -504,7 +95,7 @@ export default class App extends Component {
         }
         NetInfo.getConnectionInfo()
           .then((res) => {
-            const speedBenchmarkFile = server + projectJson.project.speedBenchmarkFile;
+            const speedBenchmarkFile = global.server + projectJson.project.speedBenchmarkFile;
             const pathToSpeedBenchmarkFile = dirs.DocumentDir + '/benchmark666.jpg';
             const timeBeforeDownload = Date.now();
             RNFB.config({ path: pathToSpeedBenchmarkFile }).fetch('GET', speedBenchmarkFile)
@@ -533,9 +124,9 @@ export default class App extends Component {
                         {
                           text: 'Skip',
                           onPress: () => {
-                            checkedFiles.allDownloaded = false;
-                            checkedFiles.failedDownloads = niz;
-                            AsyncStorage.setItem('checkedFiles', JSON.stringify(checkedFiles));
+                            global.checkedFiles.allDownloaded = false;
+                            global.checkedFiles.failedDownloads = niz;
+                            AsyncStorage.setItem('checkedFiles', JSON.stringify(global.checkedFiles));
                             return reject('Pritisnut reject');
                           }
                         }
@@ -577,59 +168,6 @@ export default class App extends Component {
       })
     }
 
-
-
-    checkHashFiles = (pocetni) => {
-      console.log('usao u hash files()');
-      return new Promise((resolve, reject) => {
-        let downloadStage = pocetni;
-        checkedFiles.failedDownloads = [];
-        AsyncStorage.getItem('supportedLanguages')
-          .then(res => JSON.parse(res))
-          .then(res => {
-            let a = res.currentlySupportedLanguages.map(l => {
-              return new Promise((resolve, reject) => {
-                AsyncStorage.getItem(l.language)
-                  .then(res => JSON.parse(res))
-                  .then(res => {
-                    let b = res.files.map(file =>
-                      RNFB.fs.exists(dirs.DocumentDir + '/' + file.fileId + '.' + file.ext)
-                        .then(res => {
-                          if (!res) { /* && md5(dirs.DocumentDir + '/' + file.fileId + '.' + file.ext)  != file.hash*/
-                            downloadStage.push(file);
-                          }
-                        })
-                    )
-                    Promise.all(b)
-                      .then(() => resolve())
-                  })
-              })
-            })
-            Promise.all(a)
-              .then(() => { downloadStage = _.uniqBy(downloadStage, 'fileId'); return Promise.resolve(); })
-              .then(() => resolve(downloadStage))
-              .catch(err => console.log('Greska kod checkHashFiles()' + err))
-
-          })
-
-      })
-    }
-
-    processArray = (array, fn) => {
-      var index = 0;
-      return new Promise((resolve, reject) => {
-        function next() {
-          if (index < array.length) {
-            fn(array[index++]).then(next, reject);
-          } else {
-            resolve();
-          }
-        }
-        next();
-      })
-    }
-
-
     downloadFiles = (filesArr) => {
       console.log('usao u downloadFiles()')
       return new Promise((resolve, reject) => {
@@ -642,11 +180,10 @@ export default class App extends Component {
           downloadOne(file)
         );*/
         this.setState({ downloadedL: filesArr.length });
-        //Promise.all(a)
-        processArray(filesArr, downloadOne)
+        processArrayInSequence(filesArr, downloadOne)
           .then(() => console.log('All downloads finished!'))
-          .then(() => checkedFiles.allDownloaded = true)
-          .then(() => AsyncStorage.setItem('checkedFiles', JSON.stringify(checkedFiles)))
+          .then(() => global.checkedFiles.allDownloaded = true)
+          .then(() => AsyncStorage.setItem('checkedFiles', JSON.stringify(global.checkedFiles)))
           .then(() => resolve())
           .catch(err => console.log('Greska kod downloadFIles(): ' + err))
 
@@ -654,12 +191,53 @@ export default class App extends Component {
       })
     }
 
+    downloadOne = (file) => {
+      return new Promise((resolve, reject) => {
+        let t0 = Date.now();
+        RNFB.config({ path: dirs.DocumentDir + '/' + file.fileId + '.' + file.ext }).fetch('GET', global.server + global.projectJson.project.contentDir + file.filename + '?deviceId=' + deviceId)
+          .then(r => {
+            if (r.info().status == 200) {
+              console.log('One file downloaded at ', r.path() + ', with status code: ' + r.info().status);
+              let t1 = Date.now();
+              this.setState(prevState => ({ downloaded: prevState.downloaded + 1, mbDone: prevState.mbDone + Math.round(Number(file.size) / 1024 / 1024) }));
+              let time = t1 - t0;
+              let sizeOne = Number(file.size) / 1024.0;
+              let dlSpeed = sizeOne / time;
+              global.averageSpeed = 0.001 * dlSpeed + (1 - 0.001) * global.averageSpeed;
+              this.setState(() => ({ bonusSec: ((this.state.total - this.state.mbDone) / global.averageSpeed).toFixed(0) }));
+              return resolve();
+            } else if (r.info().status == 404) {
+              console.log('Fajl ne postoji: ' + file.fileId);
+              global.checkedFiles.failedDownloads.push(file);
+              AsyncStorage.setItem('checkedFiles', JSON.stringify(global.checkedFiles));
+              RNFB.fs.unlink(dirs.DocumentDir + '/' + file.fileId + '.' + file.ext);
+              return resolve();
+            } else {
+              console.log('Neka druga greska');
+              global.checkedFiles.failedDownloads.push(file);
+              AsyncStorage.setItem('checkedFiles', JSON.stringify(global.checkedFiles));
+              RNFB.fs.unlink(dirs.DocumentDir + '/' + file.fileId + '.' + file.ext);
+              return resolve();
+            }
+
+          })
+          .catch((err) => {
+            console.log('Fajl koruptovan: ' + file.fileId);
+            global.checkedFiles.failedDownloads.push(file);
+            AsyncStorage.setItem('checkedFiles', JSON.stringify(global.checkedFiles));
+            RNFB.fs.unlink(dirs.DocumentDir + '/' + file.fileId + '.' + file.ext);
+            return resolve()
+          })
+      })
+    }
+
     akoImaNeta = () => {
       projectJsonLogic()
         .then(() => contentJsonLogic())
-        .then(() => this.getAllUsers())
-        .then(() => pdfJsonLogic())
-        .then(() => videoJsonLogic())
+        .then(() => jsonLogic('usersJson'))
+        .then(() => jsonLogic('pdfJson'))
+        .then(() => jsonLogic('videosJson'))
+        .then(() => thumbnailsLogic())
         .then(() => checkForFile())
         .then((a) => checkHashFiles(a))
         .then((niz) => calculateSize(niz)
@@ -668,24 +246,6 @@ export default class App extends Component {
         )
         .catch(err => console.log('Catch od glavnog bloka od checkHashFiles: ' + err))
         .then(() => this.setState({ isLoading: 0 }))
-    }
-
-    zaNemaNetaDefault = () => {
-      return new Promise((resolve, reject) => {
-        AsyncStorage.getItem('projectJson')
-          .then(res => res != null ? res : Promise.reject('Ne postoji project JSON u lokalu'))
-          .then(res => JSON.parse(res))
-          .then(res => {
-            global.projectJson = res;
-            defaultLanguageId = Number(global.projectJson.project.defaultLanguageId);
-            defaultLanguageObject = global.projectJson.languages.find(l => l.languageId == defaultLanguageId);
-            return Promise.resolve();
-          })
-          .then(() => resolve())
-          .catch(err => reject(err));
-
-      })
-
     }
 
     akoNemaNeta = () => {
@@ -700,17 +260,16 @@ export default class App extends Component {
             this.setState({ isLoading: 0 });
           }
         })
-        .then(() => this.getUsersFromLocale())
+        .then(() => AsyncStorage.getItem('usersJson'))
+        .then(res => global.usersJson = JSON.parse(res))
         .then(() => AsyncStorage.getItem('pdfJson'))
-        .then(res => { global.globalPdf = JSON.parse(res); return Promise.resolve() })
+        .then(res => { global.pdfJson = JSON.parse(res); return Promise.resolve() })
         .then(() => AsyncStorage.getItem('videoJson'))
-        .then(res => { global.globalVideoJson = JSON.parse(res); return Promise.resolve(); })
+        .then(res => { global.videosJson = JSON.parse(res); return Promise.resolve(); })
         .catch((err) => { console.log(err); this.setState({ isLoading: -1 }) })
     }
 
-
-
-    this.isNetworkConnected()
+    isNetworkConnected()
       .then(res => {
         if (res) {
           akoImaNeta();
@@ -719,53 +278,14 @@ export default class App extends Component {
         }
       })
 
-
-
   } // End of isLoading()
 
-  isNetworkConnected = global.isNetworkConnected = () => {
-    if (Platform.OS === 'ios') {
-      return new Promise(resolve => {
-        const handleFirstConnectivityChangeIOS = isConnected => {
-          NetInfo.isConnected.removeEventListener('connectionChange', handleFirstConnectivityChangeIOS);
-          resolve(isConnected);
-        };
-        NetInfo.isConnected.addEventListener('connectionChange', handleFirstConnectivityChangeIOS);
-      });
-    }
-    return NetInfo.isConnected.fetch();
-  }
 
-
-  syncApp() {
-    this.isNetworkConnected()
-      .then(res => {
-        if (res) {
-          AsyncStorage.getItem('checkedFiles')
-            .then((res) => JSON.parse(res))
-            .then(fajlic => {
-              fetch(global.projectJsonURL)
-                .then(res => res.json())
-                .then(res => {
-                  let neSkinutiFajlovi = fajlic.failedDownloads.length > 0 ? 'There seems to be ' + fajlic.failedDownloads.length + ' missing files. Try syncing the app. \nIf this problem persists, that means files are missing from the server. \nContact your admin to fix it.' : 'Seems everything is OK. If you want you can restart application anyway.';
-                  if (res.project.lastChanges == global.projectJson.project.lastChanges) {
-                    //Alert.alert('UP TO DATE!', neSkinutiFajlovi, [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }])
-                  } else {
-                    Alert.alert('There seems to be update!', 'Do you wish to sync?', [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }]);
-                  }
-                })
-                .catch(() => { /*Alert.alert('Error', 'Something went wrong. Please check your internet connection, restart the app, or try again later.', [{ text: 'OK', onPress: () => { } }]);*/ });
-            })
-        } else {
-          //Alert.alert('Offline', 'You seem to be offline.', [{ text: 'OK', onPress: () => {} }]);
-        }
-      })
-  }
 
   _handleAppStateChange = (nextAppState) => {
     if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
       console.log('App has come to the foreground!');
-      this.syncApp();
+      syncApp(false);
     }
     this.setState({ appState: nextAppState });
   }

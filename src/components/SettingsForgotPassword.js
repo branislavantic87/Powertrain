@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, TextInput, Text, Platform, NetInfo, Alert, AsyncStorage } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { isNetworkConnected } from '../../helpers';
 
 export default class ForgotPassword extends Component {
   constructor(props) {
@@ -14,21 +15,8 @@ export default class ForgotPassword extends Component {
     };
   }
 
-  isNetworkConnected = () => {
-    if (Platform.OS === 'ios') {
-      return new Promise(resolve => {
-        const handleFirstConnectivityChangeIOS = isConnected => {
-          NetInfo.isConnected.removeEventListener('connectionChange', handleFirstConnectivityChangeIOS);
-          resolve(isConnected);
-        };
-        NetInfo.isConnected.addEventListener('connectionChange', handleFirstConnectivityChangeIOS);
-      });
-    }
-    return NetInfo.isConnected.fetch();
-  }
-
   forgotPassword() {
-    users = global.allUsers.users;
+    users = global.usersJson.users;
     user = users.find(({ email }) => {
       return this.state.email === email;
     })
@@ -77,7 +65,7 @@ export default class ForgotPassword extends Component {
 
 
   componentWillMount() {
-    this.isNetworkConnected()
+    isNetworkConnected()
       .then(res => {
         this.setState(() => ({ isConnected: res }));
         return Promise.resolve();
