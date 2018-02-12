@@ -136,8 +136,8 @@ const styles = {
         position: 'relative',
         height: '100%',
         width: '100%',
-        zIndex: 23
-        //bottom: '7%'
+        zIndex: 4,
+        bottom: '0%'
     }
 }
 
