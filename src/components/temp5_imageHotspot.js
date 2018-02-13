@@ -67,7 +67,7 @@ export default class HotspotImage extends Component {
                             onLayout={event => {
                                 const width = event.nativeEvent.layout.width;
                                 const height = event.nativeEvent.layout.height;
-                                console.log('event', width, height);
+                                //console.log('event', width, height);
                                 this.setState(() => ({ layoutWidth: width, layoutHeigth: height }));
                             }}
                             source={{ uri: 'file://' + RNFB.fs.dirs.DocumentDir + '/' + this.props.page.files.find(e => e.ext == 'jpg').filename }} />}
