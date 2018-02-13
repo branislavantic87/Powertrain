@@ -347,3 +347,42 @@ export const processArrayInSequence = (array, fn) => {
         next();
     })
 }
+
+export const findPageObjectById = (b) => {
+    return [global.globalJson.pages.find(p => p.pageId == b)];
+}
+
+export const findMenuObjectById = (menuIdS) => {
+    let menus = global.globalJson.menuTrees[global.language].menuTree;
+    let found = {};
+
+    for (let i = 0; i < menus.length; i++) {
+        if (menus[i].menuId == menuIdS) { found = menus[i]; break; }
+        else {
+            if (menus[i].children)
+                for (let j = 0; j < menus[i].children.length; j++) {
+                    if (menus[i].children[j].menuId == menuIdS) { found = menus[i].children[j]; break; }
+                    else {
+                        if (menus[i].children[j].children) {
+                            for (let k = 0; k < menus[i].children[j].children.length; k++) {
+                                if (menus[i].children[j].children[k].menuId == menuIdS) { found = menus[i].children[j].children[k]; break; }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+    return found;
+}
+
+
+export const findMenu1Selected = (m) => {
+    let index;
+    if (m.parentId == 0) {
+        return index = global.globalJson.menuTrees[global.language].menuTree.findIndex(cale => cale.menuId == m.menuId);
+    }
+    else {
+        let a = global.globalJson.menus[global.language].menu.find(x => x.menuId == m.parentId);
+        return findMenu1Selected(a);
+    }
+}

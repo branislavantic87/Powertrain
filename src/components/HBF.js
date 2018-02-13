@@ -38,7 +38,6 @@ class HBF extends Component {
         whatIsOpen: ''
     }
 
-
     render() {
 
         return (

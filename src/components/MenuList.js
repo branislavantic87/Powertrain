@@ -19,7 +19,7 @@ class MenuList extends React.PureComponent {
         //this.calculateMenu1();
         //this.refs._scrollView1.scrollTo({y:30, x: 30, animated: true});
         //if (this.props.from)
-            this.chooseSelected(this.state.fromObj);
+        this.chooseSelected(this.state.fromObj);
 
     }
     componentWillMount() {
@@ -29,22 +29,20 @@ class MenuList extends React.PureComponent {
                 o.menuId == this.props.from
             )
         });
-    } 
+    }
 
     chooseSelected(m) {
-        // this.props.from
-        
         if (m.parentId == 0) {
-            
+
             this.state.menus.map((cale, i) => {
                 if (cale.menuId == m.menuId) {
-                    
+
                     this.setState({ selected: i })
                 }
             })
         }
         else {
-            
+
             let a = global.globalJson.menus[global.language].menu.find(x => x.menuId == m.parentId);
             this.chooseSelected(a)
         }
@@ -109,7 +107,7 @@ class MenuList extends React.PureComponent {
     }
 
     render() {
-        
+
         return (
 
             <View style={styles.mainCont}>
