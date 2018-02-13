@@ -49,7 +49,7 @@ export default class SettingsLogin extends Component {
           'SUCCESS!',
           'You have logged in successfully',
           [
-            { text: 'OK', onPress: () => Actions.reset('home') },
+            { text: 'OK', onPress: () => this.props.onChange() },
           ],
           { cancelable: false }
         )
