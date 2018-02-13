@@ -29,7 +29,6 @@ class Menu2 extends Component {
     }
 
     filterPages() {
-
         var a = this.props.pages.filter(elem => { return elem.menuId == this.props.menu2.menuId });
         this.setState({ filteredPages: a });
     }
