@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, Dimensions, StatusBar, TouchableOpacity 
 import VB from './VideoBtn';
 import DB from './DocBtn';
 import Modall from './Modall';
+import LeafletButton from './LeafletButton';
 
 export default class ImageButtons extends Component {
 
@@ -36,27 +37,11 @@ export default class ImageButtons extends Component {
         StatusBar.setHidden(true);
     }
 
-    onPressAdd = () => {
-        this.state.whichOne == 'add' ? this.setState({ whichOne: '', visableTwoBtns: false }) : this.setState({ whichOne: 'add', visableTwoBtns: true });
-
-    }
-
     render() {
         return (
 
             <View style={styles.mainView}>
-                { !this.props.fromHome && 
-                <View style={styles.floatingButtonsHolder}>
-                    <TouchableOpacity onPress={() => this.onPressAdd()} style={styles.add}><Image style={styles.floatBtnAdd} source={this.state.whichOne != 'add' ? require('./ico/add/add.png') : require('./ico/add/add_close_pressed.png')} /></TouchableOpacity>
-
-                    {this.state.visableTwoBtns &&
-                        <View>
-                            <TouchableOpacity style={styles.add_leaflet}><Image style={styles.floatBtnAdd} source={require('./ico/add/add_leaflet.png')} /></TouchableOpacity>
-                            <TouchableOpacity style={styles.add_presentation}><Image style={styles.floatBtnAdd} source={require('./ico/add/add_mypresentation.png')} /></TouchableOpacity>
-                        </View>
-                    }
-                </View>
-                }
+                { !this.props.fromHome && <LeafletButton page={this.props.page} /> }
                 <View style={styles.body}>
 
                     <View>

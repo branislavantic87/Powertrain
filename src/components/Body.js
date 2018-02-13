@@ -31,23 +31,23 @@ class Body extends Component {
 
             switch (page.templateId) {
                 case '1':
-                    return <FullImage fromHome={this.props.fromHome} key={page.pageId} files={files} />
+                    return <FullImage fromHome={this.props.fromHome} page={page} key={page.pageId} files={files} />
                     break;
 
                 case '2':
-                    return <ImageButtons fromHome={this.props.fromHome} key={page.pageId} templateTitle={title} subtitle={subtitle} files={files} />
+                    return <ImageButtons fromHome={this.props.fromHome} page={page} key={page.pageId} templateTitle={title} subtitle={subtitle} files={files} />
                     break;
 
                 case '3':
-                    return <TextImage fromHome={this.props.fromHome} key={page.pageId} templateTitle={title} subtitle={subtitle} files={files} text={text} />
+                    return <TextImage fromHome={this.props.fromHome} page={page} key={page.pageId} templateTitle={title} subtitle={subtitle} files={files} text={text} />
                     break;
 
                 case '4':
-                    return <FullText fromHome={this.props.fromHome} key={page.pageId} subtitle={subtitle} templateTitle={title} text={text} />
+                    return <FullText fromHome={this.props.fromHome} page={page} key={page.pageId} subtitle={subtitle} templateTitle={title} text={text} />
                     break;
 
                 case '5':
-                    return <HotspotImage page={page} key={page.pageId} />
+                    return <HotspotImage fromHome={this.props.fromHome} page={page} key={page.pageId} />
                     break;
 
                 default:

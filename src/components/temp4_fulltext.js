@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import HTML from 'react-native-render-html';
+import LeafletButton from './LeafletButton';
 
 
 export default class FullText extends Component {
     render() {
         return (
             <View style={styles.mainView}>
-
+             { !this.props.fromHome && <LeafletButton page={this.props.page} /> }
                 <View style={styles.body}>
                     <View>
                         <Text style={[styles.headingText, styles.headingMain]}>{this.props.templateTitle}</Text>

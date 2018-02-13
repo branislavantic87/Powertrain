@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, Text, TouchableWithoutFeedback, Dimensions } from 'react-native';
 import RNFB from 'react-native-fetch-blob';
 import { Actions } from 'react-native-router-flux';
+import LeafletButton from './LeafletButton';
 import { findPageObjectById, findMenuObjectById, findMenu1Selected, aaa } from '../../helpers';
 
 const margine = 0.10;
@@ -58,6 +59,7 @@ export default class HotspotImage extends Component {
 
         return (
             <View style={styles.mainView} >
+             { !this.props.fromHome && <LeafletButton page={this.props.page} /> }
                 <View style={styles.body}>
                     <View style={styles.contentContainer}>
                         {<Image

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
+import LeafletButton from './LeafletButton';
 import Modall from './Modall';
 
 export default class FullImage extends Component {
@@ -8,6 +9,7 @@ export default class FullImage extends Component {
 
     return (
       <View style={styles.mainView}>
+       { !this.props.fromHome && <LeafletButton page={this.props.page} /> }
 
         <View style={styles.body}>
 

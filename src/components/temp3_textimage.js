@@ -5,6 +5,7 @@ import Swiper from 'react-native-swiper';
 import VB from './VideoBtn';
 import DB from './DocBtn';
 import Modall from './Modall';
+import LeafletButton from './LeafletButton';
 
 
 import SwiperFlatList from './SwiperFlatList';
@@ -63,7 +64,7 @@ export default class TextImage extends Component {
     return (
 
       <View style={styles.mainView}>
-
+       { !this.props.fromHome && <LeafletButton page={this.props.page} /> }
         <View style={styles.body}>
 
           <View>
