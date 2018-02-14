@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, Text, Settings } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, Text, Settings, TouchableWithoutFeedback } from 'react-native';
 import Header from './Header';
 import Footer from './Footer';
 import MenuList from './MenuList';
@@ -43,6 +43,7 @@ class HBF extends Component {
         return (
 
             <View>
+                {this.state.visibleMenu && <TouchableWithoutFeedback onPress={() => this.setState({ visibleMenu: false })} ><View style={{ backgroundColor: 'black', opacity: 0.3, position: 'absolute', top: 0, zIndex: 5, height: '100%', width: '100%'}}></View></TouchableWithoutFeedback>}
                 <Header
                     whatIsOpen={this.state.whatIsOpen}
                     title={this.props.from.title}
@@ -108,22 +109,15 @@ class HBF extends Component {
 
                 <Body fromHome={this.props.fromHome} style={{ bottom: 10 }} pages={this.props.filtered} />
 
-            {this.state.visibleMenu==false &&
-                <View style={{ position: 'absolute', width: 50, height: 50, bottom: 30, left: 40, zIndex: 20 }}>
+            {!this.state.visibleMenu &&
+                <View style={{ position: 'absolute', width: 50, height: 50, bottom: 30, left: 40, zIndex: 5 }}>
                     <TouchableOpacity onPress={() => { this.state.visibleMenu ? this.setState({ visibleMenu: false }) : this.setState({ visibleMenu: true }); }} style={{ width: '100%', height: '100%' }}>
                         <Image style={styles.ico} source={require('./ico/32/main-menu.png')} />
                     </TouchableOpacity>
                 </View>
             }
                
-                <View style={{ position: 'absolute', bottom: this.state.visibleMenu ? '6%' : -500, width: '100%' }}>
-                {this.state.visibleMenu==true &&
-                    <View style={{ width: 50, height: 50, bottom: 30, left: 40, zIndex: 22 }}>
-                        <TouchableOpacity onPress={() => { this.state.visibleMenu ? this.setState({ visibleMenu: false }) : this.setState({ visibleMenu: true }); }} style={{ position: 'absolute', width: '100%', height: '100%', }}>
-                            <Image style={styles.ico} source={require('./ico/32/main-menu.png')} />
-                        </TouchableOpacity>
-                    </View>
-                }
+                <View style={{ position: 'absolute', bottom:  0, height: this.state.visibleMenu ? undefined : 0, zIndex: 6, width: '100%' }}>
                     <MenuList selected={this.props.selected} data={global.globalJson} from={this.props.from.menuId} />
                 </View> 
                 
