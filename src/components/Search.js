@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ListView, ScrollView, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ListView, ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import RNFB from 'react-native-fetch-blob';
 
@@ -260,12 +260,12 @@ export default class Search extends Component {
                         </TouchableOpacity >
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 30, }}>
-                        <TouchableOpacity>
+                        <TouchableWithoutFeedback>
                             <Image
                                 style={{ width: 32, height: 32 }}
                                 source={require('./ico/x64/search.png')}
                             />
-                        </TouchableOpacity>
+                        </TouchableWithoutFeedback>
                         <View style={{ padding: 10 }}>
                             <TextInput
                                 keyboardType='default'
@@ -278,12 +278,6 @@ export default class Search extends Component {
                                 value={this.state.text}
                             />
                         </View>
-                        <TouchableOpacity onPress={Keyboard.dismiss}>
-                            <Image
-                                style={{ width: 32, height: 32 }}
-                                source={require('./ico/32/right.png')}
-                            />
-                        </TouchableOpacity>
                     </View>
                     <ScrollView>
                         {this.createObject()}
