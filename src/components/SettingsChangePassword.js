@@ -256,7 +256,8 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '700',
     textAlign: 'center',
-    marginBottom: 40
+    marginBottom: 40,
+    color: 'red'
   },
   containerChangePswd: {
     borderWidth: 24,

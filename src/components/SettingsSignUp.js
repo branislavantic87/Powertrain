@@ -193,7 +193,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '700',
     textAlign: 'center',
-    paddingTop: 30
+    paddingTop: 30,
+    color: 'red'
   },
   containerSignUp: {
     borderWidth: 24,
