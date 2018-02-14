@@ -42,7 +42,7 @@ class Menu3 extends Component {
                 </TouchableOpacity>
 
                 <View style={{ height: 50, borderColor: 'red', borderWidth: 1 }}>
-                    {/*this.renderMenus4()*/}
+                    {this.renderMenus4()}
                 </View>
         
             </View>
