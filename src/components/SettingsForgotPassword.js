@@ -121,7 +121,8 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '700',
     textAlign: 'center',
-    marginTop: '10%'
+    marginTop: '10%',
+    color: 'red'
   },
   containerForgotPswd: {
     borderWidth: 24,
