@@ -30,19 +30,6 @@ class MenuList extends React.PureComponent {
                 o.menuId == this.props.from
             )
         })
-        /*let fromObj = global.globalJson.menus[global.language].menu.find(o => o.menuId == this.props.from);
-        this.chooseSelected(fromObj);
-        let menu2Obj = findMenu(this.props.from);
-        let menu2Index = this.findMenu2Index(menu2Obj);
-        setTimeout(() => {
-            console.log('setTImeout()');
-            this.refs._scrollView1.scrollTo({ y: 0, x: this.state.selected * menu1Width - (menu1Width * menu1scrollAwayFactor), animated: true });
-            this.refs._scrollView2.scrollTo({ y: 0, x: menu2Index * 10, animated: true });
-
-        }, 1);*/
-        //InteractionManager.runAfterInteractions(() => {
-
-        //})
     }
 
     chooseSelected(m) {
@@ -61,7 +48,7 @@ class MenuList extends React.PureComponent {
     }
 
 
-    componentDidUpdate() {
+    componentDidUpdate() {   
         this.refs._scrollView2.scrollTo({ y: 0, x: 0, animated: true });
     }
 
@@ -101,14 +88,6 @@ class MenuList extends React.PureComponent {
 
     }
 
-    pozoviMeBa = () => {
-        setTimeout(() => {
-            console.log('setTImeout1');
-            this.refs._scrollView1.scrollTo({ y: 0, x: this.state.selected * menu1Width - (menu1Width * menu1scrollAwayFactor), animated: false });
-            this.refs._scrollView2.scrollTo({ y: 0, x: /*menu2Index * 10*/ 50, animated: false });
-        }, 1)
-    }
-
 
     componentDidMount() {
         console.log('componentDidMount()');
@@ -116,12 +95,16 @@ class MenuList extends React.PureComponent {
         this.chooseSelected(this.state.fromObj);
         let menu2Obj = findMenu(this.props.from);
         let menu2Index = this.findMenu2Index(menu2Obj);
-        InteractionManager.runAfterInteractions(() => {
+        /*InteractionManager.runAfterInteractions(() => {
             console.log('setTImeout1');
             
-            this.pozoviMeBa();
+            setTimeout(() => {
+                console.log('setTImeout1');
+                this.refs._scrollView1.scrollTo({ y: 0, x: this.state.selected * menu1Width - (menu1Width * menu1scrollAwayFactor), animated: false });
+                this.refs._scrollView2.scrollTo({ y: 0, x: menu2Index * 10, animated: false });
+            }, 1)
             console.log('setTImeout2');
-        })
+        })*/
 
         
     }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Menu3 from './Menu3';
 import { Actions } from 'react-native-router-flux';
+import HTML from 'react-native-render-html';
 
 
 class Menu2 extends Component {
@@ -23,6 +24,7 @@ class Menu2 extends Component {
                     pages={this.props.pages}
                     isPressed={this.props.from == child.menuId ? true : false}
                     selected={this.props.selected}
+                    from={this.props.from}
                 />
             );
         }
@@ -38,13 +40,12 @@ class Menu2 extends Component {
         return (
 
             <View >
-                <TouchableOpacity style={styles.menu2Item} onPress={() => Actions.reset('HBF', { from: this.props.menu2, filtered: this.state.filteredPages, selected: this.props.selected })}>
-                    <Text numberOfLines={1} style={[styles.menu2Text, { color: this.props.isPressed ? '#dd0000' : '#dd0000' }, { borderColor: this.props.isPressed ? '#d7d7d7' : '#d7d7d7' }]}>{this.props.menu2.title}</Text>
+                <TouchableOpacity  style={[styles.menu2Item,  { borderColor: this.props.isPressed ? '#990000' : '#d7d7d7' }]} onPress={() => Actions.reset('HBF', { from: this.props.menu2, filtered: this.state.filteredPages, selected: this.props.selected })}>
+                    <HTML containerStyle={styles.menu2Text} baseFontStyle={{color: 'red', fontSize: 12, fontWeight: 'bold' }}  html={this.props.menu2.title} />
                 </TouchableOpacity>
 
-                <View style={{ height: 220, flexWrap: 'wrap', borderRightColor: '#dddddd', borderRightWidth: 1, paddingRight: 10 }}>
+                <View style={{ height: 250, flexWrap: 'wrap', borderRightColor: '#d7d7d7', borderRightWidth: 1, paddingRight: 20, paddingLeft: 20 }}>
                     {this.renderMenus3()}
-
                 </View>
 
             </View>
@@ -54,16 +55,18 @@ class Menu2 extends Component {
 
 const styles = {
     menu2Item: {
-        margin: 10,
-        width: 200,
-        backgroundColor: '#d7d7d7'
+        margin: 5, 
+        marginLeft: 20,
+        marginRight: 20,
+        marginTop: 20,
+        backgroundColor: '#d7d7d7',
+        width: 250,
+        height: 50,
+        justifyContent: 'center',
+        borderWidth: 1
     },
     menu2Text: {
-        backgroundColor: '#d7d7d7',
-        padding: 10,
-        color: 'black',
-        fontSize: 16,
-        borderWidth: 1,
+        paddingLeft: 15,
     }
 }
 
