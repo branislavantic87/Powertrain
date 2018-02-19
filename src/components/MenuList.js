@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import { ScrollView, View } from 'react-native';
 import Menu1 from './Menu1';
 import Menu2 from './Menu2';
+import { findMenu } from '../../helpers';
+
+const menu1Width = 300;
+const menu1scrollAwayFactor = 1.5;
+const menu2Width = 200;
 
 
 class MenuList extends React.PureComponent {
@@ -14,16 +19,9 @@ class MenuList extends React.PureComponent {
         fromObj: {}
     };
 
-    componentDidMount() {
-        //this.refs._scrollView1.scrollTo({ y: 0, x:  });
-        //this.calculateMenu1();
-        //this.refs._scrollView1.scrollTo({y:30, x: 30, animated: true});
-        //if (this.props.from)
-        this.chooseSelected(this.state.fromObj);
 
-    }
+
     componentWillMount() {
-        // this.setState({menus: this.props.data.menuTrees[this.props.a-1].menuTree});
         this.setState({
             fromObj: global.globalJson.menus[global.language].menu.find(o =>
                 o.menuId == this.props.from
@@ -33,7 +31,6 @@ class MenuList extends React.PureComponent {
 
     chooseSelected(m) {
         if (m.parentId == 0) {
-
             this.state.menus.map((cale, i) => {
                 if (cale.menuId == m.menuId) {
 
@@ -42,41 +39,17 @@ class MenuList extends React.PureComponent {
             })
         }
         else {
-
             let a = global.globalJson.menus[global.language].menu.find(x => x.menuId == m.parentId);
             this.chooseSelected(a)
         }
     }
 
 
-
-
-    calculateMenu1() {
-        for (let i = 0, l = this.state.menus.length; i < l; i++) {
-            if (this.state.selected == i) {
-                this.refs['_menu1' + i].measure(
-                    (fx, fy, width, height, px, py) => {
-
-                        console.log('Component width is: ' + width)
-                        console.log('Component height is: ' + height)
-                        console.log('X offset to frame: ' + fx)
-                        console.log('Y offset to frame: ' + fy)
-                        console.log('X offset to page: ' + px)
-                        console.log('Y offset to page: ' + py)
-                    })
-
-            }
-        }
-    }
-
-
     componentDidUpdate() {
-
         this.refs._scrollView2.scrollTo({ y: 0, x: 0, animated: true });
     }
 
     renderMenus1() {
-
         return this.state.menus.map((menu, i) =>
             <Menu1 onPress={() => this.setState({ selected: i })}
                 isPressed={this.state.selected == i ? true : false}
@@ -88,7 +61,6 @@ class MenuList extends React.PureComponent {
     }
 
     renderMenus2() {
-
         if (this.state.menus[this.state.selected]) {
             if (this.state.menus[this.state.selected].children) {
                 return this.state.menus[this.state.selected].children.map(menu =>
@@ -106,10 +78,30 @@ class MenuList extends React.PureComponent {
         }
     }
 
+    findMenu2Index = (menu) => {
+        let b = global.globalJson.menus[global.language].menu.filter(m => menu.depth == m.depth && menu.parentId == m.parentId)
+        let a = b.findIndex(m => m.menuId == menu.menuId);
+        console.log(a/b.length*100);
+        return a/b.length*100;
+
+    }
+
+    componentDidMount() {
+        this.chooseSelected(this.state.fromObj);
+        let menu2Obj = findMenu(this.props.from);
+        console.log('===========');
+        console.log(menu2Obj);
+        console.log('===========');
+        let menu2Index = this.findMenu2Index(menu2Obj);
+        
+        setTimeout(() => {
+            this.refs._scrollView1.scrollTo({ y: 0, x: this.state.selected * menu1Width - (menu1Width * menu1scrollAwayFactor), animated: true });
+            this.refs._scrollView2.scrollTo({ y: 0, x: menu2Index * 10, animated: true });
+        }, 1)
+    }
+
     render() {
-
         return (
-
             <View style={styles.mainCont}>
                 <ScrollView ref='_scrollView1' horizontal={true} style={styles.menu1Container} showsHorizontalScrollIndicator={false}>
                     {this.renderMenus1()}

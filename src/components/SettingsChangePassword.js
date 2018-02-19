@@ -215,6 +215,7 @@ export default class ChangePassword extends Component {
               value={this.state.oldpassword}
               onChangeText={oldpassword => this.setState({ oldpassword })}
               onSubmitEditing={() => this.oldpassword.focus()}
+              editable={this.state.isConnected}
             />
             <Text style={{ alignSelf: 'flex-start', fontSize: 16 }}>NEW PASSWORD</Text>
             <TextInput style={styles.inputBox}
@@ -225,6 +226,7 @@ export default class ChangePassword extends Component {
               value={this.state.newpassword}
               onChangeText={newpassword => this.setState({ newpassword })}
               ref={(input) => this.oldpassword = input}
+              editable={this.state.isConnected}
             />
             <Text style={{ alignSelf: 'flex-start', fontSize: 16 }}>CONFIRM NEW PASSWORD</Text>
             <TextInput style={styles.inputBox}
@@ -234,6 +236,7 @@ export default class ChangePassword extends Component {
               value={this.state.confirm_newpassword}
               onChangeText={confirm_newpassword => this.setState({ confirm_newpassword })}
               ref={(input) => this.newpassword = input}
+              editable={this.state.isConnected}
             />
           </View>
 
@@ -256,7 +259,8 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '700',
     textAlign: 'center',
-    marginBottom: 40
+    marginBottom: 40,
+    color: 'red'
   },
   containerChangePswd: {
     borderWidth: 24,

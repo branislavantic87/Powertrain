@@ -38,6 +38,7 @@ export default class SettingsLogin extends Component {
             { text: 'Ok', onPress: () => { } }
           ]
         )
+        // Da li praviti dozvolu logovanja preko TYPE, jer trenutno TYPE postoji samo za offline log in
       } else {
         this.setState({
           userId: user.userId,

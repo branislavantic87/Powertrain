@@ -386,3 +386,10 @@ export const findMenu1Selected = (m) => {
         return findMenu1Selected(a);
     }
 }
+
+export const findMenu = (menuIdS) => {
+    let menus = global.globalJson.menus[global.language].menu;
+    
+    return menus.find(m => m.menuId == menuIdS);
+    
+}

@@ -98,6 +98,7 @@ export default class ForgotPassword extends Component {
               value={this.state.email}
               onChangeText={email => this.setState({ email })}
               returnKeyType="next"
+              editable={this.state.isConnected}
             />
           </View>
           <View style={{ height: '60%', width: '50%', alignItems: 'center', justifyContent: 'flex-start', flexDirection: 'column', marginTop: 15 }}>
@@ -121,7 +122,8 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '700',
     textAlign: 'center',
-    marginTop: '10%'
+    marginTop: '10%',
+    color: 'red'
   },
   containerForgotPswd: {
     borderWidth: 24,
