@@ -98,6 +98,7 @@ export default class ForgotPassword extends Component {
               value={this.state.email}
               onChangeText={email => this.setState({ email })}
               returnKeyType="next"
+              editable={this.state.isConnected}
             />
           </View>
           <View style={{ height: '60%', width: '50%', alignItems: 'center', justifyContent: 'flex-start', flexDirection: 'column', marginTop: 15 }}>
