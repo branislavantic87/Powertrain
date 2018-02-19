@@ -32,21 +32,23 @@ export default class Menu4 extends Component {
 const styles = {
     menu4Item: {
       
-        marginBottom: 10,
-        marginLeft: 10,
+        marginBottom: 5,
+        marginLeft: 0,
+        marginRight: 10,
         width: 200,
         //flex: 1
       
     },
     menu4Text: {
-        padding: 10,
+        padding: 13,
         backgroundColor: '#f2f2f2',
         borderWidth: 1,
         borderColor: '#909090',
-        color: '#909090'
+        color: '#909090',
+        fontSize: 12,
     },
     menu2Item: {
         width: 180,
-        alignSelf: 'flex-end'
+        alignSelf: 'flex-end',
     },
 }

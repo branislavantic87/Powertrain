@@ -58,15 +58,15 @@ const styles = {
         //height: '100%'
     },
     menu3Text: {
-        padding: 10,
+        padding: 13,
         backgroundColor: '#f2f2f2',
         borderWidth: 1,
-        borderColor: '#909090'
+        borderColor: '#909090',
+        fontSize: 12,
+        paddingLeft: 15
     },
     menu2Item: {
-        marginBottom: 10,
-        marginLeft: 10,
-
+        marginBottom: 5,
         width: 200,
         
     },

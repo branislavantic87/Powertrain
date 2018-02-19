@@ -11,7 +11,7 @@ class Menu1 extends Component {
             <View>
                 <View style={styles.pdt}>
                     <TouchableOpacity onPress={this.props.onPress} style={[styles.menu1Item, { backgroundColor: this.props.isPressed ? '#dd0000' : '#d7d7d7' }]}>
-                        <Text numberOfLines={1} style={{ paddingBottom: 6, fontSize: 16, color: this.props.isPressed ? 'white' : '#757575' }}>{this.props.menu1.title}</Text>
+                        <Text numberOfLines={1} style={{ paddingBottom: 6, paddingLeft: 5, textAlign: 'left', fontSize: 13, color: this.props.isPressed ? 'white' : '#757575' }}>{this.props.menu1.title}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -27,7 +27,7 @@ const styles = {
         borderColor: '#fff',
         height: 50,
         width: 300,
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'center',
         padding: 10,
        

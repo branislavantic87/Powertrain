@@ -42,9 +42,8 @@ class Menu2 extends Component {
                     <Text numberOfLines={1} style={[styles.menu2Text, { color: this.props.isPressed ? '#dd0000' : '#dd0000' }, { borderColor: this.props.isPressed ? '#d7d7d7' : '#d7d7d7' }]}>{this.props.menu2.title}</Text>
                 </TouchableOpacity>
 
-                <View style={{ height: 220, flexWrap: 'wrap', borderRightColor: '#dddddd', borderRightWidth: 1, paddingRight: 10 }}>
+                <View style={{ height: 220, flexWrap: 'wrap', borderRightColor: '#d7d7d7', borderRightWidth: 1, paddingRight: 20, paddingLeft: 20 }}>
                     {this.renderMenus3()}
-
                 </View>
 
             </View>
@@ -54,16 +53,21 @@ class Menu2 extends Component {
 
 const styles = {
     menu2Item: {
-        margin: 10,
+        margin: 5, 
+        marginLeft: 20,
+        marginRight: 20,
+        marginTop: 20,
         width: 200,
         backgroundColor: '#d7d7d7'
     },
     menu2Text: {
         backgroundColor: '#d7d7d7',
-        padding: 10,
+        padding: 13,
         color: 'black',
         fontSize: 16,
         borderWidth: 1,
+        fontSize: 12,
+        paddingLeft: 15
     }
 }
 
