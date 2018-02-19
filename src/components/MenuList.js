@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, InteractionManager } from 'react-native';
+import _ from 'lodash';
 import Menu1 from './Menu1';
 import Menu2 from './Menu2';
 import { findMenu } from '../../helpers';
@@ -47,6 +48,7 @@ class MenuList extends React.PureComponent {
 
 
     componentDidUpdate() {
+        console.log('aaaa');
         this.refs._scrollView2.scrollTo({ y: 0, x: 0, animated: true });
     }
 
@@ -82,8 +84,12 @@ class MenuList extends React.PureComponent {
     findMenu2Index = (menu) => {
         let b = global.globalJson.menus[global.language].menu.filter(m => menu.depth == m.depth && menu.parentId == m.parentId)
         let a = b.findIndex(m => m.menuId == menu.menuId);
-        return a/b.length*100;
+        return a / b.length * 100;
 
+    }
+
+    componentWillUnmount() {
+        console.log('willUnmount()')
     }
 
     componentDidMount() {
@@ -91,24 +97,28 @@ class MenuList extends React.PureComponent {
         this.chooseSelected(this.state.fromObj);
         let menu2Obj = findMenu(this.props.from);
         let menu2Index = this.findMenu2Index(menu2Obj);
-        console.log(this.refs._scrollView1.scrollTo);
-        /*setTimeout(() => {
-            console.log('setTImeout()');
-            this.refs._scrollView1.scrollTo({ y: 0, x: this.state.selected * menu1Width - (menu1Width * menu1scrollAwayFactor), animated: true });
-            this.refs._scrollView2.scrollTo({ y: 0, x: menu2Index * 10, animated: true });
-        }, 1000)*/
+        InteractionManager.runAfterInteractions(() => {
+            setTimeout(() => {
+                console.log('setTImeout()');
+                this.refs._scrollView1.scrollTo({ y: 0, x: this.state.selected * menu1Width - (menu1Width * menu1scrollAwayFactor), animated: true });
+                this.refs._scrollView2.scrollTo({ y: 0, x: menu2Index * 10, animated: true });
+            }, 1)
+
+        })
     }
 
     render() {
         return (
             <View style={styles.mainCont}>
-                <ScrollView ref='_scrollView1' horizontal={true} style={styles.menu1Container} showsHorizontalScrollIndicator={false}>
+
+                <ScrollView ref='_scrollView1' style={styles.menu1Container} horizontal={true} showsHorizontalScrollIndicator={false}>
                     {this.renderMenus1()}
                 </ScrollView>
 
-                <ScrollView ref='_scrollView2' showsHorizontalScrollIndicator={false} horizontal={true} style={{ flexDirection: 'row', flex: 1 }}>
+                <ScrollView ref='_scrollView2' style={{ flexDirection: 'row', flex: 1 }} showsHorizontalScrollIndicator={false} horizontal={true}>
                     {this.renderMenus2()}
                 </ScrollView>
+
             </View>
         );
     }
@@ -117,7 +127,6 @@ class MenuList extends React.PureComponent {
 const styles = {
     menu1Container: {
         flexDirection: 'row',
-
     },
     mainCont: {
         backgroundColor: '#F5F5F5',

@@ -5,13 +5,14 @@ import { Actions } from 'react-native-router-flux';
 import LeafletButton from './LeafletButton';
 import { findPageObjectById, findMenuObjectById, findMenu1Selected, aaa } from '../../helpers';
 
-const margine = 0.10;
+const margine = 0.1;
 
 export default class HotspotImage extends Component {
 
     state = {
         layoutWidth: 0,
-        layoutHeigth: 0
+        layoutHeigth: 0,
+        picExists: false
     }
 
 
@@ -55,6 +56,12 @@ export default class HotspotImage extends Component {
             );
         }));
     }
+
+    componentWillMount() {
+        RNFB.fs.exists(RNFB.fs.dirs.DocumentDir + '/' + this.props.page.files.find(e => e.ext == 'jpg').filename)
+        .then(res => res ? this.setState({picExists: true}) : this.setState({picExists: false}))
+    }
+
     render() {
 
         return (
@@ -73,7 +80,7 @@ export default class HotspotImage extends Component {
                                 this.setState(() => ({ layoutWidth: width, layoutHeigth: height }));
                             }}
                             source={{ uri: 'file://' + RNFB.fs.dirs.DocumentDir + '/' + this.props.page.files.find(e => e.ext == 'jpg').filename }} />}
-                        {this.getPosistionsFromJSON()}
+                        {this.state.picExists && this.getPosistionsFromJSON()}
                     </View>
                 </View>
             </View>
