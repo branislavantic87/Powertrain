@@ -37,15 +37,16 @@ class Menu2 extends Component {
 
         return (
 
-            <View style={{flex: 1}}>
+            <View >
                 <TouchableOpacity style={styles.menu2Item} onPress={() => Actions.reset('HBF', {from: this.props.menu2, filtered: this.state.filteredPages, selected: this.props.selected })}>
                     <Text numberOfLines={1} style={[styles.menu2Text, { color: this.props.isPressed ? '#f44336' : '#f44336' }, {backgroundColor: this.props.isPressed ? '#D8D8D8' : '#EEEEEE' }]}>{this.props.menu2.title}</Text>
                 </TouchableOpacity>
 
-                <View style={{ flex: 1, height: 250, flexWrap: 'wrap', borderRightColor: '#dddddd', borderRightWidth: 1 }}>
+<View style={{ height: 240, flexWrap: 'wrap', borderRightColor: '#dddddd', borderRightWidth: 1 }}>
                     {this.renderMenus3()}
-                </View>
 
+           </View>
+               
             </View>
         );
     }
@@ -61,7 +62,20 @@ const styles = {
         padding: 10,
         color: 'black',
         fontSize: 16,
-    }
+    },
+    menu4Text: {
+        padding: 10,
+        backgroundColor: 'transparent',
+        borderWidth: 1,
+        borderColor: '#757575'
+    },
+    menu3Item: {
+        marginLeft: 20,
+        padding: 10,
+        width: 200,
+        //flex: 1
+      
+    },
 }
 
 export default Menu2;

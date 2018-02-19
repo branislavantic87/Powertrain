@@ -36,13 +36,13 @@ class Menu3 extends Component {
     render() {
         return (
             <View style={styles.menu3Item}>
-                <TouchableOpacity onPress={() => Actions.reset('HBF', { from: this.props.menu3, filtered: this.state.filteredPages, selected: this.props.selected })}>
+                <TouchableOpacity style={styles.menu2Item} onPress={() => Actions.reset('HBF', { from: this.props.menu3, filtered: this.state.filteredPages, selected: this.props.selected })}>
                     <Text numberOfLines={1} style={[styles.menu3Text, { color: this.props.isPressed ? '#757575' : '#757575' }, { borderColor: this.props.isPressed ? '#f44336' : '#E0E0E0' }]}>{this.props.menu3.title}</Text>
                 </TouchableOpacity>
 
-                <View style={{ height: 50, borderColor: 'red', borderWidth: 1 }}>
                     {this.renderMenus4()}
-                </View>
+                     
+           
         
             </View>
         );
@@ -52,8 +52,8 @@ class Menu3 extends Component {
 const styles = {
     menu3Item: {
         padding: 10,
-        //width: 200,
-        flex: 1,
+        flexWrap: 'wrap'
+        // flex: 1,
         //height: '100%'
     },
     menu3Text: {
@@ -61,7 +61,11 @@ const styles = {
         backgroundColor: 'transparent',
         borderWidth: 1,
         borderColor: '#757575'
-    }
+    },
+    menu2Item: {
+        paddingBottom: 10,
+        width: 200,
+    },
 }
 
 export default Menu3;
