@@ -37,7 +37,7 @@ class Menu3 extends Component {
         return (
             <View style={styles.menu3Item}>
                 <TouchableOpacity style={styles.menu2Item} onPress={() => Actions.reset('HBF', { from: this.props.menu3, filtered: this.state.filteredPages, selected: this.props.selected })}>
-                    <Text numberOfLines={1} style={[styles.menu3Text, { color: this.props.isPressed ? 'red' : 'red' }, { borderColor: this.props.isPressed ? '#f44336' : '#E0E0E0' }]}>{this.props.menu3.title}</Text>
+                    <Text numberOfLines={1} style={[styles.menu3Text, { borderColor: this.props.isPressed ? '#f44336' : '#E0E0E0' }]}>{this.props.menu3.title}</Text>
                 </TouchableOpacity>
 
                     {this.renderMenus4()}
@@ -57,6 +57,7 @@ const styles = {
         //height: '100%'
     },
     menu3Text: {
+        color: '#e56b64',
         padding: 10,
         backgroundColor: 'transparent',
         borderWidth: 1,

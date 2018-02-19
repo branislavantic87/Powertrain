@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ScrollView, View, InteractionManager } from 'react-native';
 import _ from 'lodash';
+import TimerMixin from 'react-timer-mixin';
 import Menu1 from './Menu1';
 import Menu2 from './Menu2';
 import { findMenu } from '../../helpers';
@@ -28,7 +29,20 @@ class MenuList extends React.PureComponent {
             fromObj: global.globalJson.menus[global.language].menu.find(o =>
                 o.menuId == this.props.from
             )
-        });
+        })
+        /*let fromObj = global.globalJson.menus[global.language].menu.find(o => o.menuId == this.props.from);
+        this.chooseSelected(fromObj);
+        let menu2Obj = findMenu(this.props.from);
+        let menu2Index = this.findMenu2Index(menu2Obj);
+        setTimeout(() => {
+            console.log('setTImeout()');
+            this.refs._scrollView1.scrollTo({ y: 0, x: this.state.selected * menu1Width - (menu1Width * menu1scrollAwayFactor), animated: true });
+            this.refs._scrollView2.scrollTo({ y: 0, x: menu2Index * 10, animated: true });
+
+        }, 1);*/
+        //InteractionManager.runAfterInteractions(() => {
+
+        //})
     }
 
     chooseSelected(m) {
@@ -48,7 +62,6 @@ class MenuList extends React.PureComponent {
 
 
     componentDidUpdate() {
-        console.log('aaaa');
         this.refs._scrollView2.scrollTo({ y: 0, x: 0, animated: true });
     }
 
@@ -88,23 +101,29 @@ class MenuList extends React.PureComponent {
 
     }
 
-    componentWillUnmount() {
-        console.log('willUnmount()')
+    pozoviMeBa = () => {
+        setTimeout(() => {
+            console.log('setTImeout1');
+            this.refs._scrollView1.scrollTo({ y: 0, x: this.state.selected * menu1Width - (menu1Width * menu1scrollAwayFactor), animated: false });
+            this.refs._scrollView2.scrollTo({ y: 0, x: /*menu2Index * 10*/ 50, animated: false });
+        }, 1)
     }
+
 
     componentDidMount() {
         console.log('componentDidMount()');
+        
         this.chooseSelected(this.state.fromObj);
         let menu2Obj = findMenu(this.props.from);
         let menu2Index = this.findMenu2Index(menu2Obj);
         InteractionManager.runAfterInteractions(() => {
-            setTimeout(() => {
-                console.log('setTImeout()');
-                this.refs._scrollView1.scrollTo({ y: 0, x: this.state.selected * menu1Width - (menu1Width * menu1scrollAwayFactor), animated: true });
-                this.refs._scrollView2.scrollTo({ y: 0, x: menu2Index * 10, animated: true });
-            }, 1)
-
+            console.log('setTImeout1');
+            
+            this.pozoviMeBa();
+            console.log('setTImeout2');
         })
+
+        
     }
 
     render() {
