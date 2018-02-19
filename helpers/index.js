@@ -199,14 +199,18 @@ export const checkHashFiles = (pocetni) => {
                         AsyncStorage.getItem(l.language)
                             .then(res => JSON.parse(res))
                             .then(res => {
-                                let b = res.files.map(file =>
-                                    RNFB.fs.exists(dirs.DocumentDir + '/' + file.fileId + '.' + file.ext)
-                                        .then(res => {
-                                            if (!res) { /* && md5(dirs.DocumentDir + '/' + file.fileId + '.' + file.ext)  != file.hash*/
-                                                downloadStage.push(file);
-                                            }
-                                        })
-                                )
+                                let b = res.files.map(file => {
+                                    return new Promise((resolve, reject) => {
+                                        RNFB.fs.exists(dirs.DocumentDir + '/' + file.filename)
+                                            .then(res => {
+                                                if (!res) { /* && md5(dirs.DocumentDir + '/' + file.fileId + '.' + file.ext)  != file.hash*/
+                                                    downloadStage.push(file);
+                                                }
+                                                return Promise.resolve();
+                                            })
+                                            .then(() => resolve())
+                                    })
+                                })
                                 Promise.all(b)
                                     .then(() => resolve())
                             })
@@ -389,7 +393,7 @@ export const findMenu1Selected = (m) => {
 
 export const findMenu = (menuIdS) => {
     let menus = global.globalJson.menus[global.language].menu;
-    
+
     return menus.find(m => m.menuId == menuIdS);
-    
+
 }
