@@ -10,7 +10,7 @@ class Menu1 extends Component {
 
             <View>
                 <View style={styles.pdt}>
-                    <TouchableOpacity onPress={this.props.onPress} style={[styles.menu1Item, { backgroundColor: this.props.isPressed ? '#f44336' : '#eeeeee' }]}>
+                    <TouchableOpacity onPress={this.props.onPress} style={[styles.menu1Item, { backgroundColor: this.props.isPressed ? '#dd0000' : '#d7d7d7' }]}>
                         <Text numberOfLines={1} style={{ paddingBottom: 6, fontSize: 16, color: this.props.isPressed ? 'white' : '#757575' }}>{this.props.menu1.title}</Text>
                     </TouchableOpacity>
                 </View>

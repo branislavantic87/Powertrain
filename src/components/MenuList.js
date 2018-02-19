@@ -81,8 +81,8 @@ class MenuList extends React.PureComponent {
     findMenu2Index = (menu) => {
         let b = global.globalJson.menus[global.language].menu.filter(m => menu.depth == m.depth && menu.parentId == m.parentId)
         let a = b.findIndex(m => m.menuId == menu.menuId);
-        console.log(a/b.length*100);
-        return a/b.length*100;
+        console.log(a / b.length * 100);
+        return a / b.length * 100;
 
     }
 
@@ -93,7 +93,7 @@ class MenuList extends React.PureComponent {
         console.log(menu2Obj);
         console.log('===========');
         let menu2Index = this.findMenu2Index(menu2Obj);
-        
+
         setTimeout(() => {
             this.refs._scrollView1.scrollTo({ y: 0, x: this.state.selected * menu1Width - (menu1Width * menu1scrollAwayFactor), animated: true });
             this.refs._scrollView2.scrollTo({ y: 0, x: menu2Index * 10, animated: true });
@@ -107,7 +107,7 @@ class MenuList extends React.PureComponent {
                     {this.renderMenus1()}
                 </ScrollView>
 
-                <ScrollView ref='_scrollView2' showsHorizontalScrollIndicator={false} horizontal={true} style={{ flexDirection: 'row', flex: 1 }}>
+                <ScrollView ref='_scrollView2' showsHorizontalScrollIndicator={false} horizontal={true} style={{ flexDirection: 'row', flex: 1, paddingLeft: 15, backgroundColor: '#f2f2f2' }}>
                     {this.renderMenus2()}
                 </ScrollView>
             </View>
@@ -118,7 +118,7 @@ class MenuList extends React.PureComponent {
 const styles = {
     menu1Container: {
         flexDirection: 'row',
-
+        backgroundColor: '#d7d7d7'
     },
     mainCont: {
         backgroundColor: '#F5F5F5',
