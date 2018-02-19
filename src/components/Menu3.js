@@ -21,7 +21,6 @@ class Menu3 extends Component {
 
     renderMenus4 = () => {
         if (this.props.menu3.children) {
-            console.log('renderMenus4');
             return this.props.menu3.children.map(child =>
                 <Menu4
                     key={child.menuId}
