@@ -39,7 +39,7 @@ class Menu2 extends Component {
 
             <View >
                 <TouchableOpacity style={styles.menu2Item} onPress={() => Actions.reset('HBF', { from: this.props.menu2, filtered: this.state.filteredPages, selected: this.props.selected })}>
-                    <Text numberOfLines={1} style={[styles.menu2Text, { color: this.props.isPressed ? '#f44336' : '#f44336' }, { borderColor: this.props.isPressed ? '#f44336' : '#E0E0E0' }]}>{this.props.menu2.title}</Text>
+                    <Text numberOfLines={1} style={[styles.menu2Text, { color: this.props.isPressed ? '#dd0000' : '#dd0000' }, { borderColor: this.props.isPressed ? '#d7d7d7' : '#d7d7d7' }]}>{this.props.menu2.title}</Text>
                 </TouchableOpacity>
 
                 <View style={{ height: 220, flexWrap: 'wrap', borderRightColor: '#dddddd', borderRightWidth: 1, paddingRight: 10 }}>
@@ -56,10 +56,10 @@ const styles = {
     menu2Item: {
         margin: 10,
         width: 200,
-        backgroundColor: '#EEEEEE'
+        backgroundColor: '#d7d7d7'
     },
     menu2Text: {
-        backgroundColor: '#E0E0E0',
+        backgroundColor: '#d7d7d7',
         padding: 10,
         color: 'black',
         fontSize: 16,
