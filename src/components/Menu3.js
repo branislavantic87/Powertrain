@@ -59,9 +59,9 @@ const styles = {
     menu3Text: {
         color: '#e56b64',
         padding: 10,
-        backgroundColor: 'transparent',
+        backgroundColor: '#f2f2f2',
         borderWidth: 1,
-        borderColor: '#757575'
+        borderColor: '#909090'
     },
     menu2Item: {
         marginBottom: 10,
