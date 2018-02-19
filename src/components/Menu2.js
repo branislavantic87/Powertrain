@@ -38,15 +38,15 @@ class Menu2 extends Component {
         return (
 
             <View >
-                <TouchableOpacity style={styles.menu2Item} onPress={() => Actions.reset('HBF', {from: this.props.menu2, filtered: this.state.filteredPages, selected: this.props.selected })}>
-                    <Text numberOfLines={1} style={[styles.menu2Text, { color: this.props.isPressed ? '#f44336' : '#f44336' }, {backgroundColor: this.props.isPressed ? '#D8D8D8' : '#EEEEEE' }]}>{this.props.menu2.title}</Text>
+                <TouchableOpacity style={styles.menu2Item} onPress={() => Actions.reset('HBF', { from: this.props.menu2, filtered: this.state.filteredPages, selected: this.props.selected })}>
+                    <Text numberOfLines={1} style={[styles.menu2Text, { color: this.props.isPressed ? '#dd0000' : '#dd0000' }, { borderColor: this.props.isPressed ? '#d7d7d7' : '#d7d7d7' }]}>{this.props.menu2.title}</Text>
                 </TouchableOpacity>
 
-<View style={{ height: 240, flexWrap: 'wrap', borderRightColor: '#dddddd', borderRightWidth: 1 }}>
+                <View style={{ height: 220, flexWrap: 'wrap', borderRightColor: '#dddddd', borderRightWidth: 1, paddingRight: 10 }}>
                     {this.renderMenus3()}
 
-           </View>
-               
+                </View>
+
             </View>
         );
     }
@@ -54,28 +54,17 @@ class Menu2 extends Component {
 
 const styles = {
     menu2Item: {
-        padding: 10,
+        margin: 10,
         width: 200,
+        backgroundColor: '#d7d7d7'
     },
     menu2Text: {
-        backgroundColor: '#E0E0E0',
+        backgroundColor: '#d7d7d7',
         padding: 10,
         color: 'black',
         fontSize: 16,
-    },
-    menu4Text: {
-        padding: 10,
-        backgroundColor: 'transparent',
         borderWidth: 1,
-        borderColor: '#757575'
-    },
-    menu3Item: {
-        marginLeft: 20,
-        padding: 10,
-        width: 200,
-        //flex: 1
-      
-    },
+    }
 }
 
 export default Menu2;
