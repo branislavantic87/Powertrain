@@ -31,9 +31,10 @@ export default class Menu4 extends Component {
 
 const styles = {
     menu4Item: {
-        paddingRight: 10,
+      
+        marginBottom: 10,
         marginLeft: 10,
-        width: 190,
+        width: 200,
         //flex: 1
       
     },
@@ -44,7 +45,7 @@ const styles = {
         borderColor: '#757575'
     },
     menu2Item: {
-        paddingRight: 10,
-        width: 200,
+        width: 180,
+        alignSelf: 'flex-end'
     },
 }
