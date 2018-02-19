@@ -142,6 +142,7 @@ export default class SignUpModal extends Component {
               value={this.state.email}
               onChangeText={email => this.setState({ email })}
               onSubmitEditing={() => this.password.focus()}
+              editable={this.state.isConnected}
             />
             <Text style={{ alignSelf: 'flex-start', fontSize: 16 }}>PASSWORD</Text>
             <TextInput style={styles.inputBox}
@@ -152,6 +153,7 @@ export default class SignUpModal extends Component {
               value={this.state.password}
               onChangeText={password => this.setState({ password })}
               onSubmitEditing={() => this.firstname.focus()}
+              editable={this.state.isConnected}
             />
             <Text style={{ alignSelf: 'flex-start', fontSize: 16 }}>FIRST NAME</Text>
             <TextInput style={styles.inputBox}
@@ -161,6 +163,7 @@ export default class SignUpModal extends Component {
               value={this.state.firstname}
               onChangeText={firstname => this.setState({ firstname })}
               onSubmitEditing={() => this.surname.focus()}
+              editable={this.state.isConnected}
             />
             <Text style={{ alignSelf: 'flex-start', fontSize: 16 }}>SURNAME</Text>
             <TextInput style={styles.inputBox}
@@ -169,6 +172,7 @@ export default class SignUpModal extends Component {
               value={this.state.surname}
               onChangeText={surname => this.setState({ surname })}
               ref={(input) => this.surname = input}
+              editable={this.state.isConnected}
             />
 
           </View>
