@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, Dimensions, TouchableOpacity } from 'react-native';
 import HTML from 'react-native-render-html';
+import Modal from 'react-native-modal';
+import { Actions } from 'react-native-router-flux';
 import Swiper from 'react-native-swiper';
 import VB from './VideoBtn';
 import DB from './DocBtn';
@@ -20,6 +22,8 @@ export default class TextImage extends Component {
     imagesPath: [],
     startSwiper: false,
     dimensions: undefined,
+    videos: false,
+    documents: false
   }
 
   onLayout(event) {
@@ -46,6 +50,36 @@ export default class TextImage extends Component {
     this.setState({ videoPath: videos, documentPath: documents, imagesPath: images });
   }
 
+  modalForMultiple = (what) => {
+    return (
+      <Modal
+        isVisible={this.state[what]}
+        onBackdropPress={() => this.setState({ [what]: false })}
+        onBackButtonPress={() => this.setState({ [what]: false })}
+        
+      >
+        <View style={{borderWidth: 1, borderColor: 'black'}}>
+          {this.renderListOfFiles(what)}
+        </View>
+      </Modal>
+    );
+  }
+
+  renderListOfFiles = (what) => {
+    let arr = what == 'videos' ? this.state.videoPath : this.state.documentPath;
+    let whaturi = what == 'videos' ? 'videouri' : 'docuri';
+    let whatView = what == 'videos' ? 'VideoView' : 'DocumentView';
+    let fileNames = what == 'videos' ? this.props.page.files.filter(f => f.type == 'video') : this.props.page.files.filter(f => f.type == 'document');
+    let reg = /[^/]+$/;
+    return arr.map((f, i) => {
+      return (
+        <TouchableOpacity key={i} onPress={() => {Actions[whatView]({ [whaturi]: f }); this.setState({[what]: false})}} >
+          <Text style={{fontSize: 30, color: 'green'}}>{reg.exec(f)[0]}</Text>
+        </TouchableOpacity>
+      );
+    })
+  }
+
 
   renderPics(w, h) {
     return this.state.imagesPath.map((pic, i) => {
@@ -64,13 +98,13 @@ export default class TextImage extends Component {
     return (
 
       <View style={styles.mainView}>
-       { !this.props.fromHome && <LeafletButton page={this.props.page} /> }
+        {!this.props.fromHome && <LeafletButton page={this.props.page} />}
         <View style={styles.body}>
 
           <View>
             <Text style={[styles.headingText, styles.headingMain]}>{this.props.templateTitle}</Text>
             <Text style={styles.headingText}>{this.props.subtitle}</Text>
-           
+
           </View>
 
           <View style={styles.contentContainer}>
@@ -79,9 +113,9 @@ export default class TextImage extends Component {
               <ScrollView contentContainerStyle={styles.scrollText}>
                 <HTML html={this.props.text} />
               </ScrollView>
-             
+
             </View>
-            
+
             <View style={styles.contentPic} onLayout={(event) => this.onLayout(event)}>
               <View style={{ width: '100%', height: '85%' }}>
                 <SwiperFlatList
@@ -93,8 +127,11 @@ export default class TextImage extends Component {
                 </SwiperFlatList>
               </View>
               <View style={styles.ButtonContainer}>
-                {this.state.videoPath.length > 0 && <VB videouri={this.state.videoPath[0]} />}
-                {this.state.documentPath.length > 0 && <DB documenturi={this.state.documentPath[0]} />}
+                {this.state.videoPath.length == 1 && <VB videouri={this.state.videoPath[0]} />}
+                {this.state.documentPath.length == 1 && <DB documenturi={this.state.documentPath[0]} />}
+                {this.state.videoPath.length > 1 && <TouchableOpacity onPress={() => {  this.setState({ videos: true }); }}><VB disabled={true} /></TouchableOpacity>}
+                {this.state.documentPath.length > 1 && <TouchableOpacity onPress={() => { this.setState({ documents: true }); }}><DB disabled={true} /></TouchableOpacity>}
+
               </View>
 
             </View>
@@ -103,7 +140,8 @@ export default class TextImage extends Component {
 
         </View>
 
-
+        {this.modalForMultiple('videos')}
+        {this.modalForMultiple('documents')}
       </View>
     );
   }
@@ -170,6 +208,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ebeced',
     padding: 20
   },
- 
+
 
 });

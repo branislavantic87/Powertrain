@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, Dimensions, StatusBar, TouchableOpacity } from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import Modal from 'react-native-modal';
 import VB from './VideoBtn';
 import DB from './DocBtn';
 import Modall from './Modall';
@@ -12,7 +14,8 @@ export default class ImageButtons extends Component {
         documentPath: [],
         image: '',
         whichOne: '',
-        visableTwoBtns: false
+        visableTwoBtns: false,
+        modalVisible: false
     };
 
     componentWillMount() {
@@ -37,11 +40,36 @@ export default class ImageButtons extends Component {
         StatusBar.setHidden(true);
     }
 
+    modalForMultiple = (arr) => {
+        console.log('pozvan sa arr: ' + arr);
+        return (
+            <Modal
+                isVisible={this.state.modalVisible}
+                onBackdropPress={() => this.setState({ modalVisible: false })}
+                onBackButtonPress={() => this.setState({ modalVisible: false })}
+            >
+                <View>
+                    {this.renderListOfFiles(arr)}
+                </View>
+            </Modal>
+        );
+    }
+
+    renderListOfFiles = (arr) => {
+        return arr.map(f => {
+            return (
+                <TouchableOpacity onPress={() => Actions.VideoView({ videouri: this.props.videouri })} >
+                    <Text>{f}</Text>
+                </TouchableOpacity>
+            );
+        })
+    }
+
     render() {
         return (
 
             <View style={styles.mainView}>
-                { !this.props.fromHome && <LeafletButton page={this.props.page} /> }
+                {!this.props.fromHome && <LeafletButton page={this.props.page} />}
                 <View style={styles.body}>
 
                     <View>
@@ -59,8 +87,10 @@ export default class ImageButtons extends Component {
                             </Modall>
 
                             <View style={styles.ButtonContainer}>
-                                {this.state.videoPath.length > 0 && <VB videouri={this.state.videoPath[0]} />}
-                                {this.state.documentPath.length > 0 && <DB documenturi={this.state.documentPath[0]} />}
+                                {this.state.videoPath.length == 1 && <VB videouri={this.state.videoPath[0]} />}
+                                {this.state.documentPath.length == 1 && <DB documenturi={this.state.documentPath[0]} />}
+                                {this.state.videoPath.length > 1 && <TouchableOpacity onPress={() => {console.log('KLIK'); this.setState({modalVisible: true}); this.modalForMultiple(this.state.videoPath)}}><VB /></TouchableOpacity>}
+                                {this.state.documentPath.length > 1 && this.modalForMultiple(this.state.documentPath)}
                             </View>
 
                         </View>

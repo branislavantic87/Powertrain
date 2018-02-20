@@ -399,3 +399,11 @@ export const findMenu = (menuIdS) => {
     let menus = global.globalJson.menus[global.language].menu;
     return menus.find(m => m.menuId == menuIdS);
 }
+
+export const renderVB = (arr) => {
+
+}
+
+export const renderDB = (arr) => {
+
+}
