@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, Text, TouchableWithoutFeedback, Dimensions } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, Text, TouchableWithoutFeedback, Dimensions, ImageBackground } from 'react-native';
 import RNFB from 'react-native-fetch-blob';
 import { Actions } from 'react-native-router-flux';
 import LeafletButton from './LeafletButton';
@@ -46,15 +46,24 @@ export default class HotspotImage extends Component {
                     <TouchableOpacity
                         key={i}
                         style={{ marginTop: 17 }}
-                        onPress={() => this.hotspotRedirect(spot)}
+                        onPress={() => {
+                            let { filtered, from, selected } = this.findInfoAboutMenu(spot.linkPageId);
+                            Actions.reset('HBF', { filtered, from, selected });
+                        }}
                     >
                         <Image key={i + '.image'} source={require('./ico/32/hotspot.png')} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.hotspotRedirect(spot)}>
-                        <View key={i + '.viewSlave'} style={[styles.hotspotTitileView, { marginBottom: 17 }]}>
+                        <ImageBackground key={i + '.viewSlave'}
+                            style={styles.hotspotTitileView}
+                            source={require('./ico/32/123.png')}
+                        >
                             <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.label}</Text>
-                        </View>
+                        </ImageBackground>
                     </TouchableOpacity>
+                    {/* <View key={i + '.viewSlave'} style={[styles.hotspotTitileView, {marginBottom: 17} ]}>
+                        <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.label}</Text>
+                    </View> */}
                 </View>
             );
         }));
@@ -62,7 +71,7 @@ export default class HotspotImage extends Component {
 
     componentWillMount() {
         RNFB.fs.exists(RNFB.fs.dirs.DocumentDir + '/' + this.props.page.files.find(e => e.ext == 'jpg').filename)
-        .then(res => res ? this.setState({picExists: true}) : this.setState({picExists: false}))
+            .then(res => res ? this.setState({ picExists: true }) : this.setState({ picExists: false }))
     }
 
     render() {
@@ -112,10 +121,7 @@ const styles = StyleSheet.create({
     },
 
     hotspotTitileView: {
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 5,
-        borderBottomRightRadius: 5,
-        backgroundColor: 'white',
+        backgroundColor: 'transparent',
         height: 25,
         width: 150,
         alignItems: 'center',
