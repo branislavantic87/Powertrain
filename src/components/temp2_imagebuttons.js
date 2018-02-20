@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, Dimensions, StatusBar, TouchableOpacity } from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import Modal from 'react-native-modal';
 import VB from './VideoBtn';
 import DB from './DocBtn';
 import Modall from './Modall';
 import LeafletButton from './LeafletButton';
+import { renderVB, renderDB, renderModalforMultipleFiles } from '../../helpers';
 
 export default class ImageButtons extends Component {
 
@@ -12,11 +15,13 @@ export default class ImageButtons extends Component {
         documentPath: [],
         image: '',
         whichOne: '',
-        visableTwoBtns: false
+        visableTwoBtns: false,
+        modalVisible: false,
+        videos: false,
+        documents: false
     };
 
     componentWillMount() {
-        c
         let videos = this.props.files.filter(file => {
             return file.substring(file.length - 3, file.length) == 'mp4'
         })
@@ -38,11 +43,19 @@ export default class ImageButtons extends Component {
         StatusBar.setHidden(true);
     }
 
+    hideModal = () => {
+        this.setState({ videos: false, documents: false });
+    }
+
+    showModal = (which) => {
+        this.setState({ [which]: true });
+    }
+
     render() {
         return (
 
             <View style={styles.mainView}>
-                { !this.props.fromHome && <LeafletButton page={this.props.page} /> }
+                {!this.props.fromHome && <LeafletButton page={this.props.page} />}
                 <View style={styles.body}>
 
                     <View>
@@ -60,8 +73,8 @@ export default class ImageButtons extends Component {
                             </Modall>
 
                             <View style={styles.ButtonContainer}>
-                                {this.state.videoPath.length > 0 && <VB videouri={this.state.videoPath[0]} />}
-                                {this.state.documentPath.length > 0 && <DB documenturi={this.state.documentPath[0]} />}
+                                {renderVB(this.state.videoPath, this.showModal.bind(null, 'videos'))}
+                                {renderDB(this.state.documentPath, this.showModal.bind(null, 'documents'))}
                             </View>
 
                         </View>
@@ -69,7 +82,8 @@ export default class ImageButtons extends Component {
                     </View>
 
                 </View>
-
+                {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
+                {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
             </View>
         );
     }

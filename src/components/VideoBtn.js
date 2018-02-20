@@ -11,7 +11,7 @@ export default class VB extends Component {
             
           <View style={{width: 160}}>
 
-                <TouchableOpacity style={styles.ButtonContent} onPress={() => Actions.VideoView({ videouri: this.props.videouri })}>
+                <TouchableOpacity disabled={this.props.disabled} style={styles.ButtonContent} onPress={() => Actions.VideoView({ videouri: this.props.videouri })}>
                     <Image
                         style={styles.ButtonIconStyle2}
                         source={require('./ico/x64/video-tour.png')}

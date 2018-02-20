@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import LeafletButton from './LeafletButton';
 import Modall from './Modall';
-import VB from './VideoBtn';
-import DB from './DocBtn';
+import { renderVB, renderDB, renderModalforMultipleFiles } from '../../helpers';
 
 export default class FullImage extends Component {
 
   state = {
     videoPath: [],
     documentPath: [],
+    videos: false,
+    documents: false,
   }
 
   componentWillMount() {
-    console.log(this.props.files)
     let videos = this.props.files.filter(file => {
       return file.substring(file.length - 3, file.length) == 'mp4'
     })
@@ -23,6 +23,14 @@ export default class FullImage extends Component {
     })
 
     this.setState({ videoPath: videos, documentPath: documents });
+  }
+
+  hideModal = () => {
+    this.setState({ videos: false, documents: false });
+  }
+
+  showModal = (which) => {
+    this.setState({[which]: true});
   }
 
   render() {
@@ -42,8 +50,8 @@ export default class FullImage extends Component {
 
               </Modall>
               <View style={styles.ButtonContainer}>
-                {this.state.videoPath.length > 0 && <VB videouri={this.state.videoPath[0]} />}
-                {this.state.documentPath.length > 0 && <DB documenturi={this.state.documentPath[0]} />}
+                {renderVB(this.state.videoPath, this.showModal.bind(null, 'videos'))}
+                {renderDB(this.state.documentPath, this.showModal.bind(null, 'documents'))}
               </View>
 
             </View>
@@ -52,6 +60,8 @@ export default class FullImage extends Component {
 
         </View>
 
+        {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
+        {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
       </View>
     );
   }
@@ -87,5 +97,5 @@ const styles = StyleSheet.create({
     bottom: 25,
     right: 25,
     width: '51%',
-},
+  },
 });

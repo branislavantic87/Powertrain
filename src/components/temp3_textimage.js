@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, Dimensions, TouchableOpacity } from 'react-native';
 import HTML from 'react-native-render-html';
+import Modal from 'react-native-modal';
+import { Actions } from 'react-native-router-flux';
 import Swiper from 'react-native-swiper';
 import VB from './VideoBtn';
 import DB from './DocBtn';
 import Modall from './Modall';
 import LeafletButton from './LeafletButton';
-
-
+import { renderVB, renderDB, renderModalforMultipleFiles } from '../../helpers';
 import SwiperFlatList from './SwiperFlatList';
 export const { width, height } = Dimensions.get('window');
 
@@ -20,6 +21,8 @@ export default class TextImage extends Component {
     imagesPath: [],
     startSwiper: false,
     dimensions: undefined,
+    videos: false,
+    documents: false
   }
 
   onLayout(event) {
@@ -46,6 +49,15 @@ export default class TextImage extends Component {
     this.setState({ videoPath: videos, documentPath: documents, imagesPath: images });
   }
 
+  
+  hideModal = () => {
+    this.setState({ videos: false, documents: false });
+  }
+
+  showModal = (which) => {
+    this.setState({[which]: true});
+  }
+
 
   renderPics(w, h) {
     return this.state.imagesPath.map((pic, i) => {
@@ -63,13 +75,13 @@ export default class TextImage extends Component {
     return (
 
       <View style={styles.mainView}>
-       { !this.props.fromHome && <LeafletButton page={this.props.page} /> }
+        {!this.props.fromHome && <LeafletButton page={this.props.page} />}
         <View style={styles.body}>
 
           <View>
             <Text style={[styles.headingText, styles.headingMain]}>{this.props.templateTitle}</Text>
             <Text style={styles.headingText}>{this.props.subtitle}</Text>
-           
+
           </View>
 
           <View style={styles.contentContainer}>
@@ -78,9 +90,9 @@ export default class TextImage extends Component {
               <ScrollView contentContainerStyle={styles.scrollText}>
                 <HTML html={this.props.text} />
               </ScrollView>
-             
+
             </View>
-            
+
             <View style={styles.contentPic} onLayout={(event) => this.onLayout(event)}>
               <View style={{ width: '100%', height: '85%' }}>
                 <SwiperFlatList
@@ -92,8 +104,9 @@ export default class TextImage extends Component {
                 </SwiperFlatList>
               </View>
               <View style={styles.ButtonContainer}>
-                {this.state.videoPath.length > 0 && <VB videouri={this.state.videoPath[0]} />}
-                {this.state.documentPath.length > 0 && <DB documenturi={this.state.documentPath[0]} />}
+                {renderVB(this.state.videoPath, this.showModal.bind(null, 'videos'))}
+                {renderDB(this.state.documentPath, this.showModal.bind(null, 'documents'))}
+                
               </View>
 
             </View>
@@ -102,6 +115,8 @@ export default class TextImage extends Component {
 
         </View>
 
+        {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
+        {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
 
       </View>
     );
@@ -169,6 +184,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ebeced',
     padding: 20
   },
- 
+
 
 });
