@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, Text, TouchableWithoutFeedback, Dimensions } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, Text, TouchableWithoutFeedback, Dimensions, ImageBackground } from 'react-native';
 import RNFB from 'react-native-fetch-blob';
 import { Actions } from 'react-native-router-flux';
 import LeafletButton from './LeafletButton';
@@ -26,6 +26,10 @@ export default class HotspotImage extends Component {
         return { filtered, from, selected };
     }
 
+    hotspotRedirect = (spot) => {
+        let { filtered, from, selected } = this.findInfoAboutMenu(spot.linkPageId);
+        Actions.reset('HBF', { filtered, from, selected });
+    }
 
     getPosistionsFromJSON = () => {
         //console.log('layoutWidth: ' + this.state.layoutWidth + ' layoutHeight: ' + this.state.layoutHeigth);
@@ -34,24 +38,32 @@ export default class HotspotImage extends Component {
         //console.log('hotspots:', hotspots);
 
         return (hotspots.map((spot, i) => {
-            const posx = this.state.layoutWidth * (spot.x / 1000) + Dimensions.get('screen').width * margine/2;
+            const posx = this.state.layoutWidth * (spot.x / 1000) + Dimensions.get('screen').width * margine / 2;
             // const posx = this.state.layoutWidth * (spot.x / 1000) + Dimensions.get('screen').width * 0.07;
             const posy = this.state.layoutHeigth * (spot.y / 1000) - 19;
             return (
-                <View key={i + '.viewMaster'} style={{flexDirection: 'row', position: "absolute", zIndex: 20, left: posx - 10, top: posy - 10}}>
-                    <TouchableOpacity 
-                    key={i} 
-                    style={{marginTop: 17 }} 
-                    onPress={() => {
-                        let { filtered, from, selected } = this.findInfoAboutMenu(spot.linkPageId);
-                        Actions.reset('HBF', { filtered, from, selected });
-                    }}
+                <View key={i + '.viewMaster'} style={{ flexDirection: 'row', position: "absolute", zIndex: 20, left: posx - 10, top: posy - 10 }}>
+                    <TouchableOpacity
+                        key={i}
+                        style={{ marginTop: 17 }}
+                        onPress={() => {
+                            let { filtered, from, selected } = this.findInfoAboutMenu(spot.linkPageId);
+                            Actions.reset('HBF', { filtered, from, selected });
+                        }}
                     >
                         <Image key={i + '.image'} source={require('./ico/32/hotspot.png')} />
                     </TouchableOpacity>
-                    <View key={i + '.viewSlave'} style={[styles.hotspotTitileView, {marginBottom: 17} ]}>
+                    <TouchableOpacity onPress={() => this.hotspotRedirect(spot)}>
+                        <ImageBackground key={i + '.viewSlave'}
+                            style={styles.hotspotTitileView}
+                            source={require('./ico/32/123.png')}
+                        >
+                            <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.label}</Text>
+                        </ImageBackground>
+                    </TouchableOpacity>
+                    {/* <View key={i + '.viewSlave'} style={[styles.hotspotTitileView, {marginBottom: 17} ]}>
                         <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.label}</Text>
-                    </View>
+                    </View> */}
                 </View>
             );
         }));
@@ -59,14 +71,14 @@ export default class HotspotImage extends Component {
 
     componentWillMount() {
         RNFB.fs.exists(RNFB.fs.dirs.DocumentDir + '/' + this.props.page.files.find(e => e.ext == 'jpg').filename)
-        .then(res => res ? this.setState({picExists: true}) : this.setState({picExists: false}))
+            .then(res => res ? this.setState({ picExists: true }) : this.setState({ picExists: false }))
     }
 
     render() {
 
         return (
             <View style={styles.mainView} >
-             { !this.props.fromHome && <LeafletButton page={this.props.page} /> }
+                {!this.props.fromHome && <LeafletButton page={this.props.page} />}
                 <View style={styles.body}>
                     <View style={styles.contentContainer}>
                         {<Image
@@ -109,21 +121,18 @@ const styles = StyleSheet.create({
     },
 
     hotspotTitileView: {
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 5,
-        borderBottomRightRadius: 5,
-        backgroundColor: 'white',
+        backgroundColor: 'transparent',
         height: 25,
         width: 150,
         alignItems: 'center',
         justifyContent: 'center',
     },
     imageStyle: {
-        width: Dimensions.get('screen').width - Dimensions.get('screen').width*margine,
-        height: Dimensions.get('screen').height - Dimensions.get('screen').height*margine,
+        width: Dimensions.get('screen').width - Dimensions.get('screen').width * margine,
+        height: Dimensions.get('screen').height - Dimensions.get('screen').height * margine,
         resizeMode: 'cover',
         zIndex: 1,
-        marginLeft: Dimensions.get('screen').width  * margine/2
+        marginLeft: Dimensions.get('screen').width * margine / 2
     }
 
 });

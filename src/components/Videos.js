@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, TouchableHighlight, AsyncStorage } from 'react-native';
 import RNFB from 'react-native-fetch-blob';
 import { Actions } from 'react-native-router-flux';
 
@@ -39,8 +39,11 @@ export default class PdfList extends Component {
         return (pathToFiles + taNekaSlika.filename);
     }
 
+    
 
     renderAllVideos = () => {
+        // uraditi za suportovani language da se prikazuju videi
+        // console.log('AAAAAAAAAAAAAAAa', AsyncStorage.getItem('supportedLanguages'))
         if (this.state.allVideos.length === 0) {
             return (
                 <Text>There are no videous!!</Text>
@@ -71,17 +74,13 @@ export default class PdfList extends Component {
 
     render() {
         return (
-
             <View style={styles.content}>
-
                 <ScrollView>
-
                     <View style={styles.scrollPdfList}>
                         {this.renderAllVideos()}
                     </View>
                 </ScrollView>
             </View>
-
         );
     }
 
