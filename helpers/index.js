@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, NetInfo, AsyncStorage, Alert, TouchableOpacity, View, Text, ScrollView } from 'react-native';
+import { Platform, NetInfo, AsyncStorage, Alert, TouchableOpacity, View, Text, ScrollView, Image } from 'react-native';
 import Modal from 'react-native-modal';
 import DeviceInfo from 'react-native-device-info';
 import RNFB from 'react-native-fetch-blob';
@@ -428,12 +428,12 @@ export const renderDB = (arr, func) => {
 
 export const renderModalforMultipleFiles = (what, arr, isVisible, func) => {
     return (
-        <Modal
+        <Modal style={{ width: '45%', justifyContent: 'center', alignItems: 'center', marginLeft: 'auto', marginRight: 'auto'}}
             isVisible={isVisible}
             onBackdropPress={() => func()}
             onBackButtonPress={() => func()}
         >
-            <ScrollView style={{ borderWidth: 1, borderColor: 'black' }}>
+            <ScrollView contentContainerStyle={{justifyContent: 'center', alignItems: 'center'}} style={{ width: '100%', borderWidth: 1, borderColor: 'transparent', backgroundColor: '#fff', padding: 30, }}>
                 {this.renderListOfFiles(what, arr, func)}
             </ScrollView>
         </Modal>
@@ -447,8 +447,8 @@ renderListOfFiles = (what, arr, func) => {
 
     return arr.map((f, i) => {
         return (
-            <TouchableOpacity key={i} onPress={() => { Actions[whatView]({ [whaturi]: f }); func() }} >
-                <Text style={{ fontSize: 30, color: 'green' }}>{reg.exec(f)[0]}</Text>
+            <TouchableOpacity style={{ width: '98%', marginBottom: 30,  alignItems: 'center', justifyContent: 'center', flexDirection: 'row', borderColor: '#9e9e9e', borderWidth: 1, backgroundColor: '#eee'  }} key={i} onPress={() => { Actions[whatView]({ [whaturi]: f }); func() }} >
+                <Image style={{padding: 5, width: 32, height: 32 }} source={require('../src/components/ico/x64/leaflet.png')}/><Text style={{ width: '80%', fontSize: 25, color: '#9E9E9E', padding: 15, paddingLeft: 20, paddingRight: 20, textAlign: 'center' }}>{reg.exec(f)[0]}</Text>
             </TouchableOpacity>
         );
     })
