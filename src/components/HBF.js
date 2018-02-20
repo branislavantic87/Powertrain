@@ -8,7 +8,6 @@ import SettingsComponent from './Settings';
 import Languages from './Languages';
 import NotificationComponent from './Notification';
 import Search from './Search';
-import VideoList from './VideoList';
 import PdfList from './PdfList';
 import Dashboard from './Dashboard';
 import PresentationNewComponent from './PresentationNew';

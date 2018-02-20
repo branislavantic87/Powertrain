@@ -6,7 +6,6 @@ import VideoView from './Video';
 import DocumentView from './Doc';
 import App from '../../App';
 import PdfList from './PdfList';
-import VideoList from './VideoList';
 import Settings from './Settings';
 import Notification from './Notification';
 
