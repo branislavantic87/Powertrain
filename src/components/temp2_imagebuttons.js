@@ -16,6 +16,7 @@ export default class ImageButtons extends Component {
     };
 
     componentWillMount() {
+        c
         let videos = this.props.files.filter(file => {
             return file.substring(file.length - 3, file.length) == 'mp4'
         })
@@ -123,11 +124,6 @@ const styles = StyleSheet.create({
         width: '51%',
 
     },
-
-
-
-
-
     floatingButtonsHolder: {
         position: 'absolute',
         width: 50,

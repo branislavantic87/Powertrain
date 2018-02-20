@@ -43,7 +43,7 @@ class Body extends Component {
                     break;
 
                 case '4':
-                    return <FullText fromHome={this.props.fromHome} page={page} key={page.pageId} subtitle={subtitle} templateTitle={title} text={text} />
+                    return <FullText fromHome={this.props.fromHome} page={page} key={page.pageId} subtitle={subtitle} templateTitle={title} text={text} files={files}/>
                     break;
 
                 case '5':
