@@ -52,13 +52,17 @@ export default class FullText extends Component {
                                 <HTML html={this.props.text} />
                             </ScrollView>
                         </View>
-                        <View style={styles.ButtonContainer}>
-                            {renderVB(this.state.videoPath, this.showModal.bind(null, 'videos'))}
-                            {renderDB(this.state.documentPath, this.showModal.bind(null, 'documents'))}
-                        </View>
+
+                    </View>
+                    <View style={styles.ButtonContainer}>
+
+                        {renderVB(this.state.videoPath, this.showModal.bind(null, 'videos'))}
+                        {renderDB(this.state.documentPath, this.showModal.bind(null, 'documents'))}
+
                     </View>
 
                 </View>
+
                 {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
                 {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
             </View>
@@ -83,7 +87,7 @@ const styles = StyleSheet.create({
     },
     headingMain: {
         paddingTop: 40,
-        paddingBottom: 4,
+        paddingBottom: 10,
         fontSize: 25,
         fontWeight: 'bold'
     },
