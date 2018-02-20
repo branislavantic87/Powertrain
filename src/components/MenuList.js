@@ -24,7 +24,6 @@ class MenuList extends React.PureComponent {
 
 
     componentWillMount() {
-        console.log('componentWillMount()');
         this.setState({
             fromObj: global.globalJson.menus[global.language].menu.find(o =>
                 o.menuId == this.props.from
@@ -49,7 +48,7 @@ class MenuList extends React.PureComponent {
 
 
     componentDidUpdate() {   
-        this.refs._scrollView2.scrollTo({ y: 0, x: 0, animated: true });
+        this.refs._scrollView2.scrollTo({ y: 0, x: 0, animated: false });
     }
 
     renderMenus1() {
@@ -90,7 +89,6 @@ class MenuList extends React.PureComponent {
 
 
     componentDidMount() {
-        console.log('componentDidMount()');
         
         this.chooseSelected(this.state.fromObj);
         let menu2Obj = findMenu(this.props.from);
