@@ -5,7 +5,7 @@ import { Actions } from 'react-native-router-flux';
 import LeafletButton from './LeafletButton';
 import { findPageObjectById, findMenuObjectById, findMenu1Selected, aaa } from '../../helpers';
 
-const margine = 0.10;
+const margine = 0.0;
 
 export default class HotspotImage extends Component {
 
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     contentContainer: {
-        marginTop: 10,
+        marginTop: 0,
         marginBottom: 5,
     },
     hotspotTitle: {

@@ -67,7 +67,7 @@ export default class SettingsComponent extends Component {
 
       <View style={styles.content}>
         <View style={{ backgroundColor: '#fff', width: '40%', height: "100%", justifyContent: 'flex-start' }}>
-          <TouchableOpacity style={[styles.btn_settings, styles.btn_version]} onPress={() => this.setState({ settingsText: global.projectJson.project.version })} disabled><Text style={styles.btn_version_text}>Version 2.0.0</Text></TouchableOpacity>
+          <TouchableOpacity style={[styles.btn_settings, styles.btn_version]} onPress={() => this.setState({ settingsText: global.projectJson.project.version })} disabled><Text style={styles.btn_version_text}>Version: {global.projectJson.project.version}</Text></TouchableOpacity>
           <TouchableOpacity style={styles.btn_settings} onPress={() => this.setState({ settings: 'languages' })}><Text style={styles.btn_text}>Languages</Text></TouchableOpacity>
           <TouchableOpacity style={styles.btn_settings} onPress={() => this.setState({ settings: 'update' })}><Text style={styles.btn_text}>Update</Text></TouchableOpacity>
           <TouchableOpacity style={styles.btn_settings} onPress={() => this.setState({ settings: 'failedFiles' })}><Text style={styles.btn_text}>Failed Files</Text></TouchableOpacity>

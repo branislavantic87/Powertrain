@@ -24,7 +24,7 @@ export default class Search extends Component {
      * Searches for Menu Object by MenuId
      */
     searchMenu(menuId) {
-        return global.globalJson.menus[global.language].menu.find(element =>
+        return global.globalJson.menus[0].menu.find(element =>
             menuId == element.menuId
         )
     }
@@ -38,10 +38,13 @@ export default class Search extends Component {
         let rat = [];
         switch (this.state.buttonActive) {
             case 'content':
+                console.log(this.state.searchMenus.concat(this.state.searchPages));
+                rat2 = this.state.searchMenus.concat(this.state.searchPages);
+                console.log(rat2);
                 rat = this.state.searchPages.map((element, i) => {
                     // newElement = { ...element, breadcrumb: this.getBreadcrumb(element.menuId) };
                     const breadcrumb = this.getBreadcrumb(element.menuId);
-                    return <TouchableOpacity key={i} onPress={() => Actions.reset('HBF', { from: this.searchMenu(element.menuId), filtered: Array(element) })}>
+                    return <TouchableOpacity key={i + 'touchViewPage'} onPress={() => Actions.reset('HBF', { from: this.searchMenu(element.menuId), filtered: Array(element) })}>
                         <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', borderBottomWidth: 3, borderColor: '#dddddd' }}>
                             <Image
                                 style={{ height: 60, width: 75, marginRight: 20 }}
@@ -49,14 +52,30 @@ export default class Search extends Component {
                             />
                             <View style={{ flexDirection: 'column' }}>
                                 <Text style={{ fontSize: 25 }} key={element.pageId}>
-                                    {element.title};
+                                    {element.title}
                             </Text>
                                 <Text>{breadcrumb}</Text>
                             </View>
                         </View>
                     </TouchableOpacity>
-
-                });
+                })
+                .concat(this.state.searchMenus.map((element, i) => {
+                    const breadcrumb = this.getBreadcrumb(element.menuId);
+                    return <TouchableOpacity key={i + 'touchViewMenu'} onPress={() => Actions.reset('HBF', { from: this.searchMenu(element.menuId), filtered: Array(element) })}>
+                        <View key={i + 'viewMenu'} style={{ padding: 10, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', borderBottomWidth: 3, borderColor: '#dddddd' }}>
+                            <Image
+                                style={{ height: 60, width: 60, marginRight: 35 }}
+                                source={  require('./ico/top-bar/breadcrumbs.png')  /* + this.pageImageHelper(element.pageId)  */}
+                            />
+                            <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontSize: 25 }} key={element.menuId}>
+                                    {element.title}
+                            </Text>
+                                <Text>{breadcrumb}</Text>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                }));
                 break;
             case 'video':
                 rat = this.state.searchFiles.map((element, i) => {
@@ -160,11 +179,11 @@ export default class Search extends Component {
             let foundPages = where.filter(x => {
                 if (x.text != null)
                     if (
-                        (x.text.toLowerCase().includes(itemL) || x.subtitle.toLowerCase().includes(itemL) || x.title.toLowerCase().includes(itemL)) && x.languageId == global.language + 1) {
+                        (x.text.toLowerCase().includes(itemL) || x.subtitle.toLowerCase().includes(itemL) || x.title.toLowerCase().includes(itemL)) ) {
                         return x;
                     }
                     else if (x.text == null)
-                        if ((x.subtitle.toLowerCase().includes(itemL) || x.title.toLowerCase().includes(itemL)) && x.languageId == global.language + 1) {
+                        if ((x.subtitle.toLowerCase().includes(itemL) || x.title.toLowerCase().includes(itemL)) ) {
                             return x;
                         };
             })
@@ -184,10 +203,9 @@ export default class Search extends Component {
 
     searchPromise = (input) => {
         return new Promise((resolve, reject) => {
-            let idLang = global.language // engleski
 
             let pages = global.globalJson.pages;
-            let menus = global.globalJson.menus[idLang].menu;
+            let menus = global.globalJson.menus[0].menu;
 
             let resultMenus = [];
             this.searchDoTitlesPromiseWrapper(input, menus)
