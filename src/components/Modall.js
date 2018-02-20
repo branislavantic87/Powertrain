@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Modal, View, Image, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
-//import Modal from 'react-native-modal';
-
+import { Modal, View, Image, TouchableOpacity, TouchableWithoutFeedback, Dimensions } from 'react-native';
+import ImageZoom from 'react-native-image-pan-zoom';
 class Modall extends Component {
 
     // this.props.source
@@ -17,8 +16,8 @@ class Modall extends Component {
         //.then(() => this.setState({}));
     }
 
-    temp3()  {
-        if(this.props.modalPress) {
+    temp3() {
+        if (this.props.modalPress) {
             this.props.modalPress();
         }
     }
@@ -33,7 +32,7 @@ class Modall extends Component {
                     </TouchableWithoutFeedback>
                 </View>
             );
-        } 
+        }
         else if (this.props.pic && this.state.modalVisible) {
             return (
                 <Modal
@@ -43,8 +42,17 @@ class Modall extends Component {
 
                 >
                     <View style={styles.aa}>
-                        <TouchableWithoutFeedback onPress={() => this.closeModal()}  >
-                            <Image resizeMethod='resize' style={{ width: '100%', height: '100%', resizeMode: 'cover' }} source={{ uri: this.props.pic }} />
+                        <TouchableWithoutFeedback >
+                            <ImageZoom
+                                cropWidth={Dimensions.get('window').width}
+                                cropHeight={Dimensions.get('window').height}
+                                imageWidth={Dimensions.get('window').width}
+                                imageHeight={Dimensions.get('window').height}
+                                doubleClickInterval={175}
+                                onClick={() => this.closeModal()}
+                            >
+                                <Image resizeMethod='resize' style={{ width: '100%', height: '100%', resizeMode: 'cover' }} source={{ uri: this.props.pic }} />
+                            </ImageZoom>
                         </TouchableWithoutFeedback>
                     </View>
                 </Modal>
@@ -58,8 +66,17 @@ class Modall extends Component {
                     animationType={'fade'}
                 >
                     <View style={styles.aa}>
-                        <TouchableWithoutFeedback onPress={() => this.closeModal()}>
-                            {this.props.children}
+                        <TouchableWithoutFeedback >
+                            <ImageZoom
+                                cropWidth={Dimensions.get('window').width}
+                                cropHeight={Dimensions.get('window').height}
+                                imageWidth={Dimensions.get('window').width}
+                                imageHeight={Dimensions.get('window').height}
+                                doubleClickInterval={175}
+                                onClick={() => this.closeModal()}
+                            >
+                                {this.props.children}
+                            </ImageZoom>
                         </TouchableWithoutFeedback>
                     </View>
                 </Modal>

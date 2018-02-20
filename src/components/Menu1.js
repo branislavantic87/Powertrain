@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-
+import HTML from 'react-native-render-html';
 
 class Menu1 extends Component {
 
@@ -10,8 +10,8 @@ class Menu1 extends Component {
 
             <View>
                 <View style={styles.pdt}>
-                    <TouchableOpacity onPress={this.props.onPress} style={[styles.menu1Item, { backgroundColor: this.props.isPressed ? '#f44336' : '#eeeeee' }]}>
-                        <Text numberOfLines={1} style={{ paddingBottom: 6, fontSize: 16, color: this.props.isPressed ? 'white' : '#757575' }}>{this.props.menu1.title}</Text>
+                    <TouchableOpacity onPress={this.props.onPress} style={[styles.menu1Item, { backgroundColor: this.props.isPressed ? '#da291c' : '#d8d8d8' }]}>
+                        <HTML containerStyle={{ paddingBottom: 6, paddingLeft: 5}} baseFontStyle={{color: this.props.isPressed ? 'white' : '#757575', fontSize: 12, textAlign: 'left' }} html={this.props.menu1.title} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -27,7 +27,7 @@ const styles = {
         borderColor: '#fff',
         height: 50,
         width: 300,
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'center',
         padding: 10,
        

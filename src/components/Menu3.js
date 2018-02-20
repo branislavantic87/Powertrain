@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Menu4 from './Menu4';
+import HTML from 'react-native-render-html';
 
 
 class Menu3 extends Component {
@@ -21,7 +22,6 @@ class Menu3 extends Component {
 
     renderMenus4 = () => {
         if (this.props.menu3.children) {
-            console.log('renderMenus4');
             return this.props.menu3.children.map(child =>
                 <Menu4
                     key={child.menuId}
@@ -37,8 +37,8 @@ class Menu3 extends Component {
     render() {
         return (
             <View style={styles.menu3Item}>
-                <TouchableOpacity style={styles.menu2Item} onPress={() => Actions.reset('HBF', { from: this.props.menu3, filtered: this.state.filteredPages, selected: this.props.selected })}>
-                    <Text numberOfLines={1} style={[styles.menu3Text, { color: this.props.isPressed ? '#757575' : '#757575' }, { borderColor: this.props.isPressed ? '#f44336' : '#E0E0E0' }]}>{this.props.menu3.title}</Text>
+                <TouchableOpacity style={[styles.menu2Item, { borderColor: this.props.isPressed ? '#da291c' : '#909090' }]} onPress={() => Actions.reset('HBF', { from: this.props.menu3, filtered: this.state.filteredPages, selected: this.props.selected,  })}>
+                    <HTML containerStyle={styles.menu3Text} baseFontStyle={{color: '#da291c', fontSize: 12}} html={this.props.menu3.title} />
                 </TouchableOpacity>
 
                     {this.renderMenus4()}
@@ -52,20 +52,22 @@ class Menu3 extends Component {
 
 const styles = {
     menu3Item: {
-        padding: 10,
+        
         flexWrap: 'wrap'
         // flex: 1,
         //height: '100%'
     },
     menu3Text: {
-        padding: 10,
-        backgroundColor: 'transparent',
-        borderWidth: 1,
-        borderColor: '#757575'
+        paddingLeft: 15        
     },
     menu2Item: {
-        paddingBottom: 10,
-        width: 200,
+        marginBottom: 5,
+        width: 250,
+        height: 50,
+        justifyContent: 'center',
+        backgroundColor: '#f2f2f2',
+        borderWidth: 1,
+        marginRight: 10,
     },
 }
 

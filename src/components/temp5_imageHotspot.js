@@ -11,7 +11,8 @@ export default class HotspotImage extends Component {
 
     state = {
         layoutWidth: 0,
-        layoutHeigth: 0
+        layoutHeigth: 0,
+        picExists: false
     }
 
 
@@ -58,6 +59,12 @@ export default class HotspotImage extends Component {
             );
         }));
     }
+
+    componentWillMount() {
+        RNFB.fs.exists(RNFB.fs.dirs.DocumentDir + '/' + this.props.page.files.find(e => e.ext == 'jpg').filename)
+        .then(res => res ? this.setState({picExists: true}) : this.setState({picExists: false}))
+    }
+
     render() {
 
         return (
@@ -76,7 +83,7 @@ export default class HotspotImage extends Component {
                                 this.setState(() => ({ layoutWidth: width, layoutHeigth: height }));
                             }}
                             source={{ uri: 'file://' + RNFB.fs.dirs.DocumentDir + '/' + this.props.page.files.find(e => e.ext == 'jpg').filename }} />}
-                        {this.getPosistionsFromJSON()}
+                        {this.state.picExists && this.getPosistionsFromJSON()}
                     </View>
                 </View>
             </View>

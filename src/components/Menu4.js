@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import HTML from 'react-native-render-html';
 
 export default class Menu4 extends Component {
 
@@ -20,10 +21,9 @@ export default class Menu4 extends Component {
     render() {
         return (
             <View style={styles.menu4Item}>
-                <TouchableOpacity style={styles.menu2Item} onPress={() => Actions.reset('HBF', { from: this.props.menu4, filtered: this.state.filteredPages, selected: this.props.selected })}>
-                    <Text numberOfLines={1} style={[styles.menu4Text, { color: this.props.isPressed ? '#757575' : '#757575' }, { borderColor: this.props.isPressed ? '#f44336'  : '#E0E0E0'  }]}>{this.props.menu4.title}</Text>
+                <TouchableOpacity style={[styles.menu2Item, { borderColor: this.props.isPressed ? '#da291c'  : '#909090'  }]} onPress={() => Actions.reset('HBF', { from: this.props.menu4, filtered: this.state.filteredPages, selected: this.props.selected })}>
+                    <HTML containerStyle={styles.menu4Text} baseFontStyle={{color: '#909090', fontSize: 12 }} html={this.props.menu4.title} />
                 </TouchableOpacity>
-
             </View>
         );
     }
@@ -31,20 +31,26 @@ export default class Menu4 extends Component {
 
 const styles = {
     menu4Item: {
-        paddingRight: 10,
-        marginLeft: 10,
-        width: 190,
+      
+        marginBottom: 5,
+        marginLeft: 0,
+        marginRight: 10,
+        width: 250,
+        height: 50
         //flex: 1
       
     },
     menu4Text: {
-        padding: 10,
-        backgroundColor: 'transparent',
-        borderWidth: 1,
-        borderColor: '#757575'
+        backgroundColor: '#f2f2f2',
+        paddingLeft: 15,
+        
     },
     menu2Item: {
-        paddingRight: 10,
-        width: 200,
+        width: 230,
+        alignSelf: 'flex-end',
+        height: 50,
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: '#909090'
     },
 }
