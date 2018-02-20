@@ -32,13 +32,9 @@ export default class TextImage extends Component {
   }
 
   componentWillMount() {
-    let videos = this.props.files.filter(file => {
-      return file.substring(file.length - 3, file.length) == 'mp4'
-    })
+    let videos = this.props.page.files.filter(file => file.type == 'video')
 
-    let documents = this.props.files.filter(file => {
-      return file.substring(file.length - 3, file.length) == 'pdf'
-    })
+    let documents = this.props.page.files.filter(file => file.type == 'document');
 
     let images = this.props.files.filter(file => {
       return file.substring(file.length - 3, file.length) == 'jpg'
