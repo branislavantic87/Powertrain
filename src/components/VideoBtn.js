@@ -9,7 +9,7 @@ export default class VB extends Component {
 
         return (
             
-          <View>
+          <View style={{width: 160}}>
 
                 <TouchableOpacity style={styles.ButtonContent} onPress={() => Actions.VideoView({ videouri: this.props.videouri })}>
                     <Image
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
         borderColor: '#fff',
         borderWidth: 3,
         borderRadius: 4,
-        width: '55%',
+        width: '100%',
         backgroundColor: '#CFCFCF',
         padding: 9,
         flexDirection: 'row',

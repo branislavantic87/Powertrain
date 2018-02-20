@@ -7,30 +7,30 @@ import DB from './DocBtn';
 
 
 export default class FullText extends Component {
-    state ={
+    state = {
         videoPath: [],
         documentPath: [],
     }
 
-    componentWillMount(){
+    componentWillMount() {
         console.log(this.props.files)
         let videos = this.props.files.filter(file => {
             return file.substring(file.length - 3, file.length) == 'mp4'
-          })
-      
-          let documents = this.props.files.filter(file => {
+        })
+
+        let documents = this.props.files.filter(file => {
             return file.substring(file.length - 3, file.length) == 'pdf'
-          })
-      
-          this.setState({ videoPath: videos, documentPath: documents });
+        })
+
+        this.setState({ videoPath: videos, documentPath: documents });
     }
     render() {
-        {console.log('Ovo je patth do dokumenta ' + this.state.documentPath[0])}
+        { console.log('Ovo je patth do dokumenta ' + this.state.documentPath[0]) }
         return (
             <View style={styles.mainView}>
-             { !this.props.fromHome && <LeafletButton page={this.props.page} /> }
+                {!this.props.fromHome && <LeafletButton page={this.props.page} />}
                 <View style={styles.body}>
-                    <View>
+                    <View style={{ height: '13%' }}>
                         <Text style={[styles.headingText, styles.headingMain]}>{this.props.templateTitle}</Text>
                         <Text style={styles.headingText}>{this.props.subtitle}</Text>
                     </View>
@@ -42,13 +42,17 @@ export default class FullText extends Component {
                                 <HTML html={this.props.text} />
                             </ScrollView>
                         </View>
-                        <View style={styles.ButtonContainer}>
-                                {this.state.videoPath.length > 0 && <VB videouri={this.state.videoPath} />}
-                                {this.state.documentPath.length > 0 && <DB documenturi={this.state.documentPath[0]} />}
-                            </View>
+
+                    </View>
+                    <View style={styles.ButtonContainer}>
+
+                        {this.state.videoPath.length > 0 && <VB videouri={this.state.videoPath} />}
+                        {this.state.documentPath.length > 0 && <DB documenturi={this.state.documentPath[0]} />}
+
                     </View>
 
                 </View>
+
 
             </View>
         );
@@ -81,8 +85,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flex: 1,
         width: '100%',
-        height: '100%',
-        marginBottom: 25,
+        height: '67%',
+        marginBottom: 10,
     },
     contentText: {
         flex: 2.5,
@@ -92,13 +96,12 @@ const styles = StyleSheet.create({
         paddingTop: 30
     },
     ButtonContainer: {
+        width: '100%',
+        height: '20%',
+        alignSelf: 'flex-end',
         justifyContent: 'flex-end',
         alignItems: 'center',
         flexDirection: 'row',
-        position: 'absolute',
         bottom: 40,
-        right: 20,
-        width: '51%',
-
     },
 });

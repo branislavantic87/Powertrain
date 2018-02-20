@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import LeafletButton from './LeafletButton';
 import Modall from './Modall';
+import VB from './VideoBtn';
+import DB from './DocBtn';
 
 export default class FullImage extends Component {
 
@@ -82,8 +84,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     position: 'absolute',
-    bottom: 40,
-    right: 20,
+    bottom: 25,
+    right: 25,
     width: '51%',
 },
 });
