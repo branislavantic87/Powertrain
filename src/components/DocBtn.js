@@ -7,7 +7,7 @@ export default class DB extends Component {
 
         return (
 
-            <View>
+            <View style={{width: 160}}>
 
                 <TouchableOpacity disabled={this.props.disabled} style={styles.ButtonContent} onPress={() => Actions.DocumentView({ docuri: this.props.documenturi })}>
                     <Image
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         borderColor: '#fff',
         borderWidth: 3,
         borderRadius: 4,
-        width: '55%',
+        width: '100%',
         backgroundColor: '#CFCFCF',
         padding: 9,
         flexDirection: 'row',

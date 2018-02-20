@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
     },
 
     hotspotTitileView: {
+        borderTopLeftRadius: 25,
         backgroundColor: 'transparent',
         height: 25,
         width: 150,

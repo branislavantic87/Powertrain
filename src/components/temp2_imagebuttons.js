@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     },
     headingMain: {
         paddingTop: 20,
-        paddingBottom: 4,
+        paddingBottom: 10,
         fontSize: 25,
         fontWeight: 'bold'
     },
@@ -133,10 +133,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         position: 'absolute',
-        bottom: 40,
-        right: 20,
+        bottom: 25,
+        right: 25,
         width: '51%',
-
     },
     floatingButtonsHolder: {
         position: 'absolute',

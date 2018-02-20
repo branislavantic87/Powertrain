@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     bodyCont: {
         backgroundColor: 'white',
         width: '100%',
-        height: '93%'
+        height: '93%',
     },
     pagginationStyle: {
         bottom: 0,
