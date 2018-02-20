@@ -55,7 +55,6 @@ export default class FullImage extends Component {
           </View>
 
         </View>
-
         {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
         {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
       </View>
@@ -67,7 +66,8 @@ const styles = StyleSheet.create({
   mainView: {
     backgroundColor: 'white',
     position: 'relative',
-    height: '100%'
+    height: '100%',
+     
   },
   body: {
     height: '100%',
