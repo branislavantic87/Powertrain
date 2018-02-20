@@ -258,20 +258,17 @@ export default class Search extends Component {
                     </View>
                     <View style={styles.ButtonsView}>
                         <TouchableOpacity style={[styles.ButtonContent, { backgroundColor: this.state.content ? '#ddd' : '#fff' }]} onPress={() => this.setState({ buttonActive: 'content', content: true, video: false })}>
-
-
                             <Image
                                 style={styles.ButtonIconStyle22}
-                                source={require('./ico/32/content-content.png')}
+                                source={require('./ico/32/content-search.png')}
                             />
                             <Text style={styles.ButtonTextStyle}>CONTENT</Text>
                         </TouchableOpacity >
 
                         <TouchableOpacity style={[styles.ButtonContent, { backgroundColor: this.state.video ? '#ddd' : '#fff' }]} onPress={() => this.setState({ buttonActive: 'video', video: true, content: false })}>
-
                             <Image
                                 style={styles.ButtonIconStyle2}
-                                source={require('./ico/32/video-content.png')}
+                                source={require('./ico/32/video-search.png')}
 
                             />
                             <Text style={styles.ButtonTextStyle}>VIDEO</Text>
@@ -280,14 +277,14 @@ export default class Search extends Component {
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 30, }}>
                         <TouchableWithoutFeedback>
                             <Image
-                                style={{ width: 32, height: 32 }}
-                                source={require('./ico/x64/search.png')}
+                                style={{ width: 40, height: 40 }}
+                                source={require('./ico/top-bar/search.png')}
                             />
                         </TouchableWithoutFeedback>
                         <View style={{ padding: 10 }}>
                             <TextInput
                                 keyboardType='default'
-                                placeholder="Search"
+                                placeholder="Search term"
                                 style={styles.textInput}
                                 onChangeText={(text) => {
                                     this.setState({ text });
@@ -321,6 +318,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         width: 300,
         height: 50,
+        fontSize: 16
     },
     ButtonIconStyle2: {
         marginRight: 10,
@@ -342,7 +340,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#dddddd',
         padding: 18,
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
         marginRight: 20,
         marginLeft: 20

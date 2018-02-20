@@ -18,6 +18,7 @@ let defaultLanguageId = 1;
 let defaultLanguageObject = {};
 let server = '';
 let checkedFiles = {};
+let pathToFile = 'file://' + RNFB.fs.dirs.DocumentDir + '/';
 
 urls = global.urls = {
     projectJson: 'http://www.cduppy.com/salescms/?a=ajax&do=getProject&projectId=5&token=1234567890&deviceId=' + deviceId,
@@ -409,7 +410,7 @@ export const renderVB = (arr, func) => {
         return null;
     }
     else if (arr.length == 1) {
-        return <VB videouri={arr[0]} />;
+        return <VB videouri={pathToFile + arr[0].filename} />;
     } else {
         return <TouchableOpacity onPress={() => func()}><VB disabled={true} /></TouchableOpacity>;
     }
@@ -420,7 +421,7 @@ export const renderDB = (arr, func) => {
         return null;
     }
     else if (arr.length == 1) {
-        return <DB documenturi={arr[0]} />;
+        return <DB documenturi={pathToFile + arr[0].filename} />;
     } else {
         return <TouchableOpacity onPress={() => func()}><DB disabled={true} /></TouchableOpacity>;
     }
@@ -443,12 +444,10 @@ export const renderModalforMultipleFiles = (what, arr, isVisible, func) => {
 renderListOfFiles = (what, arr, func) => {
     let whaturi = what == 'videos' ? 'videouri' : 'docuri';
     let whatView = what == 'videos' ? 'VideoView' : 'DocumentView';
-    let reg = /[^/]+$/;
-
     return arr.map((f, i) => {
         return (
-            <TouchableOpacity key={i} onPress={() => { Actions[whatView]({ [whaturi]: f }); func() }} >
-                <Text style={{ fontSize: 30, color: 'green' }}>{reg.exec(f)[0]}</Text>
+            <TouchableOpacity key={i} onPress={() => { Actions[whatView]({ [whaturi]: pathToFile + f.filename }); func() }} >
+                <Text style={{ fontSize: 30, color: 'green' }}>{f.filename}</Text>
             </TouchableOpacity>
         );
     })
