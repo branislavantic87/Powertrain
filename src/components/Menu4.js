@@ -21,7 +21,7 @@ export default class Menu4 extends Component {
     render() {
         return (
             <View style={styles.menu4Item}>
-                <TouchableOpacity style={[styles.menu2Item, { borderColor: this.props.isPressed ? '#dd0000'  : '#909090'  }]} onPress={() => Actions.reset('HBF', { from: this.props.menu4, filtered: this.state.filteredPages, selected: this.props.selected })}>
+                <TouchableOpacity style={[styles.menu2Item, { borderColor: this.props.isPressed ? '#da291c'  : '#909090'  }]} onPress={() => Actions.reset('HBF', { from: this.props.menu4, filtered: this.state.filteredPages, selected: this.props.selected })}>
                     <HTML containerStyle={styles.menu4Text} baseFontStyle={{color: '#909090', fontSize: 12 }} html={this.props.menu4.title} />
                 </TouchableOpacity>
             </View>

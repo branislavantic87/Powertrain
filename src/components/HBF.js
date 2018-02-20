@@ -110,7 +110,7 @@ class HBF extends Component {
                 <Body fromHome={this.props.fromHome} style={{ bottom: 10 }} pages={this.props.filtered} />
 
             {!this.state.visibleMenu &&
-                <View style={{ position: 'absolute', width: 50, height: 50, bottom: 30, left: 40, zIndex: 5 }}>
+                <View style={{ position: 'absolute', width: 50, height: 50, bottom: 15, left: 15, zIndex: 5 }}>
                     <TouchableOpacity onPress={() => { this.state.visibleMenu ? this.setState({ visibleMenu: false }) : this.setState({ visibleMenu: true }); }} style={{ width: '100%', height: '100%' }}>
                         <Image style={styles.ico} source={require('./ico/32/main-menu.png')} />
                     </TouchableOpacity>

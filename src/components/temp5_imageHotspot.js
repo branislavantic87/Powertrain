@@ -11,7 +11,8 @@ export default class HotspotImage extends Component {
 
     state = {
         layoutWidth: 0,
-        layoutHeigth: 0
+        layoutHeigth: 0,
+        picExists: false
     }
 
 
@@ -25,6 +26,10 @@ export default class HotspotImage extends Component {
         return { filtered, from, selected };
     }
 
+    hotspotRedirect = (spot) => {
+        let { filtered, from, selected } = this.findInfoAboutMenu(spot.linkPageId);
+        Actions.reset('HBF', { filtered, from, selected });
+    }
 
     getPosistionsFromJSON = () => {
         //console.log('layoutWidth: ' + this.state.layoutWidth + ' layoutHeight: ' + this.state.layoutHeigth);
@@ -48,13 +53,14 @@ export default class HotspotImage extends Component {
                     >
                         <Image key={i + '.image'} source={require('./ico/32/hotspot.png')} />
                     </TouchableOpacity>
-
+<TouchableOpacity onPress={() => this.hotspotRedirect(spot)}>
                     <ImageBackground key={i + '.viewSlave'}
                         style={styles.hotspotTitileView}
                         source={require('./ico/32/123.png')}
                    >
                        <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.label}</Text>
                   </ImageBackground>
+                  </TouchableOpacity>
                     {/* <View key={i + '.viewSlave'} style={[styles.hotspotTitileView, {marginBottom: 17} ]}>
                         <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.label}</Text>
                     </View> */}
@@ -62,6 +68,12 @@ export default class HotspotImage extends Component {
             );
         }));
     }
+
+    componentWillMount() {
+        RNFB.fs.exists(RNFB.fs.dirs.DocumentDir + '/' + this.props.page.files.find(e => e.ext == 'jpg').filename)
+        .then(res => res ? this.setState({picExists: true}) : this.setState({picExists: false}))
+    }
+
     render() {
 
         return (
@@ -80,7 +92,7 @@ export default class HotspotImage extends Component {
                                 this.setState(() => ({ layoutWidth: width, layoutHeigth: height }));
                             }}
                             source={{ uri: 'file://' + RNFB.fs.dirs.DocumentDir + '/' + this.props.page.files.find(e => e.ext == 'jpg').filename }} />}
-                        {this.getPosistionsFromJSON()}
+                        {this.state.picExists && this.getPosistionsFromJSON()}
                     </View>
                 </View>
             </View>
