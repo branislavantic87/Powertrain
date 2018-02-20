@@ -60,7 +60,6 @@ export default class TextImage extends Component {
   }
 
   render() {
-
     return (
 
       <View style={styles.mainView}>

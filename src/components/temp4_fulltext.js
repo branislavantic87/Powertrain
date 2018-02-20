@@ -2,10 +2,30 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import HTML from 'react-native-render-html';
 import LeafletButton from './LeafletButton';
+import VB from './VideoBtn';
+import DB from './DocBtn';
 
 
 export default class FullText extends Component {
+    state ={
+        videoPath: [],
+        documentPath: [],
+    }
+
+    componentWillMount(){
+        console.log(this.props.files)
+        let videos = this.props.files.filter(file => {
+            return file.substring(file.length - 3, file.length) == 'mp4'
+          })
+      
+          let documents = this.props.files.filter(file => {
+            return file.substring(file.length - 3, file.length) == 'pdf'
+          })
+      
+          this.setState({ videoPath: videos, documentPath: documents });
+    }
     render() {
+        {console.log('Ovo je patth do dokumenta ' + this.state.documentPath[0])}
         return (
             <View style={styles.mainView}>
              { !this.props.fromHome && <LeafletButton page={this.props.page} /> }
@@ -22,7 +42,10 @@ export default class FullText extends Component {
                                 <HTML html={this.props.text} />
                             </ScrollView>
                         </View>
-
+                        <View style={styles.ButtonContainer}>
+                                {this.state.videoPath.length > 0 && <VB videouri={this.state.videoPath} />}
+                                {this.state.documentPath.length > 0 && <DB documenturi={this.state.documentPath[0]} />}
+                            </View>
                     </View>
 
                 </View>
@@ -66,5 +89,15 @@ const styles = StyleSheet.create({
         height: '100%',
         padding: 20,
         paddingTop: 30
+    },
+    ButtonContainer: {
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        flexDirection: 'row',
+        position: 'absolute',
+        bottom: 40,
+        right: 20,
+        width: '51%',
+
     },
 });
