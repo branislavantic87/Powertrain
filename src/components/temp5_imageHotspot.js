@@ -5,13 +5,14 @@ import { Actions } from 'react-native-router-flux';
 import LeafletButton from './LeafletButton';
 import { findPageObjectById, findMenuObjectById, findMenu1Selected, aaa } from '../../helpers';
 
-const margine = 0.10;
+const margine = 0.0;
 
 export default class HotspotImage extends Component {
 
     state = {
         layoutWidth: 0,
-        layoutHeigth: 0
+        layoutHeigth: 0,
+        picExists: false
     }
 
 
@@ -25,6 +26,10 @@ export default class HotspotImage extends Component {
         return { filtered, from, selected };
     }
 
+    hotspotRedirect = (spot) => {
+        let { filtered, from, selected } = this.findInfoAboutMenu(spot.linkPageId);
+        Actions.reset('HBF', { filtered, from, selected });
+    }
 
     getPosistionsFromJSON = () => {
         //console.log('layoutWidth: ' + this.state.layoutWidth + ' layoutHeight: ' + this.state.layoutHeigth);
@@ -33,33 +38,38 @@ export default class HotspotImage extends Component {
         //console.log('hotspots:', hotspots);
 
         return (hotspots.map((spot, i) => {
-            const posx = this.state.layoutWidth * (spot.x / 1000) + Dimensions.get('screen').width * margine/2;
+            const posx = this.state.layoutWidth * (spot.x / 1000) + Dimensions.get('screen').width * margine / 2;
             // const posx = this.state.layoutWidth * (spot.x / 1000) + Dimensions.get('screen').width * 0.07;
             const posy = this.state.layoutHeigth * (spot.y / 1000) - 19;
             return (
-                <View key={i + '.viewMaster'} style={{flexDirection: 'row', position: "absolute", zIndex: 20, left: posx - 10, top: posy - 10}}>
-                    <TouchableOpacity 
-                    key={i} 
-                    style={{marginTop: 17 }} 
-                    onPress={() => {
-                        let { filtered, from, selected } = this.findInfoAboutMenu(spot.linkPageId);
-                        Actions.reset('HBF', { filtered, from, selected });
-                    }}
+                <View key={i + '.viewMaster'} style={{ flexDirection: 'row', position: "absolute", zIndex: 20, left: posx - 10, top: posy - 10 }}>
+                    <TouchableOpacity
+                        key={i}
+                        style={{ marginTop: 17 }}
+                        onPress={() => this.hotspotRedirect(spot)}
                     >
                         <Image key={i + '.image'} source={require('./ico/32/hotspot.png')} />
                     </TouchableOpacity>
-                    <View key={i + '.viewSlave'} style={[styles.hotspotTitileView, {marginBottom: 17} ]}>
-                        <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.label}</Text>
-                    </View>
+                    <TouchableOpacity onPress={() => this.hotspotRedirect(spot)}>
+                        <View key={i + '.viewSlave'} style={[styles.hotspotTitileView, { marginBottom: 17 }]}>
+                            <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.label}</Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
             );
         }));
     }
+
+    componentWillMount() {
+        RNFB.fs.exists(RNFB.fs.dirs.DocumentDir + '/' + this.props.page.files.find(e => e.ext == 'jpg').filename)
+        .then(res => res ? this.setState({picExists: true}) : this.setState({picExists: false}))
+    }
+
     render() {
 
         return (
             <View style={styles.mainView} >
-             { !this.props.fromHome && <LeafletButton page={this.props.page} /> }
+                {!this.props.fromHome && <LeafletButton page={this.props.page} />}
                 <View style={styles.body}>
                     <View style={styles.contentContainer}>
                         {<Image
@@ -73,7 +83,7 @@ export default class HotspotImage extends Component {
                                 this.setState(() => ({ layoutWidth: width, layoutHeigth: height }));
                             }}
                             source={{ uri: 'file://' + RNFB.fs.dirs.DocumentDir + '/' + this.props.page.files.find(e => e.ext == 'jpg').filename }} />}
-                        {this.getPosistionsFromJSON()}
+                        {this.state.picExists && this.getPosistionsFromJSON()}
                     </View>
                 </View>
             </View>
@@ -92,7 +102,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     contentContainer: {
-        marginTop: 10,
+        marginTop: 0,
         marginBottom: 5,
     },
     hotspotTitle: {
@@ -112,11 +122,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     imageStyle: {
-        width: Dimensions.get('screen').width - Dimensions.get('screen').width*margine,
-        height: Dimensions.get('screen').height - Dimensions.get('screen').height*margine,
+        width: Dimensions.get('screen').width - Dimensions.get('screen').width * margine,
+        height: Dimensions.get('screen').height - Dimensions.get('screen').height * margine,
         resizeMode: 'cover',
         zIndex: 1,
-        marginLeft: Dimensions.get('screen').width  * margine/2
+        marginLeft: Dimensions.get('screen').width * margine / 2
     }
 
 });

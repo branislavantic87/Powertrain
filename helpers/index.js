@@ -50,11 +50,11 @@ postojiJson = (json) => {
             .then(res => {
                 global[json] = JSON.parse(res);
                 if (global[json].lastChanges == fetchedJson[json].lastChanges) {
-                    return resolve();
+                    return resolve(true);
                 } else {
                     global[json] = fetchedJson[json];
                     AsyncStorage.setItem(json, JSON.stringify(fetchedJson[json]))
-                        .then(() => resolve())
+                        .then(() => resolve(false))
                 }
             })
     })
@@ -128,6 +128,10 @@ checkContentForLang = (lang) => {
                             } else {
                                 console.log('Content JSON za jezik ' + lang.language + ' je RAZLICITI i treba ga opet skinuti, smestiti i naci fajlove.');
                                 AsyncStorage.setItem(lang.language, JSON.stringify(res))
+                                    .then(() => AsyncStorage.getItem('checkedFiles'))
+                                    .then(res => JSON.parse(res))
+                                    .then(res => { res && res.allDownloaded ? res.allDownloaded = false : null; return Promise.resolve(res); })
+                                    .then((res) => AsyncStorage.setItem('checkedFiles', JSON.stringify(res)))
                                     .then(() => resolve())
                             }
                         })
@@ -199,14 +203,18 @@ export const checkHashFiles = (pocetni) => {
                         AsyncStorage.getItem(l.language)
                             .then(res => JSON.parse(res))
                             .then(res => {
-                                let b = res.files.map(file =>
-                                    RNFB.fs.exists(dirs.DocumentDir + '/' + file.fileId + '.' + file.ext)
-                                        .then(res => {
-                                            if (!res) { /* && md5(dirs.DocumentDir + '/' + file.fileId + '.' + file.ext)  != file.hash*/
-                                                downloadStage.push(file);
-                                            }
-                                        })
-                                )
+                                let b = res.files.map(file => {
+                                    return new Promise((resolve, reject) => {
+                                        RNFB.fs.exists(dirs.DocumentDir + '/' + file.filename)
+                                            .then(res => {
+                                                if (!res) { /* && md5(dirs.DocumentDir + '/' + file.fileId + '.' + file.ext)  != file.hash*/
+                                                    downloadStage.push(file);
+                                                }
+                                                return Promise.resolve();
+                                            })
+                                            .then(() => resolve())
+                                    })
+                                })
                                 Promise.all(b)
                                     .then(() => resolve())
                             })
@@ -320,7 +328,7 @@ export const syncApp = (showAlerts) => {
                             .then(res => res.json())
                             .then(res => {
                                 let neSkinutiFajlovi = fajlic.failedDownloads.length > 0 ? 'There seems to be ' + fajlic.failedDownloads.length + ' missing files. Try syncing the app. \nIf this problem persists, that means files are missing from the server. \nContact your admin to fix it.' : 'Seems everything is OK. If you want you can sync application anyway.';
-                                if (res.project.lastChanges == global.projectJson.project.lastChanges) {
+                                if (res.lastChanges == global.projectJson.lastChanges) {
                                     showAlerts && Alert.alert('UP TO DATE!', neSkinutiFajlovi, [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }])
                                 } else {
                                     Alert.alert('There seems to be update!', 'Do you wish to sync?', [{ text: 'Sync', onPress: () => { RNRestart.Restart(); } }, { text: 'Cancel', onPress: () => { } }]);
@@ -389,7 +397,5 @@ export const findMenu1Selected = (m) => {
 
 export const findMenu = (menuIdS) => {
     let menus = global.globalJson.menus[global.language].menu;
-    
     return menus.find(m => m.menuId == menuIdS);
-    
 }

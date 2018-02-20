@@ -66,14 +66,15 @@ const styles = StyleSheet.create({
         paddingRight: 40,
     },
     headingText: {
-        color: '#1496ba',
+        color: '#494949',
         fontSize: 15,
         paddingBottom: 35
     },
     headingMain: {
         paddingTop: 40,
         paddingBottom: 4,
-        fontSize: 25
+        fontSize: 25,
+        fontWeight: 'bold'
     },
     contentContainer: {
         marginTop: 20,

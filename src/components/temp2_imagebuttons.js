@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
         paddingRight: 10,
     },
     headingText: {
-        color: '#757575',
+        color: '#494949',
         fontSize: 15,
         paddingBottom: 10,
         paddingLeft: 30
@@ -95,7 +95,8 @@ const styles = StyleSheet.create({
     headingMain: {
         paddingTop: 20,
         paddingBottom: 4,
-        fontSize: 25
+        fontSize: 25,
+        fontWeight: 'bold'
     },
     contentContainer: {
         marginTop: 20,
