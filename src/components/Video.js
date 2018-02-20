@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, NavigationActions } from 'react-native';
 import Video from 'react-native-video';
 import VideoPlayer from 'react-native-video-controls';
 import { Actions } from 'react-native-router-flux';
 
 export default class VideoView extends Component {
 
+    onEnd = () => (
+        this.props.navigation.goBack()
+    )
     render() {
-
         return (
 
 
@@ -15,7 +17,6 @@ export default class VideoView extends Component {
                 <VideoPlayer
                     source={{ uri: this.props.videouri }}   // Can be a URL or a local file.
                     controlTimeout={2000}
-                    navigator={() => { }}
                     onBack={() => Actions.pop()}
                     // Store reference
                     rate={1.0}                              // 0 is paused, 1 is normal.
@@ -23,7 +24,7 @@ export default class VideoView extends Component {
                     muted={false}                           // Mutes the audio entirely.
                     paused={false}                          // Pauses playback entirely.
                     resizeMode="cover"                      // Fill the whole screen at aspect ratio.*
-                    repeat={true}                           // Repeat forever.
+                    repeat={false}                           // Repeat forever.
                     playInBackground={false}                // Audio continues to play when app entering background.
                     playWhenInactive={false}                // [iOS] Video continues to play when control or notification center are shown.
                     ignoreSilentSwitch={"ignore"}           // [iOS] ignore | obey - When 'ignore', audio will still play with the iOS hard silent switch set to silent. When 'obey', audio will toggle with the switch. When not specified, will inherit audio settings as usual.
