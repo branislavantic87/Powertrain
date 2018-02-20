@@ -32,38 +32,31 @@ export default class HotspotImage extends Component {
     }
 
     getPosistionsFromJSON = () => {
-        //console.log('layoutWidth: ' + this.state.layoutWidth + ' layoutHeight: ' + this.state.layoutHeigth);
-        //console.log(this.props);
         const hotspots = this.props.page.hotspots;
-        //console.log('hotspots:', hotspots);
 
         return (hotspots.map((spot, i) => {
             const posx = this.state.layoutWidth * (spot.x / 1000) + Dimensions.get('screen').width * margine / 2;
-            // const posx = this.state.layoutWidth * (spot.x / 1000) + Dimensions.get('screen').width * 0.07;
             const posy = this.state.layoutHeigth * (spot.y / 1000) - 19;
             return (
                 <View key={i + '.viewMaster'} style={{ flexDirection: 'row', position: "absolute", zIndex: 20, left: posx - 10, top: posy - 10 }}>
                     <TouchableOpacity
                         key={i}
-                        style={{ marginTop: 17 }}
+                        style={{ paddingTop: 17 }}
                         onPress={() => {
                             let { filtered, from, selected } = this.findInfoAboutMenu(spot.linkPageId);
                             Actions.reset('HBF', { filtered, from, selected });
                         }}
                     >
                         <Image key={i + '.image'} source={require('./ico/32/hotspot.png')} />
+                        <View style={{top: -40, left: 17}}>
+                            <ImageBackground key={i + '.viewSlave'}
+                                style={[styles.hotspotTitileView,{}]}
+                                source={require('./ico/32/123.png')}
+                            >
+                                <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.label}</Text>
+                            </ImageBackground>
+                        </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.hotspotRedirect(spot)}>
-                        <ImageBackground key={i + '.viewSlave'}
-                            style={styles.hotspotTitileView}
-                            source={require('./ico/32/123.png')}
-                        >
-                            <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.label}</Text>
-                        </ImageBackground>
-                    </TouchableOpacity>
-                    {/* <View key={i + '.viewSlave'} style={[styles.hotspotTitileView, {marginBottom: 17} ]}>
-                        <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.label}</Text>
-                    </View> */}
                 </View>
             );
         }));
@@ -118,12 +111,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         color: '#da281c',
+        paddingBottom: 3
     },
 
     hotspotTitileView: {
         borderTopLeftRadius: 25,
         backgroundColor: 'transparent',
-        height: 25,
+        height: 20,
         width: 150,
         alignItems: 'center',
         justifyContent: 'center',
