@@ -49,46 +49,13 @@ export default class TextImage extends Component {
     this.setState({ videoPath: videos, documentPath: documents, imagesPath: images });
   }
 
-  modalForMultiple = (what) => {
-    return (
-      <Modal
-        isVisible={this.state[what]}
-        onBackdropPress={() => this.setState({ [what]: false })}
-        onBackButtonPress={() => this.setState({ [what]: false })}
-
-      >
-        <View style={{ borderWidth: 1, borderColor: 'black' }}>
-          {this.renderListOfFiles(what)}
-        </View>
-      </Modal>
-    );
-  }
-
-  renderListOfFiles = (what) => {
-    let arr = what == 'videos' ? this.state.videoPath : this.state.documentPath;
-    let whaturi = what == 'videos' ? 'videouri' : 'docuri';
-    let whatView = what == 'videos' ? 'VideoView' : 'DocumentView';
-    let fileNames = what == 'videos' ? this.props.page.files.filter(f => f.type == 'video') : this.props.page.files.filter(f => f.type == 'document');
-    let reg = /[^/]+$/;
-    return arr.map((f, i) => {
-      return (
-        <TouchableOpacity key={i} onPress={() => { Actions[whatView]({ [whaturi]: f }); this.setState({ [what]: false }) }} >
-          <Text style={{ fontSize: 30, color: 'green' }}>{reg.exec(f)[0]}</Text>
-        </TouchableOpacity>
-      );
-    })
-  }
-
-  showVideosModal = () => {
-    this.setState({ videos: true });
-  }
-
-  showDocumentModal = () => {
-    this.setState({ documents: true });
-  }
-
+  
   hideModal = () => {
     this.setState({ videos: false, documents: false });
+  }
+
+  showModal = (which) => {
+    this.setState({[which]: true});
   }
 
 
@@ -137,8 +104,8 @@ export default class TextImage extends Component {
                 </SwiperFlatList>
               </View>
               <View style={styles.ButtonContainer}>
-                {renderVB(this.state.videoPath, this.showVideosModal)}
-                {renderDB(this.state.documentPath, this.showDocumentModal)}
+                {renderVB(this.state.videoPath, this.showModal.bind(null, 'videos'))}
+                {renderDB(this.state.documentPath, this.showModal.bind(null, 'documents'))}
                 
               </View>
 
@@ -150,7 +117,7 @@ export default class TextImage extends Component {
 
         {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
         {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
-        
+
       </View>
     );
   }

@@ -6,6 +6,7 @@ import VB from './VideoBtn';
 import DB from './DocBtn';
 import Modall from './Modall';
 import LeafletButton from './LeafletButton';
+import { renderVB, renderDB, renderModalforMultipleFiles } from '../../helpers';
 
 export default class ImageButtons extends Component {
 
@@ -15,11 +16,12 @@ export default class ImageButtons extends Component {
         image: '',
         whichOne: '',
         visableTwoBtns: false,
-        modalVisible: false
+        modalVisible: false,
+        videos: false,
+        documents: false
     };
 
     componentWillMount() {
-        c
         let videos = this.props.files.filter(file => {
             return file.substring(file.length - 3, file.length) == 'mp4'
         })
@@ -41,29 +43,12 @@ export default class ImageButtons extends Component {
         StatusBar.setHidden(true);
     }
 
-    modalForMultiple = (arr) => {
-        console.log('pozvan sa arr: ' + arr);
-        return (
-            <Modal
-                isVisible={this.state.modalVisible}
-                onBackdropPress={() => this.setState({ modalVisible: false })}
-                onBackButtonPress={() => this.setState({ modalVisible: false })}
-            >
-                <View>
-                    {this.renderListOfFiles(arr)}
-                </View>
-            </Modal>
-        );
+    hideModal = () => {
+        this.setState({ videos: false, documents: false });
     }
 
-    renderListOfFiles = (arr) => {
-        return arr.map(f => {
-            return (
-                <TouchableOpacity onPress={() => Actions.VideoView({ videouri: this.props.videouri })} >
-                    <Text>{f}</Text>
-                </TouchableOpacity>
-            );
-        })
+    showModal = (which) => {
+        this.setState({ [which]: true });
     }
 
     render() {
@@ -88,10 +73,8 @@ export default class ImageButtons extends Component {
                             </Modall>
 
                             <View style={styles.ButtonContainer}>
-                                {this.state.videoPath.length == 1 && <VB videouri={this.state.videoPath[0]} />}
-                                {this.state.documentPath.length == 1 && <DB documenturi={this.state.documentPath[0]} />}
-                                {this.state.videoPath.length > 1 && <TouchableOpacity onPress={() => {console.log('KLIK'); this.setState({modalVisible: true}); this.modalForMultiple(this.state.videoPath)}}><VB /></TouchableOpacity>}
-                                {this.state.documentPath.length > 1 && this.modalForMultiple(this.state.documentPath)}
+                                {renderVB(this.state.videoPath, this.showModal.bind(null, 'videos'))}
+                                {renderDB(this.state.documentPath, this.showModal.bind(null, 'documents'))}
                             </View>
 
                         </View>
@@ -99,7 +82,8 @@ export default class ImageButtons extends Component {
                     </View>
 
                 </View>
-
+                {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
+                {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
             </View>
         );
     }

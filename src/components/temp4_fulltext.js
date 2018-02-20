@@ -2,33 +2,43 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import HTML from 'react-native-render-html';
 import LeafletButton from './LeafletButton';
-import VB from './VideoBtn';
-import DB from './DocBtn';
+import { renderVB, renderDB, renderModalforMultipleFiles } from '../../helpers';
 
 
 export default class FullText extends Component {
-    state ={
+    state = {
         videoPath: [],
         documentPath: [],
+        videos: false,
+        documents: false
     }
 
-    componentWillMount(){
+    componentWillMount() {
         console.log(this.props.files)
         let videos = this.props.files.filter(file => {
             return file.substring(file.length - 3, file.length) == 'mp4'
-          })
-      
-          let documents = this.props.files.filter(file => {
+        })
+
+        let documents = this.props.files.filter(file => {
             return file.substring(file.length - 3, file.length) == 'pdf'
-          })
-      
-          this.setState({ videoPath: videos, documentPath: documents });
+        })
+
+        this.setState({ videoPath: videos, documentPath: documents });
     }
+
+    hideModal = () => {
+        this.setState({ videos: false, documents: false });
+    }
+
+    showModal = (which) => {
+        this.setState({ [which]: true });
+    }
+
+
     render() {
-        {console.log('Ovo je patth do dokumenta ' + this.state.documentPath[0])}
         return (
             <View style={styles.mainView}>
-             { !this.props.fromHome && <LeafletButton page={this.props.page} /> }
+                {!this.props.fromHome && <LeafletButton page={this.props.page} />}
                 <View style={styles.body}>
                     <View>
                         <Text style={[styles.headingText, styles.headingMain]}>{this.props.templateTitle}</Text>
@@ -43,13 +53,14 @@ export default class FullText extends Component {
                             </ScrollView>
                         </View>
                         <View style={styles.ButtonContainer}>
-                                {this.state.videoPath.length > 0 && <VB videouri={this.state.videoPath} />}
-                                {this.state.documentPath.length > 0 && <DB documenturi={this.state.documentPath[0]} />}
-                            </View>
+                            {renderVB(this.state.videoPath, this.showModal.bind(null, 'videos'))}
+                            {renderDB(this.state.documentPath, this.showModal.bind(null, 'documents'))}
+                        </View>
                     </View>
 
                 </View>
-
+                {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
+                {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
             </View>
         );
     }

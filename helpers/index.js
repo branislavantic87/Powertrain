@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, NetInfo, AsyncStorage, Alert, TouchableOpacity, View, Text } from 'react-native';
+import { Platform, NetInfo, AsyncStorage, Alert, TouchableOpacity, View, Text, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
 import DeviceInfo from 'react-native-device-info';
 import RNFB from 'react-native-fetch-blob';
@@ -433,9 +433,9 @@ export const renderModalforMultipleFiles = (what, arr, isVisible, func) => {
             onBackdropPress={() => func()}
             onBackButtonPress={() => func()}
         >
-            <View style={{ borderWidth: 1, borderColor: 'black' }}>
+            <ScrollView style={{ borderWidth: 1, borderColor: 'black' }}>
                 {this.renderListOfFiles(what, arr, func)}
-            </View>
+            </ScrollView>
         </Modal>
     );
 }
