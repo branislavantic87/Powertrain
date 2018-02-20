@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import LeafletButton from './LeafletButton';
 import Modall from './Modall';
+import DB from './DocBtn';
+import VB from './VideoBtn';
 
 export default class FullImage extends Component {
 

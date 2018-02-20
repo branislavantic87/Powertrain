@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
-import { Platform, NetInfo, AsyncStorage, Alert } from 'react-native';
+import { Platform, NetInfo, AsyncStorage, Alert, TouchableOpacity, View, Text } from 'react-native';
+import Modal from 'react-native-modal';
 import DeviceInfo from 'react-native-device-info';
 import RNFB from 'react-native-fetch-blob';
 import RNRestart from 'react-native-restart';
 import axios from 'axios';
+import VB from '../src/components/VideoBtn';
+import DB from '../src/components/DocBtn';
+import { Actions } from 'react-native-router-flux';
 import _ from 'lodash';
 
 const dirs = RNFB.fs.dirs;
@@ -400,10 +404,53 @@ export const findMenu = (menuIdS) => {
     return menus.find(m => m.menuId == menuIdS);
 }
 
-export const renderVB = (arr) => {
-
+export const renderVB = (arr, func) => {
+    if (arr.length == 0) {
+        return null;
+    }
+    else if (arr.length == 1) {
+        return <VB videouri={arr[0]} />;
+    } else {
+        return <TouchableOpacity onPress={() => func()}><VB disabled={true} /></TouchableOpacity>;
+    }
 }
 
-export const renderDB = (arr) => {
+export const renderDB = (arr, func) => {
+    if (arr.length == 0) {
+        return null;
+    }
+    else if (arr.length == 1) {
+        return <DB documenturi={arr[0]} />;
+    } else {
+        return <TouchableOpacity onPress={() => func()}><DB disabled={true} /></TouchableOpacity>;
+    }
+}
+
+export const renderModalforMultipleFiles = (what, arr, isVisible, func) => {
+    return (
+        <Modal
+            isVisible={isVisible}
+            onBackdropPress={() => func()}
+            onBackButtonPress={() => func()}
+        >
+            <View style={{ borderWidth: 1, borderColor: 'black' }}>
+                {this.renderListOfFiles(what, arr, func)}
+            </View>
+        </Modal>
+    );
+}
+
+renderListOfFiles = (what, arr, func) => {
+    let whaturi = what == 'videos' ? 'videouri' : 'docuri';
+    let whatView = what == 'videos' ? 'VideoView' : 'DocumentView';
+    let reg = /[^/]+$/;
+
+    return arr.map((f, i) => {
+        return (
+            <TouchableOpacity key={i} onPress={() => { Actions[whatView]({ [whaturi]: f }); func() }} >
+                <Text style={{ fontSize: 30, color: 'green' }}>{reg.exec(f)[0]}</Text>
+            </TouchableOpacity>
+        );
+    })
 
 }

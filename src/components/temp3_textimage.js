@@ -8,8 +8,7 @@ import VB from './VideoBtn';
 import DB from './DocBtn';
 import Modall from './Modall';
 import LeafletButton from './LeafletButton';
-
-
+import { renderVB, renderDB, renderModalforMultipleFiles } from '../../helpers';
 import SwiperFlatList from './SwiperFlatList';
 export const { width, height } = Dimensions.get('window');
 
@@ -56,9 +55,9 @@ export default class TextImage extends Component {
         isVisible={this.state[what]}
         onBackdropPress={() => this.setState({ [what]: false })}
         onBackButtonPress={() => this.setState({ [what]: false })}
-        
+
       >
-        <View style={{borderWidth: 1, borderColor: 'black'}}>
+        <View style={{ borderWidth: 1, borderColor: 'black' }}>
           {this.renderListOfFiles(what)}
         </View>
       </Modal>
@@ -73,11 +72,23 @@ export default class TextImage extends Component {
     let reg = /[^/]+$/;
     return arr.map((f, i) => {
       return (
-        <TouchableOpacity key={i} onPress={() => {Actions[whatView]({ [whaturi]: f }); this.setState({[what]: false})}} >
-          <Text style={{fontSize: 30, color: 'green'}}>{reg.exec(f)[0]}</Text>
+        <TouchableOpacity key={i} onPress={() => { Actions[whatView]({ [whaturi]: f }); this.setState({ [what]: false }) }} >
+          <Text style={{ fontSize: 30, color: 'green' }}>{reg.exec(f)[0]}</Text>
         </TouchableOpacity>
       );
     })
+  }
+
+  showVideosModal = () => {
+    this.setState({ videos: true });
+  }
+
+  showDocumentModal = () => {
+    this.setState({ documents: true });
+  }
+
+  hideModal = () => {
+    this.setState({ videos: false, documents: false });
   }
 
 
@@ -126,11 +137,9 @@ export default class TextImage extends Component {
                 </SwiperFlatList>
               </View>
               <View style={styles.ButtonContainer}>
-                {this.state.videoPath.length == 1 && <VB videouri={this.state.videoPath[0]} />}
-                {this.state.documentPath.length == 1 && <DB documenturi={this.state.documentPath[0]} />}
-                {this.state.videoPath.length > 1 && <TouchableOpacity onPress={() => {  this.setState({ videos: true }); }}><VB disabled={true} /></TouchableOpacity>}
-                {this.state.documentPath.length > 1 && <TouchableOpacity onPress={() => { this.setState({ documents: true }); }}><DB disabled={true} /></TouchableOpacity>}
-
+                {renderVB(this.state.videoPath, this.showVideosModal)}
+                {renderDB(this.state.documentPath, this.showDocumentModal)}
+                
               </View>
 
             </View>
@@ -139,8 +148,9 @@ export default class TextImage extends Component {
 
         </View>
 
-        {this.modalForMultiple('videos')}
-        {this.modalForMultiple('documents')}
+        {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
+        {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
+        
       </View>
     );
   }
