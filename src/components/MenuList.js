@@ -94,10 +94,10 @@ class MenuList extends React.PureComponent {
         console.log('===========');
         let menu2Index = this.findMenu2Index(menu2Obj);
 
-        setTimeout(() => {
-            this.refs._scrollView1.scrollTo({ y: 0, x: this.state.selected * menu1Width - (menu1Width * menu1scrollAwayFactor), animated: true });
-            this.refs._scrollView2.scrollTo({ y: 0, x: menu2Index * 10, animated: true });
-        }, 1)
+        // setTimeout(() => {
+        //     this.refs._scrollView1.scrollTo({ y: 0, x: this.state.selected * menu1Width - (menu1Width * menu1scrollAwayFactor), animated: true });
+        //     this.refs._scrollView2.scrollTo({ y: 0, x: menu2Index * 10, animated: true });
+        // }, 1)
     }
 
     render() {
