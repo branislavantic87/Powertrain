@@ -9,7 +9,7 @@ export default class DB extends Component {
 
             <View>
 
-                <TouchableOpacity style={styles.ButtonContent} onPress={() => Actions.DocumentView({ docuri: this.props.documenturi })}>
+                <TouchableOpacity disabled={this.props.disabled} style={styles.ButtonContent} onPress={() => Actions.DocumentView({ docuri: this.props.documenturi })}>
                     <Image
                         style={styles.ButtonIconStyle}
                         source={require('./ico/32/menu.png')}

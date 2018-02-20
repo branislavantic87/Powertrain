@@ -6,9 +6,6 @@ import { Actions } from 'react-native-router-flux';
 
 export default class VideoView extends Component {
 
-    onEnd = () => (
-        this.props.navigation.goBack()
-    )
     render() {
         return (
 
@@ -32,7 +29,7 @@ export default class VideoView extends Component {
                     onLoadStart={this.loadStart}            // Callback when video starts to load
                     onLoad={this.setDuration}               // Callback when video loads
                     onProgress={this.setTime}               // Callback every ~250ms with currentTime
-                    onEnd={this.onEnd}                      // Callback when playback finishes
+                    onEnd={() => Actions.pop()}                      // Callback when playback finishes
                     onError={this.videoError}               // Callback when video cannot be loaded
                     onBuffer={this.onBuffer}                // Callback when remote video is buffering
                     onTimedMetadata={this.onTimedMetadata}  // Callback when the stream receive some metadata

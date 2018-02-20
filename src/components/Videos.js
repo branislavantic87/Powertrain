@@ -42,8 +42,6 @@ export default class PdfList extends Component {
     
 
     renderAllVideos = () => {
-        // uraditi za suportovani language da se prikazuju videi
-        // console.log('AAAAAAAAAAAAAAAa', AsyncStorage.getItem('supportedLanguages'))
         if (this.state.allVideos.length === 0) {
             return (
                 <Text>There are no videous!!</Text>
