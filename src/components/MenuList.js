@@ -127,6 +127,7 @@ class MenuList extends React.PureComponent {
 const styles = {
     menu1Container: {
         flexDirection: 'row',
+        backgroundColor: '#d8d8d8'
     },
     mainCont: {
         backgroundColor: '#F5F5F5',
