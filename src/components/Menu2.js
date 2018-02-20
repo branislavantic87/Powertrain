@@ -40,11 +40,11 @@ class Menu2 extends Component {
         return (
 
             <View >
-                <TouchableOpacity  style={[styles.menu2Item,  { borderColor: this.props.isPressed ? '#990000' : '#d7d7d7' }]} onPress={() => Actions.reset('HBF', { from: this.props.menu2, filtered: this.state.filteredPages, selected: this.props.selected })}>
-                    <HTML containerStyle={styles.menu2Text} baseFontStyle={{color: 'red', fontSize: 12, fontWeight: 'bold' }}  html={this.props.menu2.title} />
+                <TouchableOpacity  style={[styles.menu2Item,  { borderColor: this.props.isPressed ? '#990000' : '#d8d8d8' }]} onPress={() => Actions.reset('HBF', { from: this.props.menu2, filtered: this.state.filteredPages, selected: this.props.selected })}>
+                    <HTML containerStyle={styles.menu2Text} baseFontStyle={{color: '#da291c', fontSize: 12, fontWeight: 'bold' }}  html={this.props.menu2.title} />
                 </TouchableOpacity>
 
-                <View style={{ height: 250, flexWrap: 'wrap', borderRightColor: '#d7d7d7', borderRightWidth: 1, paddingRight: 20, paddingLeft: 20 }}>
+                <View style={{ height: 250, flexWrap: 'wrap', borderRightColor: '#d8d8d8', borderRightWidth: 1, paddingRight: 20, paddingLeft: 20 }}>
                     {this.renderMenus3()}
                 </View>
 
@@ -59,7 +59,7 @@ const styles = {
         marginLeft: 20,
         marginRight: 20,
         marginTop: 20,
-        backgroundColor: '#d7d7d7',
+        backgroundColor: '#d8d8d8',
         width: 250,
         height: 50,
         justifyContent: 'center',
