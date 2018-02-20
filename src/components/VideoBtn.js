@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#CFCFCF',
         padding: 9,
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
     },
 });

@@ -18,6 +18,7 @@ let defaultLanguageId = 1;
 let defaultLanguageObject = {};
 let server = '';
 let checkedFiles = {};
+let pathToFile = 'file://' + RNFB.fs.dirs.DocumentDir + '/';
 
 urls = global.urls = {
     projectJson: 'http://www.cduppy.com/salescms/?a=ajax&do=getProject&projectId=5&token=1234567890&deviceId=' + deviceId,
@@ -409,7 +410,7 @@ export const renderVB = (arr, func) => {
         return null;
     }
     else if (arr.length == 1) {
-        return <VB videouri={arr[0]} />;
+        return <VB videouri={pathToFile + arr[0].filename} />;
     } else {
         return <TouchableOpacity onPress={() => func()}><VB disabled={true} /></TouchableOpacity>;
     }
@@ -420,7 +421,7 @@ export const renderDB = (arr, func) => {
         return null;
     }
     else if (arr.length == 1) {
-        return <DB documenturi={arr[0]} />;
+        return <DB documenturi={pathToFile + arr[0].filename} />;
     } else {
         return <TouchableOpacity onPress={() => func()}><DB disabled={true} /></TouchableOpacity>;
     }
@@ -443,12 +444,10 @@ export const renderModalforMultipleFiles = (what, arr, isVisible, func) => {
 renderListOfFiles = (what, arr, func) => {
     let whaturi = what == 'videos' ? 'videouri' : 'docuri';
     let whatView = what == 'videos' ? 'VideoView' : 'DocumentView';
-    let reg = /[^/]+$/;
-
     return arr.map((f, i) => {
         return (
-            <TouchableOpacity style={{ width: '98%', marginBottom: 30,  alignItems: 'center', justifyContent: 'center', flexDirection: 'row', borderColor: '#9e9e9e', borderWidth: 1, backgroundColor: '#eee'  }} key={i} onPress={() => { Actions[whatView]({ [whaturi]: f }); func() }} >
-                <Image style={{padding: 5, width: 32, height: 32 }} source={require('../src/components/ico/x64/leaflet.png')}/><Text style={{ width: '80%', fontSize: 25, color: '#9E9E9E', padding: 15, paddingLeft: 20, paddingRight: 20, textAlign: 'center' }}>{reg.exec(f)[0]}</Text>
+            <TouchableOpacity style={{ width: '98%', marginBottom: 30,  alignItems: 'center', justifyContent: 'center', flexDirection: 'row', borderColor: '#9e9e9e', borderWidth: 1, backgroundColor: '#eee'  }} key={i} onPress={() => { Actions[whatView]({ [whaturi]: pathToFile + f.filename }); func() }} >
+                <Image style={{padding: 5, width: 32, height: 32 }} source={require('../src/components/ico/x64/leaflet.png')}/><Text style={{ width: '80%', fontSize: 25, color: '#9E9E9E', padding: 15, paddingLeft: 20, paddingRight: 20, textAlign: 'center' }}>{f.filename}</Text>
             </TouchableOpacity>
         );
     })
