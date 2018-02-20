@@ -53,14 +53,14 @@ export default class HotspotImage extends Component {
                     >
                         <Image key={i + '.image'} source={require('./ico/32/hotspot.png')} />
                     </TouchableOpacity>
-<TouchableOpacity onPress={() => this.hotspotRedirect(spot)}>
-                    <ImageBackground key={i + '.viewSlave'}
-                        style={styles.hotspotTitileView}
-                        source={require('./ico/32/123.png')}
-                   >
-                       <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.label}</Text>
-                  </ImageBackground>
-                  </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.hotspotRedirect(spot)}>
+                        <ImageBackground key={i + '.viewSlave'}
+                            style={styles.hotspotTitileView}
+                            source={require('./ico/32/123.png')}
+                        >
+                            <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.label}</Text>
+                        </ImageBackground>
+                    </TouchableOpacity>
                     {/* <View key={i + '.viewSlave'} style={[styles.hotspotTitileView, {marginBottom: 17} ]}>
                         <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.label}</Text>
                     </View> */}
@@ -71,7 +71,7 @@ export default class HotspotImage extends Component {
 
     componentWillMount() {
         RNFB.fs.exists(RNFB.fs.dirs.DocumentDir + '/' + this.props.page.files.find(e => e.ext == 'jpg').filename)
-        .then(res => res ? this.setState({picExists: true}) : this.setState({picExists: false}))
+            .then(res => res ? this.setState({ picExists: true }) : this.setState({ picExists: false }))
     }
 
     render() {
