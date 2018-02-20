@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   },
   headingMain: {
     paddingTop: 40,
-    paddingBottom: 4,
+    paddingBottom: 10,
     fontSize: 25,
     fontWeight: 'bold'
   },
