@@ -47,7 +47,7 @@ class MenuList extends React.PureComponent {
     }
 
 
-    componentDidUpdate() {   
+    componentDidUpdate() {
         this.refs._scrollView2.scrollTo({ y: 0, x: 0, animated: false });
     }
 
@@ -81,18 +81,29 @@ class MenuList extends React.PureComponent {
     }
 
     findMenu2Index = (menu) => {
-        let b = global.globalJson.menus[global.language].menu.filter(m => menu.depth == m.depth && menu.parentId == m.parentId)
-        let a = b.findIndex(m => m.menuId == menu.menuId);
-        return a / b.length * 100;
 
+
+    }
+
+    findMenu2 = (menu) => {
+        if(menu.depth==2) {
+            return menu;
+        } else {
+            return this.findMenu2(findMenu(menu.parentId))
+        }
+    }
+
+    findChildrens3 = (menu) => {
+        
     }
 
 
     componentDidMount() {
-        
+
         this.chooseSelected(this.state.fromObj);
-        let menu2Obj = findMenu(this.props.from);
-        let menu2Index = this.findMenu2Index(menu2Obj);
+        let menuObj = findMenu(this.props.from);
+        let menu2Obj = this.findMenu2(menuObj);
+        console.log(menu2Obj);
         /*InteractionManager.runAfterInteractions(() => {
             console.log('setTImeout1');
             
@@ -104,7 +115,7 @@ class MenuList extends React.PureComponent {
             console.log('setTImeout2');
         })*/
 
-        
+
     }
 
     render() {
