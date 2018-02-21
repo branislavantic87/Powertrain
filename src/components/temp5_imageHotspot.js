@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     contentContainer: {
+        top: -0.11 * Dimensions.get('screen').height,
         marginTop: 0,
         marginBottom: 5,
     },
