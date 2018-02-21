@@ -33,7 +33,7 @@ export default class HotspotImage extends Component {
 
     getPosistionsFromJSON = () => {
         const hotspots = this.props.page.hotspots;
-
+        // console.log(Dimensions.get('screen').scale);
         return (hotspots.map((spot, i) => {
             const posx = this.state.layoutWidth * (spot.x / 1000) + Dimensions.get('screen').width * margine / 2;
             const posy = this.state.layoutHeigth * (spot.y / 1000) - 19;
@@ -48,9 +48,9 @@ export default class HotspotImage extends Component {
                         }}
                     >
                         <Image key={i + '.image'} source={require('./ico/32/hotspot.png')} />
-                        <View style={{top: -40, left: 17}}>
+                        <View style={{ top: -40, left: 17 }}>
                             <ImageBackground key={i + '.viewSlave'}
-                                style={[styles.hotspotTitileView,{}]}
+                                style={[styles.hotspotTitileView, {}]}
                                 source={require('./ico/32/123.png')}
                             >
                                 <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.label}</Text>
@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     contentContainer: {
+        top: -Dimensions.get('screen').scale / 10 * Dimensions.get('screen').height,
         marginTop: 0,
         marginBottom: 5,
     },
