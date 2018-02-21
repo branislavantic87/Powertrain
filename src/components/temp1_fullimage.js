@@ -14,13 +14,9 @@ export default class FullImage extends Component {
   }
 
   componentWillMount() {
-    let videos = this.props.files.filter(file => {
-      return file.substring(file.length - 3, file.length) == 'mp4'
-    })
+    let videos = this.props.page.files.filter(file => file.type == 'video')
 
-    let documents = this.props.files.filter(file => {
-      return file.substring(file.length - 3, file.length) == 'pdf'
-    })
+    let documents = this.props.page.files.filter(file => file.type == 'document');
 
     this.setState({ videoPath: videos, documentPath: documents });
   }
@@ -59,7 +55,6 @@ export default class FullImage extends Component {
           </View>
 
         </View>
-
         {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
         {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
       </View>
@@ -71,7 +66,8 @@ const styles = StyleSheet.create({
   mainView: {
     backgroundColor: 'white',
     position: 'relative',
-    height: '100%'
+    height: '100%',
+     
   },
   body: {
     height: '100%',
@@ -94,8 +90,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     position: 'absolute',
-    bottom: 40,
-    right: 20,
+    bottom: 25,
+    right: 25,
     width: '51%',
   },
 });

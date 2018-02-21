@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, NetInfo, AsyncStorage, Alert, TouchableOpacity, View, Text, ScrollView } from 'react-native';
+import { Platform, NetInfo, AsyncStorage, Alert, TouchableOpacity, View, Text, ScrollView, Image, Dimensions } from 'react-native';
 import Modal from 'react-native-modal';
 import DeviceInfo from 'react-native-device-info';
 import RNFB from 'react-native-fetch-blob';
@@ -10,6 +10,7 @@ import DB from '../src/components/DocBtn';
 import { Actions } from 'react-native-router-flux';
 import _ from 'lodash';
 
+const {height, width} = Dimensions.get('window');
 const dirs = RNFB.fs.dirs;
 const deviceId = DeviceInfo.getUniqueID();
 let fetchedJson = {};
@@ -18,6 +19,7 @@ let defaultLanguageId = 1;
 let defaultLanguageObject = {};
 let server = '';
 let checkedFiles = {};
+let pathToFile = 'file://' + RNFB.fs.dirs.DocumentDir + '/';
 
 urls = global.urls = {
     projectJson: 'http://www.cduppy.com/salescms/?a=ajax&do=getProject&projectId=5&token=1234567890&deviceId=' + deviceId,
@@ -409,7 +411,7 @@ export const renderVB = (arr, func) => {
         return null;
     }
     else if (arr.length == 1) {
-        return <VB videouri={arr[0]} />;
+        return <VB videouri={pathToFile + arr[0].filename} />;
     } else {
         return <TouchableOpacity onPress={() => func()}><VB disabled={true} /></TouchableOpacity>;
     }
@@ -420,7 +422,7 @@ export const renderDB = (arr, func) => {
         return null;
     }
     else if (arr.length == 1) {
-        return <DB documenturi={arr[0]} />;
+        return <DB documenturi={pathToFile + arr[0].filename} />;
     } else {
         return <TouchableOpacity onPress={() => func()}><DB disabled={true} /></TouchableOpacity>;
     }
@@ -428,14 +430,15 @@ export const renderDB = (arr, func) => {
 
 export const renderModalforMultipleFiles = (what, arr, isVisible, func) => {
     return (
-        <Modal
+        <Modal style={{ flex:0, width: '55%', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto', maxHeight: '79.5%'}}
             isVisible={isVisible}
             onBackdropPress={() => func()}
             onBackButtonPress={() => func()}
-        >
-            <ScrollView style={{ borderWidth: 1, borderColor: 'black' }}>
+        ><View style={{padding: 50, margin: 50}}>
+            <ScrollView showsVerticalScrollIndicator contentContainerStyle={{justifyContent: 'center', alignItems: 'center',}} style={{width: '100%',  backgroundColor: '#fff', }}>
                 {this.renderListOfFiles(what, arr, func)}
             </ScrollView>
+            </View>
         </Modal>
     );
 }
@@ -443,12 +446,14 @@ export const renderModalforMultipleFiles = (what, arr, isVisible, func) => {
 renderListOfFiles = (what, arr, func) => {
     let whaturi = what == 'videos' ? 'videouri' : 'docuri';
     let whatView = what == 'videos' ? 'VideoView' : 'DocumentView';
-    let reg = /[^/]+$/;
-
     return arr.map((f, i) => {
         return (
-            <TouchableOpacity key={i} onPress={() => { Actions[whatView]({ [whaturi]: f }); func() }} >
-                <Text style={{ fontSize: 30, color: 'green' }}>{reg.exec(f)[0]}</Text>
+            <TouchableOpacity style={{ width: '88%',  marginBottom: 20, marginTop: 20, }}  key={i} onPress={() => { Actions[whatView]({ [whaturi]: pathToFile + f.filename }); func() }} >
+            <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', borderColor: '#9e9e9e', borderWidth: 1, backgroundColor: '#FAFAFA'  }}>
+                {what == 'documents' && <Image style={{padding: 5, width: 38, height: 38 }} source={require('../src/components/ico/x64/leaflet.png')}/>}
+                {what == 'videos' && <Image style={{ height: 38, width: 38, }} source={{ uri: pathToFile + 'videoThumbs/' + f.thumbnail}} />}
+                <Text style={{ width: '80%', fontSize: 25, color: '#9E9E9E', padding: 15, paddingLeft: 20, paddingRight: 20, textAlign: 'center' }}>{f.filename}</Text>
+                </View>
             </TouchableOpacity>
         );
     })

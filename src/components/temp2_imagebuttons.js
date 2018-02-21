@@ -22,13 +22,9 @@ export default class ImageButtons extends Component {
     };
 
     componentWillMount() {
-        let videos = this.props.files.filter(file => {
-            return file.substring(file.length - 3, file.length) == 'mp4'
-        })
+        let videos = this.props.page.files.filter(file => file.type == 'video')
 
-        let documents = this.props.files.filter(file => {
-            return file.substring(file.length - 3, file.length) == 'pdf'
-        })
+        let documents = this.props.page.files.filter(file => file.type == 'document');
 
         let images = this.props.files.find(file => {
             return file.substring(file.length - 3, file.length) == 'jpg'
@@ -108,7 +104,7 @@ const styles = StyleSheet.create({
     },
     headingMain: {
         paddingTop: 20,
-        paddingBottom: 4,
+        paddingBottom: 10,
         fontSize: 25,
         fontWeight: 'bold'
     },
@@ -133,10 +129,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         position: 'absolute',
-        bottom: 40,
-        right: 20,
+        bottom: 25,
+        right: 25,
         width: '51%',
-
     },
     floatingButtonsHolder: {
         position: 'absolute',

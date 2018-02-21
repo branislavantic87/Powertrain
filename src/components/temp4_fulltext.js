@@ -14,14 +14,9 @@ export default class FullText extends Component {
     }
 
     componentWillMount() {
-        console.log(this.props.files)
-        let videos = this.props.files.filter(file => {
-            return file.substring(file.length - 3, file.length) == 'mp4'
-        })
+        let videos = this.props.page.files.filter(file => file.type == 'video')
 
-        let documents = this.props.files.filter(file => {
-            return file.substring(file.length - 3, file.length) == 'pdf'
-        })
+        let documents = this.props.page.files.filter(file => file.type == 'document');
 
         this.setState({ videoPath: videos, documentPath: documents });
     }
@@ -40,7 +35,7 @@ export default class FullText extends Component {
             <View style={styles.mainView}>
                 {!this.props.fromHome && <LeafletButton page={this.props.page} />}
                 <View style={styles.body}>
-                    <View>
+                    <View style={{ height: '13%' }}>
                         <Text style={[styles.headingText, styles.headingMain]}>{this.props.templateTitle}</Text>
                         <Text style={styles.headingText}>{this.props.subtitle}</Text>
                     </View>
@@ -52,13 +47,17 @@ export default class FullText extends Component {
                                 <HTML html={this.props.text} />
                             </ScrollView>
                         </View>
-                        <View style={styles.ButtonContainer}>
-                            {renderVB(this.state.videoPath, this.showModal.bind(null, 'videos'))}
-                            {renderDB(this.state.documentPath, this.showModal.bind(null, 'documents'))}
-                        </View>
+
+                    </View>
+                    <View style={styles.ButtonContainer}>
+
+                        {renderVB(this.state.videoPath, this.showModal.bind(null, 'videos'))}
+                        {renderDB(this.state.documentPath, this.showModal.bind(null, 'documents'))}
+
                     </View>
 
                 </View>
+
                 {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
                 {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
             </View>
@@ -83,7 +82,7 @@ const styles = StyleSheet.create({
     },
     headingMain: {
         paddingTop: 40,
-        paddingBottom: 4,
+        paddingBottom: 10,
         fontSize: 25,
         fontWeight: 'bold'
     },
@@ -92,8 +91,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flex: 1,
         width: '100%',
-        height: '100%',
-        marginBottom: 25,
+        height: '67%',
+        marginBottom: 10,
     },
     contentText: {
         flex: 2.5,
@@ -103,13 +102,12 @@ const styles = StyleSheet.create({
         paddingTop: 30
     },
     ButtonContainer: {
+        width: '100%',
+        height: '20%',
+        alignSelf: 'flex-end',
         justifyContent: 'flex-end',
         alignItems: 'center',
         flexDirection: 'row',
-        position: 'absolute',
         bottom: 40,
-        right: 20,
-        width: '51%',
-
     },
 });
