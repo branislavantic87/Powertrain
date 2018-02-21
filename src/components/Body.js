@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     },
     pagginationStyle: {
         bottom: 0,
-        backgroundColor: '#fff'
+        
     },
 });
 
