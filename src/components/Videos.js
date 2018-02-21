@@ -7,13 +7,16 @@ import { Actions } from 'react-native-router-flux';
 export default class PdfList extends Component {
 
     state = {
-        allVideos: global.videosJson.videos
+        allVideos: global.videosJson.videos,
+        supportedLanguages: []
     };
-    /*
-    Category(id) {
-        this.setState({categorySelected: id});
+
+    componentWillMount() {
+        AsyncStorage.getItem('supportedLanguages')
+            .then((res) => JSON.parse(res))
+            .then(res => this.setState({ supportedLanguages: res.currentlySupportedLanguages }))
+            .then(() => console.log('String iz komponent will mount', this.state.supportedLanguages))
     }
-    */
 
     findAllVideos = () => {
         const pathToFiles = `file://${RNFB.fs.dirs.DocumentDir}/`;
@@ -39,7 +42,7 @@ export default class PdfList extends Component {
         return (pathToFiles + taNekaSlika.filename);
     }
 
-    
+
 
     renderAllVideos = () => {
         if (this.state.allVideos.length === 0) {
@@ -47,30 +50,38 @@ export default class PdfList extends Component {
                 <Text>There are no videous!!</Text>
             );
         } else {
-            return (
-                this.state.allVideos.map((video, i) => {
-                    return (
-                        <View style={styles.videoComponent} key={i}>
-                            <View style={styles.video}>
+            if (this.state.supportedLanguages.length !== 0) {
+                return (
+                    this.state.allVideos.map((video, i) => {
+                        // this.state.supportedLanguages.map(lang => {
+                        console.log(this.state.supportedLanguages.map(l => l.languageId).includes(video.languageId))
+                        if (this.state.supportedLanguages.map(l => l.languageId).includes(video.languageId)) {
+                            return (
+                                <View style={styles.videoComponent} key={i}>
+                                    <View style={styles.video}>
 
-                                <TouchableOpacity style={styles.videoThumbnail} onPress={() => Actions.VideoView({ videouri: `file://${RNFB.fs.dirs.DocumentDir}/${video.filename}` })}>
-                                    <Image style={styles.videoThumbnail} source={{ uri: 'file://' + RNFB.fs.dirs.DocumentDir + '/videoThumbs/' + video.thumbnail }}
-                                    />
+                                        <TouchableOpacity style={styles.videoThumbnail} onPress={() => Actions.VideoView({ videouri: `file://${RNFB.fs.dirs.DocumentDir}/${video.filename}` })}>
+                                            <Image style={styles.videoThumbnail} source={{ uri: 'file://' + RNFB.fs.dirs.DocumentDir + '/videoThumbs/' + video.thumbnail }}
+                                            />
 
-                                </TouchableOpacity>
-                            </View>
-                            <Text style={styles.videoTitle}>{video.title}</Text>
-                        </View>
-                    )
-                })
-            );
+                                        </TouchableOpacity>
+                                    </View>
+                                    <Text style={styles.videoTitle}>{video.title}</Text>
+                                </View>
+                            )
+                        }
+                    })
+                    // })
+                );
+            }
         }
-
     }
 
 
 
     render() {
+        { console.log(this.state.supportedLanguages) }
+        // {console.log(this.state.allVideos)}        
         return (
             <View style={styles.content}>
                 <ScrollView>
