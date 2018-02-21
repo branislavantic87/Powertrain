@@ -53,7 +53,7 @@ export default class Search extends Component {
                             />
                             <View style={{ flexDirection: 'column' }}>
                                 <Text style={{ fontSize: 25 }} key={element.pageId}>
-                                    {element.title}
+                                    {he.decode(element.title)}
                             </Text>
                                 <Text>{breadcrumb}</Text>
                             </View>
@@ -70,7 +70,7 @@ export default class Search extends Component {
                             />
                             <View style={{ flexDirection: 'column' }}>
                                 <Text style={{ fontSize: 25 }} key={element.menuId}>
-                                    {element.title}
+                                    {he.decode(element.title)}
                             </Text>
                                 <Text>{breadcrumb}</Text>
                             </View>
@@ -89,7 +89,7 @@ export default class Search extends Component {
                                 source={{ uri: 'file://' + this.pageImageHelper(element.pageId) }}
                             />
                             <View style={{ flexDirection: 'column' }}>
-                                <Text style={{ fontSize: 25 }} key={element.filename}>{this.pageTitleHelperForFile(element.pageId).title}</Text>
+                                <Text style={{ fontSize: 25 }} key={element.filename}>{he.decode(this.pageTitleHelperForFile(element.pageId).title)}</Text>
                                 <Text>{breadcrumb}</Text>
                             </View>
                         </View>

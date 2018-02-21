@@ -5,6 +5,15 @@ import he from 'he';
 
 export default class BreadcrumbsComponent extends Component {
 
+  state = {
+    menustr: '',
+    "1": false,
+    "2": false,
+    "3": false,
+    "4": false
+
+  }
+
   searchMenu(menuId) {
     return global.globalJson.menus[0].menu.find(element =>
       menuId == element.menuId
@@ -13,7 +22,7 @@ export default class BreadcrumbsComponent extends Component {
 
   getBreadcrumb = (menuId, breadcrumb = '') => {
     let foundMenu = this.searchMenu(menuId);
-
+    this.setState({ [foundMenu.depth]: foundMenu.title });
     if (foundMenu.depth == 1) {
       breadcrumb = foundMenu.title + breadcrumb;
       breadcrumb = he.decode(breadcrumb);
@@ -25,13 +34,27 @@ export default class BreadcrumbsComponent extends Component {
 
   }
 
-  render() {
+  componentWillMount() {
     console.log('============');
+    this.setState({ menustr: this.getBreadcrumb(this.props.from) });
+
+  }
+rr
+
+  render() {
     return (
 
 
       <View style={styles.breadcrumbsContainer}>
-        <Text>{this.getBreadcrumb(this.props.from)}</Text>
+        <Text>{this.state.menustr}</Text>
+
+
+        <View>
+          <Text>{this.state["1"]}</Text>
+          <Text>{this.state["2"]}</Text>
+          <Text>{this.state["3"]}</Text>
+          <Text>{this.state["4"]}</Text>
+        </View>
       </View>
 
 
