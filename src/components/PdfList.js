@@ -18,6 +18,8 @@ export default class PdfList extends Component {
 
     renderAllCategories = () => {
         return this.state.allPdf.documents.map((file, i) => {
+            console.log(file.languageId)
+            if(Number(file.languageId) === Number(global.languageId))
             return (
                 <TouchableOpacity key={i} style={[styles.btn_settings, { backgroundColor: this.state.categorySelected == file.category ? 'white' : '#D7D7D7', borderColor: this.state.categorySelected == file.category ? '#959595' : 'white' }]}
                     onPress={() => { this.Category(file.category); this.setState({ settingsText: file.category }) }}>

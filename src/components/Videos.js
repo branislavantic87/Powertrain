@@ -9,11 +9,6 @@ export default class PdfList extends Component {
     state = {
         allVideos: global.videosJson.videos
     };
-    /*
-    Category(id) {
-        this.setState({categorySelected: id});
-    }
-    */
 
     findAllVideos = () => {
         const pathToFiles = `file://${RNFB.fs.dirs.DocumentDir}/`;
@@ -39,7 +34,7 @@ export default class PdfList extends Component {
         return (pathToFiles + taNekaSlika.filename);
     }
 
-    
+
 
     renderAllVideos = () => {
         if (this.state.allVideos.length === 0) {
@@ -49,28 +44,30 @@ export default class PdfList extends Component {
         } else {
             return (
                 this.state.allVideos.map((video, i) => {
-                    return (
-                        <View style={styles.videoComponent} key={i}>
-                            <View style={styles.video}>
+                    if(Number(video.languageId) === Number(global.languageId) ){
+                        return (
+                            <View style={styles.videoComponent} key={i}>
+                                <View style={styles.video}>
 
-                                <TouchableOpacity style={styles.videoThumbnail} onPress={() => Actions.VideoView({ videouri: `file://${RNFB.fs.dirs.DocumentDir}/${video.filename}` })}>
-                                    <Image style={styles.videoThumbnail} source={{ uri: 'file://' + RNFB.fs.dirs.DocumentDir + '/videoThumbs/' + video.thumbnail }}
-                                    />
+                                    <TouchableOpacity style={styles.videoThumbnail} onPress={() => Actions.VideoView({ videouri: `file://${RNFB.fs.dirs.DocumentDir}/${video.filename}` })}>
+                                        <Image style={styles.videoThumbnail} source={{ uri: 'file://' + RNFB.fs.dirs.DocumentDir + '/videoThumbs/' + video.thumbnail }}
+                                        />
 
-                                </TouchableOpacity>
+                                    </TouchableOpacity>
+                                </View>
+                                <Text style={styles.videoTitle}>{video.title}</Text>
                             </View>
-                            <Text style={styles.videoTitle}>{video.title}</Text>
-                        </View>
-                    )
+                        )
+                    }
                 })
             );
         }
-
     }
 
 
 
     render() {
+        // {console.log(this.state.allVideos)}        
         return (
             <View style={styles.content}>
                 <ScrollView>
