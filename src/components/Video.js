@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, NavigationActions } from 'react-native';
 import Video from 'react-native-video';
 import VideoPlayer from 'react-native-video-controls';
 import { Actions } from 'react-native-router-flux';
 
 export default class VideoView extends Component {
-
 
     render() {
         return (
@@ -15,7 +14,6 @@ export default class VideoView extends Component {
                 <VideoPlayer
                     source={{ uri: this.props.videouri }}   // Can be a URL or a local file.
                     controlTimeout={2000}
-                    navigator={() => { }}
                     onBack={() => Actions.pop()}
                     // Store reference
                     rate={1.0}                              // 0 is paused, 1 is normal.
