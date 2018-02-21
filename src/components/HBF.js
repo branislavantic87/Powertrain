@@ -80,7 +80,7 @@ class HBF extends Component {
                     <Dashboard />
                 }
                 {this.state.visiblebreadcrumbs &&
-                    <Breadcrumbs />
+                    <Breadcrumbs from={this.props.from.menuId} />
                 }
                 {this.state.visibleleaflets &&
                     <Leaflets />

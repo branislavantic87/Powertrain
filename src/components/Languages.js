@@ -33,6 +33,7 @@ class Languages extends Component {
             startPage = global.globalJson.startPages.find(l => {
                 return l.languageId == lang.languageId
             })
+            global.languageId = lang.languageId;
             startPage = startPage ? startPage : lang;
             Actions.reset('home', {startPage: startPage.pageId});
         })

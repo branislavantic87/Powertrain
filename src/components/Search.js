@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ListView, ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import RNFB from 'react-native-fetch-blob';
+import he from 'he';
 
 export default class Search extends Component {
 
@@ -162,16 +163,19 @@ export default class Search extends Component {
         });
     }
 
-    getBreadcrumb = (menuId, start = '') => {
+    getBreadcrumb = (menuId, breadcrumb = '') => {
         let foundMenu = this.searchMenu(menuId);
-        let breadcrumb = foundMenu.title + ' -> ' + start;
+        
         if (foundMenu.depth == 1) {
-            return breadcrumb;
+          breadcrumb = foundMenu.title + breadcrumb;
+          breadcrumb = he.decode(breadcrumb);
+          return breadcrumb;
         } else {
-            return this.getBreadcrumb(foundMenu.parentId, foundMenu.title);
+          breadcrumb = '->' + foundMenu.title + breadcrumb;
+          return this.getBreadcrumb(foundMenu.parentId, breadcrumb);
         }
-
-    }
+    
+      }
 
     searchDoPages = (item, where) => {
         return new Promise((resolve, reject) => {

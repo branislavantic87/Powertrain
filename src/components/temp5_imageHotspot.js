@@ -3,7 +3,7 @@ import { StyleSheet, View, Image, TouchableOpacity, Text, TouchableWithoutFeedba
 import RNFB from 'react-native-fetch-blob';
 import { Actions } from 'react-native-router-flux';
 import LeafletButton from './LeafletButton';
-import { findPageObjectById, findMenuObjectById, findMenu1Selected, aaa } from '../../helpers';
+import { findPageObjectById, findMenuObjectById, findMenu1Selected, aaa, renderVB, renderDB, renderModalforMultipleFiles } from '../../helpers';
 
 const margine = 0.0;
 
@@ -12,7 +12,11 @@ export default class HotspotImage extends Component {
     state = {
         layoutWidth: 0,
         layoutHeigth: 0,
-        picExists: false
+        picExists: false,
+        videoPath: [],
+        documentPath: [],
+        videos: false,
+        documents: false
     }
 
 
@@ -33,7 +37,7 @@ export default class HotspotImage extends Component {
 
     getPosistionsFromJSON = () => {
         const hotspots = this.props.page.hotspots;
-
+        // console.log(Dimensions.get('screen').scale);
         return (hotspots.map((spot, i) => {
             const posx = this.state.layoutWidth * (spot.x / 1000) + Dimensions.get('screen').width * margine / 2;
             const posy = this.state.layoutHeigth * (spot.y / 1000) - 19;
@@ -48,9 +52,9 @@ export default class HotspotImage extends Component {
                         }}
                     >
                         <Image key={i + '.image'} source={require('./ico/32/hotspot.png')} />
-                        <View style={{top: -40, left: 17}}>
+                        <View style={{ top: -40, left: 17 }}>
                             <ImageBackground key={i + '.viewSlave'}
-                                style={[styles.hotspotTitileView,{}]}
+                                style={[styles.hotspotTitileView, {}]}
                                 source={require('./ico/32/123.png')}
                             >
                                 <Text key={i + '.text'} style={styles.hotspotTitle}>{spot.label}</Text>
@@ -62,9 +66,22 @@ export default class HotspotImage extends Component {
         }));
     }
 
+    hideModal = () => {
+        this.setState({ videos: false, documents: false });
+    }
+
+    showModal = (which) => {
+        this.setState({ [which]: true });
+    }
+
     componentWillMount() {
         RNFB.fs.exists(RNFB.fs.dirs.DocumentDir + '/' + this.props.page.files.find(e => e.ext == 'jpg').filename)
-            .then(res => res ? this.setState({ picExists: true }) : this.setState({ picExists: false }))
+            .then(res => res ? this.setState({ picExists: true }) : this.setState({ picExists: false }));
+        let videos = this.props.page.files.filter(file => file.type == 'video')
+
+        let documents = this.props.page.files.filter(file => file.type == 'document');
+
+        this.setState({ videoPath: videos, documentPath: documents });
     }
 
     render() {
@@ -87,7 +104,13 @@ export default class HotspotImage extends Component {
                             source={{ uri: 'file://' + RNFB.fs.dirs.DocumentDir + '/' + this.props.page.files.find(e => e.ext == 'jpg').filename }} />}
                         {this.state.picExists && this.getPosistionsFromJSON()}
                     </View>
+                    <View style={styles.ButtonContainer}>
+                        {renderVB(this.state.videoPath, this.showModal.bind(null, 'videos'))}
+                        {renderDB(this.state.documentPath, this.showModal.bind(null, 'documents'))}
+                    </View>
                 </View>
+                {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
+                {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
             </View>
         );
     }
@@ -104,6 +127,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     contentContainer: {
+        top: -Dimensions.get('screen').scale / 10 * Dimensions.get('screen').height,
         marginTop: 0,
         marginBottom: 5,
     },
@@ -128,6 +152,18 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
         zIndex: 1,
         marginLeft: Dimensions.get('screen').width * margine / 2
-    }
+    },
+    ButtonContainer: {
+        position: 'absolute',
+        zIndex: 25,
+        width: '100%',
+        height: '20%',
+        alignSelf: 'flex-end',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        flexDirection: 'row',
+        bottom: 25,
+        right: 25
+    },
 
 });

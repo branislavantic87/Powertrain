@@ -81,6 +81,7 @@ export const contentJsonLogic = () => {
 initializeLanguagesFile = () => {
     return new Promise((resolve, reject) => {
         defaultLanguageId = Number(global.projectJson.project.defaultLanguageId);
+        global.languageId = defaultLanguageId;
         defaultLanguageObject = global.projectJson.languages.find(l => l.languageId == defaultLanguageId);
         AsyncStorage.getItem('supportedLanguages')
             .then((res) => JSON.parse(res))
