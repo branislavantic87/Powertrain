@@ -22,7 +22,7 @@ export default class BreadcrumbsComponent extends Component {
 
   getBreadcrumb = (menuId, breadcrumb = '') => {
     let foundMenu = this.searchMenu(menuId);
-    this.setState({ [foundMenu.depth]: foundMenu.title });
+    this.setState({ [foundMenu.depth]: he.decode(foundMenu.title) });
     if (foundMenu.depth == 1) {
       breadcrumb = foundMenu.title + breadcrumb;
       breadcrumb = he.decode(breadcrumb);
