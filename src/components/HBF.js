@@ -14,6 +14,7 @@ import PresentationNewComponent from './PresentationNew';
 import Breadcrumbs from './Breadcrumbs';
 import Leaflets from './Leaflets';
 import Videos from './Videos';
+import LeafletButtons from './LeafletButton';
 
 
 
@@ -38,11 +39,10 @@ class HBF extends Component {
     }
 
     render() {
-
         return (
 
             <View>
-                {this.state.visibleMenu && <TouchableWithoutFeedback onPress={() => this.setState({ visibleMenu: false })} ><View style={{ backgroundColor: 'black', opacity: 0.3, position: 'absolute', top: 0, zIndex: 5, height: '100%', width: '100%'}}></View></TouchableWithoutFeedback>}
+                {this.state.visibleMenu && <TouchableWithoutFeedback onPress={() => this.setState({ visibleMenu: false })} ><View style={{ backgroundColor: 'black', opacity: 0.3, position: 'absolute', top: 0, zIndex: 5, height: '100%', width: '100%' }}></View></TouchableWithoutFeedback>}
                 <Header
                     whatIsOpen={this.state.whatIsOpen}
                     title={this.props.from.title}
@@ -59,6 +59,7 @@ class HBF extends Component {
                 //  onPressPresentation={() => { this.state.visiblepresentationsort ? this.setState({ visiblepresentationsort: false }) : this.setState({ visiblepresentationsort: true, visibleMenu: false, visibleSearch: false, visiblelanguage: false, visibleVideos: false, visiblePdf: false, visiblenotification: false, visiblesettings: false, visibledashboard: false, visiblepresentation: false }) }}
                 />
 
+
                 {this.state.visiblelanguage &&
                     <Languages />
                 }
@@ -71,8 +72,8 @@ class HBF extends Component {
                 {this.state.visiblenotification &&
                     <NotificationComponent />
                 }
-              
-                
+
+
                 {this.state.visiblePdf &&
                     <PdfList />
                 }
@@ -91,7 +92,7 @@ class HBF extends Component {
 
                 {
                     this.state.visiblepresentation &&
-                    <PresentationNewComponent closePresentation={() => { this.setState({ visiblepresentation: false, whatIsOpen: '' }) }}  />
+                    <PresentationNewComponent  lookingAt={this.props.filtered? this.props.filtered : ''} closePresentation={() => { this.setState({ visiblepresentation: false, whatIsOpen: '' }) }} />
                 }
 
                 {/* {
@@ -99,8 +100,8 @@ class HBF extends Component {
                     <PresentationSortComponent />
 
                 }  */}
-                
-                 {this.state.isModalVisibleForgotPswd &&
+
+                {this.state.isModalVisibleForgotPswd &&
                     <ForgotPassword
                         ForgotPswdBack={() => { this.setState({ isModalVisibleForgotPswd: !this.state.isModalVisibleForgotPswd, isModalVisible: !this.state.isModalVisible }) }}
                         ForgotPswdDrop={() => { this.setState({ isModalVisibleForgotPswd: !this.state.isModalVisibleForgotPswd }) }} />
@@ -108,20 +109,24 @@ class HBF extends Component {
 
                 <Body fromHome={this.props.fromHome} style={{ bottom: 10 }} pages={this.props.filtered} />
 
-            {!this.state.visibleMenu &&
-                <View style={{ position: 'absolute', width: 50, height: 50, bottom: 15, left: 15, zIndex: 5 }}>
-                    <TouchableOpacity onPress={() => { this.state.visibleMenu ? this.setState({ visibleMenu: false }) : this.setState({ visibleMenu: true }); }} style={{ width: '100%', height: '100%' }}>
-                        <Image style={styles.ico} source={require('./ico/32/main-menu.png')} />
-                    </TouchableOpacity>
-                </View>
-            }
-               
-                <View style={{ position: 'absolute', bottom:  0, height: this.state.visibleMenu ? undefined : 0, zIndex: 6, width: '100%' }}>
+                {/* <LeafletButtons
+                    onPressPresentation={() => { this.setState({ visiblepresentation: !this.state.visiblepresentation }) }}
+                /> */}
+
+                {!this.state.visibleMenu &&
+                    <View style={{ position: 'absolute', width: 50, height: 50, bottom: 15, left: 15, zIndex: 5 }}>
+                        <TouchableOpacity onPress={() => { this.state.visibleMenu ? this.setState({ visibleMenu: false }) : this.setState({ visibleMenu: true }); }} style={{ width: '100%', height: '100%' }}>
+                            <Image style={styles.ico} source={require('./ico/32/main-menu.png')} />
+                        </TouchableOpacity>
+                    </View>
+                }
+
+                <View style={{ position: 'absolute', bottom: 0, height: this.state.visibleMenu ? undefined : 0, zIndex: 6, width: '100%' }}>
                     <MenuList selected={this.props.selected} data={global.globalJson} from={this.props.from.menuId} />
-                </View> 
-                
+                </View>
+
             </View >
-                
+
         );
     }
 

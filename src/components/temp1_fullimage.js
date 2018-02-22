@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import LeafletButton from './LeafletButton';
 import Modall from './Modall';
-import { renderVB, renderDB, renderModalforMultipleFiles } from '../../helpers';
+import { renderVB, renderDB, renderModalforMultipleFiles, renderModalPresentation } from '../../helpers';
 
 export default class FullImage extends Component {
 
@@ -11,6 +11,7 @@ export default class FullImage extends Component {
     documentPath: [],
     videos: false,
     documents: false,
+    presentationModal: false
   }
 
   componentWillMount() {
@@ -22,7 +23,7 @@ export default class FullImage extends Component {
   }
 
   hideModal = () => {
-    this.setState({ videos: false, documents: false });
+    this.setState({ videos: false, documents: false, presentationModal: false });
   }
 
   showModal = (which) => {
@@ -33,7 +34,7 @@ export default class FullImage extends Component {
 
     return (
       <View style={styles.mainView}>
-        {!this.props.fromHome && <LeafletButton page={this.props.page} />}
+        {!this.props.fromHome && <LeafletButton showPresentationModal={() => this.showModal('presentationModal')} page={this.props.page} />}
 
         <View style={styles.body}>
 
@@ -57,6 +58,7 @@ export default class FullImage extends Component {
         </View>
         {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
         {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
+        {renderModalPresentation('presentationModal', this.state.presentationModal, this.hideModal)}
       </View>
     );
   }

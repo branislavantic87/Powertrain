@@ -3,7 +3,7 @@ import { StyleSheet, View, Image, TouchableOpacity, Text, TouchableWithoutFeedba
 import RNFB from 'react-native-fetch-blob';
 import { Actions } from 'react-native-router-flux';
 import LeafletButton from './LeafletButton';
-import { findPageObjectById, findMenuObjectById, findMenu1Selected, aaa, renderVB, renderDB, renderModalforMultipleFiles } from '../../helpers';
+import { findPageObjectById, findMenuObjectById, findMenu1Selected, aaa, renderVB, renderDB, renderModalforMultipleFiles, renderModalPresentation } from '../../helpers';
 
 const margine = 0.0;
 
@@ -16,7 +16,8 @@ export default class HotspotImage extends Component {
         videoPath: [],
         documentPath: [],
         videos: false,
-        documents: false
+        documents: false,
+        presentationModal: false
     }
 
 
@@ -67,7 +68,7 @@ export default class HotspotImage extends Component {
     }
 
     hideModal = () => {
-        this.setState({ videos: false, documents: false });
+        this.setState({ videos: false, documents: false, presentationModal: false });
     }
 
     showModal = (which) => {
@@ -88,7 +89,7 @@ export default class HotspotImage extends Component {
 
         return (
             <View style={styles.mainView} >
-                {!this.props.fromHome && <LeafletButton page={this.props.page} />}
+                {!this.props.fromHome && <LeafletButton showPresentationModal={() => this.showModal('presentationModal')} page={this.props.page} />}
                 <View style={styles.body}>
                     <View style={styles.contentContainer}>
                         {<Image
@@ -111,6 +112,7 @@ export default class HotspotImage extends Component {
                 </View>
                 {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
                 {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
+                {renderModalPresentation('presentationModal', this.state.presentationModal, this.hideModal)}
             </View>
         );
     }

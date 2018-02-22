@@ -10,7 +10,7 @@ import DB from '../src/components/DocBtn';
 import { Actions } from 'react-native-router-flux';
 import _ from 'lodash';
 
-const {height, width} = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 const dirs = RNFB.fs.dirs;
 const deviceId = DeviceInfo.getUniqueID();
 let fetchedJson = {};
@@ -431,17 +431,31 @@ export const renderDB = (arr, func) => {
 
 export const renderModalforMultipleFiles = (what, arr, isVisible, func) => {
     return (
-        <Modal style={{ flex:0, width: '55%', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto', maxHeight: '79.5%'}}
+        <Modal style={{ flex: 0, width: '55%', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto', maxHeight: '79.5%' }}
             isVisible={isVisible}
             onBackdropPress={() => func()}
             onBackButtonPress={() => func()}
-        ><View style={{padding: 50, margin: 50}}>
-            <ScrollView showsVerticalScrollIndicator contentContainerStyle={{justifyContent: 'center', alignItems: 'center',}} style={{width: '100%',  backgroundColor: '#fff', }}>
-                {this.renderListOfFiles(what, arr, func)}
-            </ScrollView>
+        ><View style={{ padding: 50, margin: 50 }}>
+                <ScrollView showsVerticalScrollIndicator contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', }} style={{ width: '100%', backgroundColor: '#fff', }}>
+                    {this.renderListOfFiles(what, arr, func)}
+                </ScrollView>
             </View>
         </Modal>
     );
+}
+
+export const renderModalPresentation = (what, isVisible, func) => {
+    return (
+        <Modal style={{ flex: 0, width: '55%', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto', maxHeight: '79.5%' }}
+            isVisible={isVisible}
+            onBackdropPress={() => func()}
+            onBackButtonPress={() => func()}
+        >
+            <View>
+            </View>
+        </Modal>
+    );
+
 }
 
 renderListOfFiles = (what, arr, func) => {
@@ -449,14 +463,16 @@ renderListOfFiles = (what, arr, func) => {
     let whatView = what == 'videos' ? 'VideoView' : 'DocumentView';
     return arr.map((f, i) => {
         return (
-            <TouchableOpacity style={{ width: '88%',  marginBottom: 20, marginTop: 20, }}  key={i} onPress={() => { Actions[whatView]({ [whaturi]: pathToFile + f.filename }); func() }} >
-            <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', borderColor: '#9e9e9e', borderWidth: 1, backgroundColor: '#FAFAFA'  }}>
-                {what == 'documents' && <Image style={{padding: 5, width: 38, height: 38 }} source={require('../src/components/ico/x64/leaflet.png')}/>}
-                {what == 'videos' && <Image style={{ height: 38, width: 38, }} source={{ uri: pathToFile + 'videoThumbs/' + f.thumbnail}} />}
-                <Text style={{ width: '80%', fontSize: 25, color: '#9E9E9E', padding: 15, paddingLeft: 20, paddingRight: 20, textAlign: 'center' }}>{f.filename}</Text>
+            <TouchableOpacity style={{ width: '88%', marginBottom: 20, marginTop: 20, }} key={i} onPress={() => { Actions[whatView]({ [whaturi]: pathToFile + f.filename }); func() }} >
+                <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', borderColor: '#9e9e9e', borderWidth: 1, backgroundColor: '#FAFAFA' }}>
+                    {what == 'documents' && <Image style={{ padding: 5, width: 38, height: 38 }} source={require('../src/components/ico/x64/leaflet.png')} />}
+                    {what == 'videos' && <Image style={{ height: 38, width: 38, }} source={{ uri: pathToFile + 'videoThumbs/' + f.thumbnail }} />}
+                    <Text style={{ width: '80%', fontSize: 25, color: '#9E9E9E', padding: 15, paddingLeft: 20, paddingRight: 20, textAlign: 'center' }}>{f.filename}</Text>
                 </View>
             </TouchableOpacity>
         );
     })
 
 }
+
+

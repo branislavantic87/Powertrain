@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, AsyncStorage, Image, StyleSheet } from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import Modal from 'react-native-modal';
 
 export default class LeafletButton extends Component {
 
@@ -7,26 +9,26 @@ export default class LeafletButton extends Component {
 
     state = {
         visibleTwoBtns: false,
-        isActiveMainButton: false
+        isActiveMainButton: false,
     };
 
     addToLeaflet = () => {
-        
-    }
 
+    }
 
     render() {
         return (
             <View style={styles.floatingButtonsHolder}>
-                <TouchableOpacity onPress={() => this.setState({ visibleTwoBtns: !this.state.visibleTwoBtns, isActiveMainButton: !this.state.isActiveMainButton })} style={styles.add}><Image style={styles.floatBtnAdd} source={ !this.state.isActiveMainButton ? require('./ico/add/add.png') : require('./ico/add/add_close_pressed.png')} /></TouchableOpacity>
+                <TouchableOpacity onPress={() => this.setState({ visibleTwoBtns: !this.state.visibleTwoBtns, isActiveMainButton: !this.state.isActiveMainButton })} style={styles.add}><Image style={styles.floatBtnAdd} source={!this.state.isActiveMainButton ? require('./ico/add/add.png') : require('./ico/add/add_close_pressed.png')} /></TouchableOpacity>
 
                 {this.state.visibleTwoBtns &&
                     <View>
                         <TouchableOpacity onPress={() => this.addToLeaflet()} style={styles.add_leaflet}><Image style={styles.floatBtnAdd} source={require('./ico/add/add_leaflet.png')} /></TouchableOpacity>
-                        <TouchableOpacity style={styles.add_presentation}><Image style={styles.floatBtnAdd} source={require('./ico/add/add_mypresentation.png')} /></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.props.showPresentationModal()} style={styles.add_presentation}><Image style={styles.floatBtnAdd} source={require('./ico/add/add_mypresentation.png')} /></TouchableOpacity>
                     </View>
                 }
             </View>
+
         );
     }
 }

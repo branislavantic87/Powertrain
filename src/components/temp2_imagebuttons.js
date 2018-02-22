@@ -6,7 +6,7 @@ import VB from './VideoBtn';
 import DB from './DocBtn';
 import Modall from './Modall';
 import LeafletButton from './LeafletButton';
-import { renderVB, renderDB, renderModalforMultipleFiles } from '../../helpers';
+import { renderVB, renderDB, renderModalforMultipleFiles, renderModalPresentation } from '../../helpers';
 
 export default class ImageButtons extends Component {
 
@@ -18,7 +18,8 @@ export default class ImageButtons extends Component {
         visableTwoBtns: false,
         modalVisible: false,
         videos: false,
-        documents: false
+        documents: false,
+        presentationModal: false
     };
 
     componentWillMount() {
@@ -40,7 +41,7 @@ export default class ImageButtons extends Component {
     }
 
     hideModal = () => {
-        this.setState({ videos: false, documents: false });
+        this.setState({ videos: false, documents: false, presentationModal: false });
     }
 
     showModal = (which) => {
@@ -51,7 +52,7 @@ export default class ImageButtons extends Component {
         return (
 
             <View style={styles.mainView}>
-                {!this.props.fromHome && <LeafletButton page={this.props.page} />}
+                {!this.props.fromHome && <LeafletButton showPresentationModal={() => this.showModal('presentationModal')} page={this.props.page} />}
                 <View style={styles.body}>
 
                     <View>
@@ -80,6 +81,7 @@ export default class ImageButtons extends Component {
                 </View>
                 {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
                 {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
+                {renderModalPresentation('presentationModal', this.state.presentationModal, this.hideModal)}
             </View>
         );
     }
