@@ -63,6 +63,7 @@ class Body extends Component {
             <View style={styles.bodyCont}>
 
                 <Swiper
+                    index={this.props.indexStart}
                     loop={false}
                     paginationStyle={styles.pagginationStyle}
                     removeClippedSubviews={true}

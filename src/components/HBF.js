@@ -107,7 +107,7 @@ class HBF extends Component {
                         ForgotPswdDrop={() => { this.setState({ isModalVisibleForgotPswd: !this.state.isModalVisibleForgotPswd }) }} />
                 }
 
-                <Body fromHome={this.props.fromHome} style={{ bottom: 10 }} pages={this.props.filtered} />
+                <Body indexStart={this.props.indexStart ? this.props.indexStart : 0} fromHome={this.props.fromHome} style={{ bottom: 10 }} pages={this.props.filtered} />
 
                 {/* <LeafletButtons
                     onPressPresentation={() => { this.setState({ visiblepresentation: !this.state.visiblepresentation }) }}
