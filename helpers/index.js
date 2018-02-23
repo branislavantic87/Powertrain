@@ -444,20 +444,6 @@ export const renderModalforMultipleFiles = (what, arr, isVisible, func) => {
     );
 }
 
-export const renderModalPresentation = (what, isVisible, func) => {
-    return (
-        <Modal style={{ flex: 0, width: '55%', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto', maxHeight: '79.5%' }}
-            isVisible={isVisible}
-            onBackdropPress={() => func()}
-            onBackButtonPress={() => func()}
-        >
-            <View>
-            </View>
-        </Modal>
-    );
-
-}
-
 renderListOfFiles = (what, arr, func) => {
     let whaturi = what == 'videos' ? 'videouri' : 'docuri';
     let whatView = what == 'videos' ? 'VideoView' : 'DocumentView';

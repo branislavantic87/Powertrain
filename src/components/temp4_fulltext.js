@@ -10,8 +10,7 @@ export default class FullText extends Component {
         videoPath: [],
         documentPath: [],
         videos: false,
-        documents: false,
-        presentationModal: false
+        documents: false
     }
 
     componentWillMount() {
@@ -23,7 +22,7 @@ export default class FullText extends Component {
     }
 
     hideModal = () => {
-        this.setState({ videos: false, documents: false, presentationModal: false });
+        this.setState({ videos: false, documents: false });
     }
 
     showModal = (which) => {
@@ -61,7 +60,6 @@ export default class FullText extends Component {
 
                 {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
                 {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
-                {renderModalPresentation('presentationModal', this.state.presentationModal, this.hideModal)}
             </View>
         );
     }

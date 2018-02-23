@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, AsyncStorage, Image, StyleSheet } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Modal from 'react-native-modal';
+import PM from './PresentationModal';
 
 export default class LeafletButton extends Component {
 
@@ -10,12 +11,30 @@ export default class LeafletButton extends Component {
     state = {
         visibleTwoBtns: false,
         isActiveMainButton: false,
+        modalVisible: false,
+        prezentacije: []
     };
 
     addToLeaflet = () => {
 
     }
 
+    componentWillMount() {
+        try {
+            AsyncStorage.getItem('Prezentacije')
+                .then(res => JSON.parse(res))
+                .then(res => { res ? this.setState({ prezentacije: res }) : '' })
+                // .then(()=> console.log(this.state.prezentacije))
+
+        } catch (e) {
+
+        }
+
+    }
+
+    closeModal = () =>{
+        this.setState({ modalVisible: false })
+    }
     render() {
         return (
             <View style={styles.floatingButtonsHolder}>
@@ -24,10 +43,16 @@ export default class LeafletButton extends Component {
                 {this.state.visibleTwoBtns &&
                     <View>
                         <TouchableOpacity onPress={() => this.addToLeaflet()} style={styles.add_leaflet}><Image style={styles.floatBtnAdd} source={require('./ico/add/add_leaflet.png')} /></TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.props.showPresentationModal()} style={styles.add_presentation}><Image style={styles.floatBtnAdd} source={require('./ico/add/add_mypresentation.png')} /></TouchableOpacity>
+                        <TouchableOpacity onPress={() => { this.setState({ modalVisible: true }) }} style={styles.add_presentation}><Image style={styles.floatBtnAdd} source={require('./ico/add/add_mypresentation.png')} /></TouchableOpacity>
                     </View>
                 }
+                <PM
+                    handleModal={this.state.modalVisible}
+                    closeModal={this.closeModal}
+                    svePrezentacije={this.state.prezentacije}
+                />
             </View>
+
 
         );
     }

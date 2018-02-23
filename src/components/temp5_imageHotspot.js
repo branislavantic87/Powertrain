@@ -16,8 +16,7 @@ export default class HotspotImage extends Component {
         videoPath: [],
         documentPath: [],
         videos: false,
-        documents: false,
-        presentationModal: false
+        documents: false
     }
 
 
@@ -68,7 +67,7 @@ export default class HotspotImage extends Component {
     }
 
     hideModal = () => {
-        this.setState({ videos: false, documents: false, presentationModal: false });
+        this.setState({ videos: false, documents: false });
     }
 
     showModal = (which) => {
@@ -112,7 +111,6 @@ export default class HotspotImage extends Component {
                 </View>
                 {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
                 {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
-                {renderModalPresentation('presentationModal', this.state.presentationModal, this.hideModal)}
             </View>
         );
     }

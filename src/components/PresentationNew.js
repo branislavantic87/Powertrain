@@ -12,10 +12,12 @@ export default class PresentationNewComponent extends Component {
     state = {
         text: '',
         sort: false,
-        prezentacije: []
+        prezentacije: [],
+        error: undefined
     }
 
-    createNewPresentation = () => {
+    createNewPresentation = (e) => {
+        console.log('konzola od e', e)
         let foundObject = this.state.prezentacije.find(pre => (
             pre.ime === this.state.text
         ))
@@ -27,6 +29,7 @@ export default class PresentationNewComponent extends Component {
             novePrezentacije = prezentacija.concat(this.state.prezentacije);
             this.setState({ prezentacije: novePrezentacije });
             AsyncStorage.setItem('Prezentacije', JSON.stringify(novePrezentacije))
+            this.setState({ text: '' })
         } else {
             Alert.alert('Takva prezentacija vec postoji', 'Promenite ime', [{ text: 'OK', onPress: () => { } }])
         }
@@ -61,14 +64,6 @@ export default class PresentationNewComponent extends Component {
 
 
     componentWillMount() {
-        // try{
-        // AsyncStorage.getItem('Prezentacije')
-        // .then(res => JSON.parse(res))
-        // .then(res => this.state.presentacije = res)
-        // } catch (e){
-
-        // }
-        // AsyncStorage.removeItem('Prezentacije')
         try {
             AsyncStorage.getItem('Prezentacije')
                 .then(res => JSON.parse(res))
@@ -102,7 +97,7 @@ export default class PresentationNewComponent extends Component {
                                 }}
                                 value={this.state.text}
                             />
-                            <TouchableOpacity onPress={() => { this.createNewPresentation() }} >
+                            <TouchableOpacity onPress={(e) => { this.createNewPresentation() }} >
                                 <Image style={{ height: 20, width: 20 }} source={require('./ico/32/addP.png')} />
                             </TouchableOpacity>
                         </View>

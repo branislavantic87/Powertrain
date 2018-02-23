@@ -22,8 +22,7 @@ export default class TextImage extends Component {
     startSwiper: false,
     dimensions: undefined,
     videos: false,
-    documents: false,
-    presentationModal: false
+    documents: false
   }
 
   onLayout(event) {
@@ -46,13 +45,13 @@ export default class TextImage extends Component {
     this.setState({ videoPath: videos, documentPath: documents, imagesPath: images });
   }
 
-  
+
   hideModal = () => {
-    this.setState({ videos: false, documents: false, presentationModal: false });
+    this.setState({ videos: false, documents: false });
   }
 
   showModal = (which) => {
-    this.setState({[which]: true});
+    this.setState({ [which]: true });
   }
 
 
@@ -72,7 +71,7 @@ export default class TextImage extends Component {
     return (
 
       <View style={styles.mainView}>
-        {!this.props.fromHome && <LeafletButton showPresentationModal={() => this.showModal('presentationModal')} page={this.props.page} />}
+        {!this.props.fromHome && <LeafletButton page={this.props.page} />}
         <View style={styles.body}>
 
           <View>
@@ -103,7 +102,6 @@ export default class TextImage extends Component {
               <View style={styles.ButtonContainer}>
                 {renderVB(this.state.videoPath, this.showModal.bind(null, 'videos'))}
                 {renderDB(this.state.documentPath, this.showModal.bind(null, 'documents'))}
-                
               </View>
 
             </View>
@@ -114,7 +112,6 @@ export default class TextImage extends Component {
 
         {renderModalforMultipleFiles('videos', this.state.videoPath, this.state.videos, this.hideModal)}
         {renderModalforMultipleFiles('documents', this.state.documentPath, this.state.documents, this.hideModal)}
-        {renderModalPresentation('presentationModal', this.state.presentationModal, this.hideModal)}
       </View>
     );
   }
