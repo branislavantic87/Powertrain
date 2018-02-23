@@ -13,7 +13,8 @@ export default class PresentationNewComponent extends Component {
         text: '',
         sort: false,
         prezentacije: [],
-        error: undefined
+        error: undefined,
+        itsPresentations: []
     }
 
     createNewPresentation = (e) => {
@@ -73,7 +74,7 @@ export default class PresentationNewComponent extends Component {
     }
     presentationSort = () => {
         if (this.state.sort) {
-            return <PresentationSort clickDone={() => this.setState({ sort: false })} />
+            return <PresentationSort itsPresentations={this.state.itsPresentations} clickDone={() => this.setState({ sort: false })} />
         } else {
             return (
                 <View style={{ width: '100%', height: '100%' }}>
@@ -109,7 +110,7 @@ export default class PresentationNewComponent extends Component {
                                     key={p.ime}
                                     style={styles.presentation}
                                     onPress={() => {
-                                        this.setState({ sort: true });
+                                        this.setState({ sort: true, itsPresentations: p.pages });
                                         // this.addPagesToPresentation(p.ime)
                                     }}>
                                     <Image style={styles.presentationImg} source={require('./ico/img/pres.jpg')} />

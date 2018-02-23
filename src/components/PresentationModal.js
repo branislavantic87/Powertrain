@@ -12,7 +12,7 @@ export default class PresentationModal extends Component {
             AsyncStorage.getItem('Prezentacije')
                 .then(res => JSON.parse(res))
                 .then(res => { res ? this.setState({ prezentacije: res }) : '' })
-                .then(()=> console.log(this.state.prezentacije))
+                .then(() => console.log(this.state.prezentacije))
 
         } catch (e) {
             console.error(e);
@@ -22,12 +22,12 @@ export default class PresentationModal extends Component {
     }
 
     addPagesToPresentation = (imePrezentacije) => {
-        console.log('kliknuo si na', imePrezentacije);
+        // console.log('kliknuo si na', imePrezentacije);
         let modP = this.state.prezentacije.find(p => imePrezentacije == p.ime);
         if (this.props.lookingAt) {
             if (!modP.pages.find(pa => pa == this.props.lookingAt.pageId)) {
                 modP.pages = modP.pages.concat(this.props.lookingAt.pageId);
-                console.log(modP);
+                // console.log(modP);
                 const nP = this.state.prezentacije.map(pr => {
                     if (pr.ime == imePrezentacije) {
                         return modP;
@@ -35,8 +35,11 @@ export default class PresentationModal extends Component {
                         return pr;
                     }
                 });
-                console.log('nove prezentacije:', nP);
-                AsyncStorage.setItem('Prezentacije', JSON.stringify(nP));
+                // console.log('nove prezentacije:', nP);
+                AsyncStorage.setItem('Prezentacije', JSON.stringify(nP))
+                    .then(() => {
+                        Alert.alert('Successfully added!', 'Select another presentation to add this page or click away to close this modal', [{ text: 'OK', onPress: () => { } }])
+                    });
             } else {
                 Alert.alert('This page is allready in it!', 'Please select another page for your presentation', [{ text: 'OK', onPress: () => { } }])
             }
@@ -55,22 +58,22 @@ export default class PresentationModal extends Component {
                 onBackButtonPress={() => this.props.closeModal()}
             >
                 <View style={styles.modalContainer}>
-                <ScrollView>
-                    <View style={styles.innerContainer}>
-                        {this.state.prezentacije.map(p => (
-                        <View key={p.ime}>
-                            <TouchableOpacity
-                                    style={styles.presentation}
-                                    onPress={() => {
-                                        // this.setState({ sort: true });
-                                        this.addPagesToPresentation(p.ime)
-                                    }}>
-                                    <Image style={styles.presentationImg} source={require('./ico/img/pres.jpg')} />
-                                    <Text style={styles.presentationTitle}>{p.ime}</Text>
-                                </TouchableOpacity>
+                    <ScrollView>
+                        <View style={styles.innerContainer}>
+                            {this.state.prezentacije.map(p => (
+                                <View key={p.ime}>
+                                    <TouchableOpacity
+                                        style={styles.presentation}
+                                        onPress={() => {
+                                            // this.setState({ sort: true });
+                                            this.addPagesToPresentation(p.ime)
+                                        }}>
+                                        <Image style={styles.presentationImg} source={require('./ico/img/pres.jpg')} />
+                                        <Text style={styles.presentationTitle}>{p.ime}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            ))}
                         </View>
-                        ))}
-                    </View>
                     </ScrollView>
                 </View>
             </Modal>
@@ -89,7 +92,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'white',
-        maxHeight: Dimensions.get('window').height*0.8
+        maxHeight: Dimensions.get('window').height * 0.8
     },
     innerContainer: {
         alignItems: 'center',
