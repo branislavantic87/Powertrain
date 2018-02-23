@@ -1,15 +1,53 @@
 import React, { Component } from 'react';
-import { Text, View, Button, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions } from 'react-native';
+import { Text, View, Button, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions, AsyncStorage, Alert } from 'react-native';
 import Modal from 'react-native-modal';
 
-export default class MyComponent extends Component {
+export default class PresentationModal extends Component {
     state = {
-        prezentacije: this.props.svePrezentacije
+        prezentacije: []
     };
+
+    componentWillMount() {
+        try {
+            AsyncStorage.getItem('Prezentacije')
+                .then(res => JSON.parse(res))
+                .then(res => { res ? this.setState({ prezentacije: res }) : '' })
+                .then(()=> console.log(this.state.prezentacije))
+
+        } catch (e) {
+            console.error(e);
+        }
+
+
+    }
+
+    addPagesToPresentation = (imePrezentacije) => {
+        console.log('kliknuo si na', imePrezentacije);
+        let modP = this.state.prezentacije.find(p => imePrezentacije == p.ime);
+        if (this.props.lookingAt) {
+            if (!modP.pages.find(pa => pa == this.props.lookingAt.pageId)) {
+                modP.pages = modP.pages.concat(this.props.lookingAt.pageId);
+                console.log(modP);
+                const nP = this.state.prezentacije.map(pr => {
+                    if (pr.ime == imePrezentacije) {
+                        return modP;
+                    } else {
+                        return pr;
+                    }
+                });
+                console.log('nove prezentacije:', nP);
+                AsyncStorage.setItem('Prezentacije', JSON.stringify(nP));
+            } else {
+                Alert.alert('This page is allready in it!', 'Please select another page for your presentation', [{ text: 'OK', onPress: () => { } }])
+            }
+        } else {
+            Alert.alert('This is not page!', 'Please select page for your presentation', [{ text: 'OK', onPress: () => { } }])
+        }
+    }
 
     render() {
         // {console.log(this.state.prezentacije)}
-        console.log('Ovo je props od prezentacija: ', this.props.svePrezentacije)
+        // console.log('Ovo je props od prezentacija: ', this.props.svePrezentacije)
         return (
             <Modal
                 isVisible={this.props.handleModal}
@@ -19,13 +57,13 @@ export default class MyComponent extends Component {
                 <View style={styles.modalContainer}>
                 <ScrollView>
                     <View style={styles.innerContainer}>
-                        {this.props.svePrezentacije.map(p => (
+                        {this.state.prezentacije.map(p => (
                         <View key={p.ime}>
                             <TouchableOpacity
                                     style={styles.presentation}
                                     onPress={() => {
                                         // this.setState({ sort: true });
-                                        // this.addPagesToPresentation(p.ime)
+                                        this.addPagesToPresentation(p.ime)
                                     }}>
                                     <Image style={styles.presentationImg} source={require('./ico/img/pres.jpg')} />
                                     <Text style={styles.presentationTitle}>{p.ime}</Text>

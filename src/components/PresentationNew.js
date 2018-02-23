@@ -35,31 +35,29 @@ export default class PresentationNewComponent extends Component {
         }
     }
 
-    addPagesToPresentation = (imePrezentacije) => {
-        console.log('kliknuo si na', imePrezentacije);
-        let modP = this.state.prezentacije.find(p => imePrezentacije == p.ime);
-        if (this.props.lookingAt.length) {
-            if (!modP.pages.find(pa => pa == this.props.lookingAt[0].pageId)) {
-                modP.pages = modP.pages.concat(this.props.lookingAt[0].pageId);
-                console.log(modP);
-                const nP = this.state.prezentacije.map(pr => {
-                    if (pr.ime == imePrezentacije) {
-                        return modP;
-                    } else {
-                        return pr;
-                    }
-                });
-                console.log('nove prezentacije:', nP);
-                AsyncStorage.setItem('Prezentacije', JSON.stringify(nP));
-            } else {
-                Alert.alert('This page is allready in it!', 'Please select another page for your presentation', [{ text: 'OK', onPress: () => { } }])
-            }
-        } else {
-            Alert.alert('This is not page!', 'Please select page for your presentation', [{ text: 'OK', onPress: () => { } }])
-        }
-
-
-    }
+    // addPagesToPresentation = (imePrezentacije) => {
+    //     console.log('kliknuo si na', imePrezentacije);
+    //     let modP = this.state.prezentacije.find(p => imePrezentacije == p.ime);
+    //     if (this.props.lookingAt.length) {
+    //         if (!modP.pages.find(pa => pa == this.props.lookingAt[0].pageId)) {
+    //             modP.pages = modP.pages.concat(this.props.lookingAt[0].pageId);
+    //             console.log(modP);
+    //             const nP = this.state.prezentacije.map(pr => {
+    //                 if (pr.ime == imePrezentacije) {
+    //                     return modP;
+    //                 } else {
+    //                     return pr;
+    //                 }
+    //             });
+    //             console.log('nove prezentacije:', nP);
+    //             AsyncStorage.setItem('Prezentacije', JSON.stringify(nP));
+    //         } else {
+    //             Alert.alert('This page is allready in it!', 'Please select another page for your presentation', [{ text: 'OK', onPress: () => { } }])
+    //         }
+    //     } else {
+    //         Alert.alert('This is not page!', 'Please select page for your presentation', [{ text: 'OK', onPress: () => { } }])
+    //     }
+    // }
 
 
 
@@ -111,8 +109,8 @@ export default class PresentationNewComponent extends Component {
                                     key={p.ime}
                                     style={styles.presentation}
                                     onPress={() => {
-                                        // this.setState({ sort: true });
-                                        this.addPagesToPresentation(p.ime)
+                                        this.setState({ sort: true });
+                                        // this.addPagesToPresentation(p.ime)
                                     }}>
                                     <Image style={styles.presentationImg} source={require('./ico/img/pres.jpg')} />
                                     <Text style={styles.presentationTitle}>{p.ime}</Text>

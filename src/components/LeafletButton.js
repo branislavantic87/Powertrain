@@ -19,23 +19,11 @@ export default class LeafletButton extends Component {
 
     }
 
-    componentWillMount() {
-        try {
-            AsyncStorage.getItem('Prezentacije')
-                .then(res => JSON.parse(res))
-                .then(res => { res ? this.setState({ prezentacije: res }) : '' })
-                // .then(()=> console.log(this.state.prezentacije))
-
-        } catch (e) {
-
-        }
-
-    }
-
     closeModal = () =>{
         this.setState({ modalVisible: false })
     }
     render() {
+        // {console.log('this.props ' + this.props.page)}
         return (
             <View style={styles.floatingButtonsHolder}>
                 <TouchableOpacity onPress={() => this.setState({ visibleTwoBtns: !this.state.visibleTwoBtns, isActiveMainButton: !this.state.isActiveMainButton })} style={styles.add}><Image style={styles.floatBtnAdd} source={!this.state.isActiveMainButton ? require('./ico/add/add.png') : require('./ico/add/add_close_pressed.png')} /></TouchableOpacity>
@@ -43,13 +31,14 @@ export default class LeafletButton extends Component {
                 {this.state.visibleTwoBtns &&
                     <View>
                         <TouchableOpacity onPress={() => this.addToLeaflet()} style={styles.add_leaflet}><Image style={styles.floatBtnAdd} source={require('./ico/add/add_leaflet.png')} /></TouchableOpacity>
-                        <TouchableOpacity onPress={() => { this.setState({ modalVisible: true }) }} style={styles.add_presentation}><Image style={styles.floatBtnAdd} source={require('./ico/add/add_mypresentation.png')} /></TouchableOpacity>
+                        <TouchableOpacity onPress={() => { this.setState({ modalVisible: !this.state.modalVisible }) }} style={styles.add_presentation}><Image style={styles.floatBtnAdd} source={require('./ico/add/add_mypresentation.png')} /></TouchableOpacity>
                     </View>
                 }
                 <PM
                     handleModal={this.state.modalVisible}
                     closeModal={this.closeModal}
                     svePrezentacije={this.state.prezentacije}
+                    lookingAt={this.props.page}
                 />
             </View>
 
